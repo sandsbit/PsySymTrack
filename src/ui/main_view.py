@@ -16,8 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
 
-from ui.application import Application
+from tkinter import ttk
 
-if __name__ == '__main__':
-    app = Application()
-    app.mainloop()
+
+class MainView(ttk.Frame):
+    def __init__(self, parent):
+        super().__init__(parent, padding=20)
+
+        ttk.Label(
+            self,
+            text="Hello world!",
+            font=("Segoe UI", 18)
+        ).pack(expand=True)
