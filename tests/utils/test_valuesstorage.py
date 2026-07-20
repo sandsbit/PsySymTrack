@@ -22,7 +22,7 @@ from datetime import datetime
 from pathlib import Path
 from unittest.mock import patch
 
-from utils.valuestorsage import ValuesStorage
+from tracking.valuestorsage import ValuesStorage
 
 
 class TestTimeSeriesStore(unittest.TestCase):

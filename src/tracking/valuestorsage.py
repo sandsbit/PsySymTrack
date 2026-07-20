@@ -19,7 +19,7 @@
 import sqlite3
 from datetime import datetime
 
-from . import osutil
+from utils import osutil
 
 class ValuesStorage:
     """SQLite-backed storage for integer time series."""
