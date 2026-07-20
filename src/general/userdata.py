@@ -24,8 +24,8 @@ from enum import Enum
 from utils import osutil
 
 class Sex(Enum):
-    MALE = 0
-    FEMALE = 1
+    MALE = "male"
+    FEMALE = "female"
 
 @dataclass(frozen=True)
 class BasicUserData:
@@ -36,8 +36,11 @@ class BasicUserData:
 
 _USERDATA_FILE = osutil.get_app_data_dir() / "userdata.json"
 
-def load_user_data() -> BasicUserData:
-    """Loads the user information from the app's data directory."""
+def load_user_data() -> BasicUserData | None:
+    """Loads the user information from the app's data directory, None if no is saved."""
+
+    if not _USERDATA_FILE.exists():
+        return None
 
     data = json.loads(_USERDATA_FILE.read_text(encoding="utf-8"))
 
