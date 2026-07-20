@@ -25,15 +25,6 @@ from unittest.mock import patch
 
 from general.userdata import BasicUserData, Sex, load_user_data, save_user_data
 
-# test_user_data.py
-
-import json
-import tempfile
-import unittest
-from datetime import datetime
-from pathlib import Path
-from unittest.mock import patch
-
 class TestUserDataPersistence(unittest.TestCase):
     def setUp(self):
         self.temp_dir = tempfile.TemporaryDirectory()
