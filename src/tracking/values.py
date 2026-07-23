@@ -62,6 +62,21 @@ class ScaleValue(Value):
     not_severly_abormal_min: int | None
     not_severly_abormal_max: int | None
 
+    def __post_init__(self):
+        """Checking whether all rules are complied with."""
+        if self.min_value > self.max_value:
+            raise ValueError("min_value must be less than max_value")
+        if self.normal_min > self.normal_max:
+            raise ValueError("normal_min must be less than normal_max")
+        if self.normal_min < self.min_value:
+            raise ValueError("normal_min must be greater than min_value")
+        if self.normal_max > self.max_value:
+            raise ValueError("normal_max must be less than max_value")
+        if (self.not_severly_abormal_min is not None) and (self.not_severly_abormal_min > self.normal_min):
+            raise ValueError("not_severly_abormal_min must be less than normal_min")
+        if (self.not_severly_abormal_max is not None) and (self.not_severly_abormal_max < self.normal_max):
+            raise ValueError("not_severly_abormal_max must be greater than normal_max")
+
     def active_value_description_pairs(self) -> list[tuple[int, str]]:
         """Returns a list of active values and their descriptions in ascending order."""
 
@@ -114,6 +129,25 @@ class PhysicalValue(Value):
     # i.e. mildly abnormal range + normal range
     not_severly_abormal_min: float | None
     not_severly_abormal_max: float | None
+
+    def __post_init__(self):
+        """Checking whether all rules are complied with."""
+        if (self.min_value is not None and self.max_value is not None) and (self.min_value > self.max_value):
+            raise ValueError("min_value must be less than max_value")
+        if (self.normal_min is not None and self.normal_max is not None) and (self.normal_min > self.normal_max):
+            raise ValueError("normal_min must be less than normal_max")
+        if (self.normal_min is not None and self.min_value is not None) and (self.normal_min < self.min_value):
+            raise ValueError("normal_min must be greater than min_value")
+        if (self.normal_max is not None and self.max_value is not None) and (self.normal_max > self.max_value):
+            raise ValueError("normal_max must be less than max_value")
+        if self.not_severly_abormal_min is not None and self.normal_min is None:
+            raise ValueError("normal_min must be defined if not_severly_abormal_min is defined")
+        if self.not_severly_abormal_max is not None and self.normal_max is None:
+            raise ValueError("normal_max must be defined if not_severly_abormal_max is defined")
+        if (self.not_severly_abormal_min is not None) and (self.not_severly_abormal_min > self.normal_min):
+            raise ValueError("not_severly_abormal_min must be less than normal_min")
+        if (self.not_severly_abormal_max is not None) and (self.not_severly_abormal_max < self.normal_max):
+            raise ValueError("not_severly_abormal_max must be greater than normal_max")
 
 def _TEST_example_PhysicalValue() -> PhysicalValue:
     """Randmon PhysicalValue for unit tests."""
