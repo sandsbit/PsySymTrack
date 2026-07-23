@@ -18,13 +18,20 @@
 
 from tkinter import ttk
 
+from ui.add_value_window import AddValueWindow
+
 
 class MainView(ttk.Frame):
     def __init__(self, parent):
-        super().__init__(parent, padding=20)
+        super().__init__(parent)
 
-        ttk.Label(
+        self.parent = parent
+
+        ttk.Button(
             self,
-            text="Hello world!",
-            font=("Segoe UI", 18)
-        ).pack(expand=True)
+            text="Add value",
+            command=self.open_add_value
+        ).pack()
+
+    def open_add_value(self):
+        AddValueWindow(self.parent)
