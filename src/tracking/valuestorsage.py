@@ -42,7 +42,7 @@ class ValuesStorage:
             CREATE TABLE IF NOT EXISTS measurements (
                 series_id TEXT NOT NULL,
                 timestamp TEXT NOT NULL,
-                value INTEGER NOT NULL,
+                value REAL NOT NULL,
                 PRIMARY KEY (series_id, timestamp)
             )
             """
@@ -53,7 +53,7 @@ class ValuesStorage:
             self,
             series_id: str,
             date: datetime,
-            value: int,
+            value: int | float,
     ) -> None:
         """Update an existing value or insert it if missing."""
         self._connection.execute(
