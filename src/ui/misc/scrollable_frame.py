@@ -27,7 +27,7 @@ class ScrollableFrame(ttk.Frame):
     Widgets should be added to self.scrollable_frame.
     """
 
-    def __init__(self, parent, height=150, *args, **kwargs):
+    def __init__(self, parent, height: int | None = None, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
 
         self.canvas = tk.Canvas(
@@ -88,13 +88,20 @@ class ScrollableFrame(ttk.Frame):
             self._resize_frame
         )
 
-        # Important: do not let children decide the frame size
-        self.pack_propagate(False)
-        self.grid_propagate(False)
+        self.canvas.bind("<Enter>", self._bind_mousewheel)
+        self.canvas.bind("<Leave>", self._unbind_mousewheel)
 
-        self.configure(
-            height=height
-        )
+        if height is not None:
+            self.pack_propagate(False)
+            self.grid_propagate(False)
+
+            self.configure(
+                height=height
+            )
+
+    def clear(self):
+        for child in self.scrollable_frame.winfo_children():
+            child.destroy()
 
     def _update_scroll_region(self, _event=None):
         self.canvas.configure(
@@ -106,3 +113,25 @@ class ScrollableFrame(ttk.Frame):
             self._window,
             width=event.width
         )
+
+    def _bind_mousewheel(self, _event=None):
+        self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
+        self.canvas.bind_all("<Button-4>", self._on_mousewheel_linux)
+        self.canvas.bind_all("<Button-5>", self._on_mousewheel_linux)
+
+    def _unbind_mousewheel(self, _event=None):
+        self.canvas.unbind_all("<MouseWheel>")
+        self.canvas.unbind_all("<Button-4>")
+        self.canvas.unbind_all("<Button-5>")
+
+    def _on_mousewheel(self, event):
+        self.canvas.yview_scroll(
+            int(-1 * (event.delta / 120)),
+            "units"
+        )
+
+    def _on_mousewheel_linux(self, event):
+        if event.num == 4:
+            self.canvas.yview_scroll(-1, "units")
+        elif event.num == 5:
+            self.canvas.yview_scroll(1, "units")
