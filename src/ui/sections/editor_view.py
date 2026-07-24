@@ -16,24 +16,296 @@
 # You should have received a copy of the GNU General Public License
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
 
-from tkinter import ttk
-from typing import Any
+import tkinter as tk
+from tkinter import ttk, messagebox
+from datetime import datetime, timedelta
 
+from tracking.values import Value, ScaleValue, PhysicalValue
+from tracking.valuestorsage import ValuesStorage
 
 class EditorView(ttk.Frame):
     """
-    Lower-right panel for editing the selected object.
+    Editor for Value objects.
+
+    Allows:
+    - selecting a week
+    - editing the value for that week
     """
 
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
 
-        self.current_object: Any | None = None
+        self.value: Value | None = None
 
-    def show(self, obj: Any) -> None:
-        """
-        Display editor controls for the selected object.
+        self.current_week = self._week_start(
+            datetime.now()
+        )
 
-        Implementation will be added later.
+        self._create_layout()
+
+    def _create_layout(self):
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure(1, weight=1)
+
+        # Week selector
+        self.week_frame = ttk.Frame(self)
+
+        self.week_frame.grid(
+            row=0,
+            column=0,
+            sticky="ew",
+            pady=5
+        )
+
+        ttk.Button(
+            self.week_frame,
+            text="◀",
+            command=lambda: self._change_week(-1)
+        ).pack(
+            side="left"
+        )
+
+        self.date_entry = ttk.Entry(
+            self.week_frame,
+            width=12
+        )
+
+        self.date_entry.pack(
+            side="left",
+            padx=5
+        )
+
+        self.date_entry.bind(
+            "<Return>",
+            self._date_entered
+        )
+
+        ttk.Button(
+            self.week_frame,
+            text="▶",
+            command=lambda: self._change_week(1)
+        ).pack(
+            side="left"
+        )
+
+        # Editor area
+        self.editor_frame = ttk.Frame(self)
+
+        self.editor_frame.grid(
+            row=1,
+            column=0,
+            sticky="nsew"
+        )
+
+        self._update_week_display()
+
+    def show(self, value: Value):
         """
-        self.current_object = obj
+        Display editor for a selected Value object.
+        """
+        self.value = value
+
+        self.current_week = self._week_start(
+            datetime.now()
+        )
+
+        self._update_week_display()
+        self._build_editor()
+
+    # ------------------------------------------------------------------
+    # Week handling
+    # ------------------------------------------------------------------
+
+    def _week_start(self, date: datetime) -> datetime:
+        """
+        Return Monday 00:00 of the given week.
+        """
+        return datetime(
+            date.year,
+            date.month,
+            date.day
+        ) - timedelta(
+            days=date.weekday()
+        )
+
+    def _change_week(self, offset: int):
+        self.current_week += timedelta(
+            weeks=offset
+        )
+
+        self._update_week_display()
+        self._refresh_current_value()
+
+    def _date_entered(self, _event=None):
+        try:
+            date = datetime.fromisoformat(
+                self.date_entry.get()
+            )
+        except ValueError:
+            return
+
+        self.current_week = self._week_start(
+            date
+        )
+
+        self._update_week_display()
+        self._refresh_current_value()
+
+    def _update_week_display(self):
+        self.date_entry.delete(
+            0,
+            tk.END
+        )
+
+        self.date_entry.insert(
+            0,
+            self.current_week.strftime("%Y-%m-%d")
+        )
+
+    # ------------------------------------------------------------------
+    # Editor creation
+    # ------------------------------------------------------------------
+
+    def _build_editor(self):
+        for widget in self.editor_frame.winfo_children():
+            widget.destroy()
+
+        if isinstance(self.value, ScaleValue):
+            self._build_scale_editor()
+
+        elif isinstance(self.value, PhysicalValue):
+            self._build_physical_editor()
+
+    def _refresh_current_value(self):
+        """
+        Refresh selection/input when week changes.
+
+        Reading existing value:
+        """
+        if self.value is None:
+            return
+
+        storage = ValuesStorage()
+        try:
+            if isinstance(self.value, ScaleValue):
+                current_value = storage.get_value(self.value.id, self.current_week)
+                if current_value is None:
+                    self.scale_selection.set("")
+                else:
+                    self.scale_selection.set(
+                        str(current_value)
+                    )
+            elif isinstance(self.value, PhysicalValue):
+                # Clear previous value first
+                self.physical_entry.delete(
+                    0,
+                    tk.END
+                )
+
+                current_value = storage.get_value(self.value.id, self.current_week)
+                if current_value is not None:
+                    self.physical_entry.delete(0, tk.END)
+                    self.physical_entry.insert(0, str(current_value))
+        finally:
+            storage.close()
+
+    # ------------------------------------------------------------------
+    # ScaleValue editor
+    # ------------------------------------------------------------------
+
+    def _build_scale_editor(self):
+        assert isinstance(self.value, ScaleValue)
+
+        self.scale_selection = tk.StringVar(value="")
+
+        for value, description in (
+            self.value.active_value_description_pairs()
+        ):
+            ttk.Radiobutton(
+                self.editor_frame,
+                text=f"{value}: {description}",
+                variable=self.scale_selection,
+                value=str(value),
+                command=self._save_scale_value
+            ).pack(
+                anchor="w"
+            )
+
+    def _save_scale_value(self):
+        date = self.current_week
+        selected_value = self.scale_selection.get()
+
+        storage = ValuesStorage()
+        try:
+            storage.edit_value(self.value.id, date, int(selected_value))
+        finally:
+            storage.close()
+
+    # ------------------------------------------------------------------
+    # PhysicalValue editor
+    # ------------------------------------------------------------------
+
+    def _build_physical_editor(self):
+        assert isinstance(self.value, PhysicalValue)
+
+        label = (
+            f"{self.value.name} "
+            f"({self.value.min_value} - {self.value.max_value}):"
+        )
+
+        ttk.Label(
+            self.editor_frame,
+            text=label
+        ).pack(
+            anchor="w"
+        )
+
+        self.physical_entry = ttk.Entry(
+            self.editor_frame
+        )
+
+        self.physical_entry.pack(
+            fill="x"
+        )
+
+        ttk.Button(
+            self.editor_frame,
+            text="Save",
+            command=self._save_physical_value
+        ).pack(
+            pady=5
+        )
+
+    def _save_physical_value(self):
+        try:
+            value = float(
+                self.physical_entry.get()
+            )
+
+        except ValueError:
+            messagebox.showerror(
+                "Invalid value",
+                "Value must be a number."
+            )
+            return
+
+        assert isinstance(self.value, PhysicalValue)
+
+        if not (
+            self.value.min_value
+            <= value
+            <= self.value.max_value
+        ):
+            messagebox.showerror(
+                "Invalid value",
+                "Value is outside allowed range."
+            )
+            return
+
+        date = self.current_week
+
+        storage = ValuesStorage()
+        try:
+            storage.edit_value(self.value.id, date, value)
+        finally:
+            storage.close()
