@@ -181,6 +181,11 @@ class ValuesManager:
         """Singleton logic."""
         if not cls._instance:
             cls._instance = super(ValuesManager, cls).__new__(cls, *args, **kwargs)
+
+            cls._instance._load_standard_scale_values()
+            cls._instance._load_standard_physical_values()
+            cls._instance._scale_values_custom +=  cls._instance._load_values_from_file(cls._instance._scales_file_path, ScaleValue)
+            cls._instance._physical_values_custom += cls._instance._load_values_from_file(cls._instance._physicals_file_path, PhysicalValue)
         return cls._instance
 
     def __init__(self):

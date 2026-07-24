@@ -111,6 +111,8 @@ class TestLoadValuesFromFile(unittest.TestCase):
         )
 
 
+# TODO: unit tests missing getting new instance produces duplicates
+
 class TestValuesManager(unittest.TestCase):
 
     def setUp(self):
