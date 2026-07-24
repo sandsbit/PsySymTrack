@@ -18,6 +18,7 @@
 
 import tkinter as tk
 from tkinter import ttk, messagebox
+from typing import Callable
 
 from ui.sections.scale_form import ScaleForm
 from ui.sections.physical_form import PhysicalForm
@@ -27,8 +28,10 @@ from tracking.values import ValuesManager, ScaleValue, PhysicalValue
 
 class AddValueWindow(tk.Toplevel):
 
-    def __init__(self, parent):
+    def __init__(self, parent, on_saved: Callable[[], None]):
         super().__init__(parent)
+
+        self.on_saved = on_saved
 
         self.title(
             "Add value"
@@ -143,5 +146,7 @@ class AddValueWindow(tk.Toplevel):
             manager.add_physical_value(
                 value
             )
+
+        self.on_saved()
 
         self.destroy()
