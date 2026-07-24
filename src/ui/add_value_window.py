@@ -19,8 +19,8 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 
-from ui.forms.scale_form import ScaleForm
-from ui.forms.physical_form import PhysicalForm
+from ui.sections.scale_form import ScaleForm
+from ui.sections.physical_form import PhysicalForm
 
 from tracking.values import ValuesManager, ScaleValue, PhysicalValue
 
