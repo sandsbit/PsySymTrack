@@ -21,6 +21,8 @@ from datetime import datetime
 
 from utils import osutil
 
+
+# TODO: should be Singleton
 class ValuesStorage:
     """SQLite-backed storage for integer time series."""
 
@@ -47,53 +49,22 @@ class ValuesStorage:
         )
         self._connection.commit()
 
-    def add_value(
-        self,
-        series_id: str,
-        date: datetime,
-        value: int,
-    ) -> None:
-        """Add a new value.
-
-        Raises:
-            ValueError: If a value already exists for this date.
-        """
-        try:
-            self._connection.execute(
-                """
-                INSERT INTO measurements(series_id, timestamp, value)
-                VALUES (?, ?, ?)
-                """,
-                (series_id, date.isoformat(), value),
-            )
-            self._connection.commit()
-        except sqlite3.IntegrityError:
-            raise ValueError("Value already exists for this date.")
-
     def edit_value(
-        self,
-        series_id: str,
-        date: datetime,
-        value: int,
+            self,
+            series_id: str,
+            date: datetime,
+            value: int,
     ) -> None:
-        """Update an existing value.
-
-        Raises:
-            KeyError: If no value exists for the given date.
-        """
-        cursor = self._connection.execute(
+        """Update an existing value or insert it if missing."""
+        self._connection.execute(
             """
-            UPDATE measurements
-            SET value = ?
-            WHERE series_id = ? AND timestamp = ?
+            INSERT INTO measurements (series_id, timestamp, value)
+            VALUES (?, ?, ?)
+            ON CONFLICT(series_id, timestamp)
+            DO UPDATE SET value = excluded.value
             """,
-            (value, series_id, date.isoformat()),
+            (series_id, date.isoformat(), value),
         )
-
-        if cursor.rowcount == 0:
-            raise KeyError(
-                f"No value found for series '{series_id}' at {date}"
-            )
 
         self._connection.commit()
 

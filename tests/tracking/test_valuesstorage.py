@@ -49,20 +49,12 @@ class TestTimeSeriesStore(unittest.TestCase):
     def test_add_and_get_value(self) -> None:
         date = datetime(2026, 7, 20, 10, 30)
 
-        self.store.add_value("weight", date, 75000)
+        self.store.edit_value("weight", date, 75000)
 
         self.assertEqual(
             self.store.get_value("weight", date),
             75000,
         )
-
-    def test_add_duplicate_value_fails(self) -> None:
-        date = datetime(2026, 7, 20)
-
-        self.store.add_value("weight", date, 75000)
-
-        with self.assertRaises(ValueError):
-            self.store.add_value("weight", date, 76000)
 
     def test_get_missing_value_fails(self) -> None:
         self.assertIsNone(
@@ -75,7 +67,7 @@ class TestTimeSeriesStore(unittest.TestCase):
     def test_edit_existing_value(self) -> None:
         date = datetime(2026, 7, 20)
 
-        self.store.add_value("weight", date, 75000)
+        self.store.edit_value("weight", date, 75000)
         self.store.edit_value("weight", date, 75500)
 
         self.assertEqual(
@@ -83,18 +75,10 @@ class TestTimeSeriesStore(unittest.TestCase):
             75500,
         )
 
-    def test_edit_missing_value_fails(self) -> None:
-        with self.assertRaises(KeyError):
-            self.store.edit_value(
-                "weight",
-                datetime(2026, 7, 20),
-                75500,
-            )
-
     def test_delete_existing_value(self) -> None:
         date = datetime(2026, 7, 20)
 
-        self.store.add_value("weight", date, 75000)
+        self.store.edit_value("weight", date, 75000)
         self.store.delete_value("weight", date)
 
     def test_delete_missing_value_fails(self) -> None:
@@ -105,17 +89,17 @@ class TestTimeSeriesStore(unittest.TestCase):
             )
 
     def test_get_range_returns_sorted_values(self) -> None:
-        self.store.add_value(
+        self.store.edit_value(
             "weight",
             datetime(2026, 7, 3),
             73000,
         )
-        self.store.add_value(
+        self.store.edit_value(
             "weight",
             datetime(2026, 7, 1),
             72000,
         )
-        self.store.add_value(
+        self.store.edit_value(
             "weight",
             datetime(2026, 7, 2),
             72500,
@@ -139,8 +123,8 @@ class TestTimeSeriesStore(unittest.TestCase):
     def test_get_range_excludes_other_series(self) -> None:
         date = datetime(2026, 7, 20)
 
-        self.store.add_value("weight", date, 75000)
-        self.store.add_value("height", date, 180)
+        self.store.edit_value("weight", date, 75000)
+        self.store.edit_value("height", date, 180)
 
         result = self.store.get_range(
             "weight",
@@ -156,8 +140,8 @@ class TestTimeSeriesStore(unittest.TestCase):
     def test_multiple_series_can_have_same_date(self) -> None:
         date = datetime(2026, 7, 20)
 
-        self.store.add_value("weight", date, 75000)
-        self.store.add_value("blood_pressure", date, 120)
+        self.store.edit_value("weight", date, 75000)
+        self.store.edit_value("blood_pressure", date, 120)
 
         self.assertEqual(
             self.store.get_value("weight", date),
@@ -171,7 +155,7 @@ class TestTimeSeriesStore(unittest.TestCase):
     def test_data_survives_reopening(self) -> None:
         date = datetime(2026, 7, 20, 10, 30)
 
-        self.store.add_value("weight", date, 75000)
+        self.store.edit_value("weight", date, 75000)
         self.store.close()
 
         reopened_store = ValuesStorage()
