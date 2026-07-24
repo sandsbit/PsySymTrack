@@ -22,17 +22,37 @@ from .registration_view import RegistrationView
 from .main_view import MainView
 
 from general.userdata import load_user_data
-
+from app_info import APP_NAME
 
 class Application(tk.Tk):
     def __init__(self):
         super().__init__()
 
-        self.title("Clinical Assessment")
-        self.geometry("450x350")
-        self.resizable(False, False)
+        self.title(APP_NAME)
+        width = 1200
+        height = 800
+
+        self.geometry(
+            f"{width}x{height}"
+        )
+
+        self._center_window(
+            width,
+            height
+        )
 
         self.show_initial_view()
+
+    def _center_window(self, width, height):
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+
+        x = (screen_width - width) // 2
+        y = (screen_height - height) // 2
+
+        self.geometry(
+            f"{width}x{height}+{x}+{y}"
+        )
 
     def show_initial_view(self):
         user_data = load_user_data()

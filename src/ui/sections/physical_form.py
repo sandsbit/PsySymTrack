@@ -121,7 +121,7 @@ class PhysicalForm(ttk.Frame):
 
             if (
                 value is None
-                and self.entries[name].get().strip()
+                and self.entries[name].get_value().strip()
                 not in ("", "None")
             ):
                 errors.append(

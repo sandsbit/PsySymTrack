@@ -17,8 +17,9 @@
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
 
 from tkinter import ttk
-from typing import Callable, Any
+from typing import Callable
 
+from tracking.values import Value
 from .object_entry import ObjectEntry
 
 
@@ -31,7 +32,7 @@ class CollapsibleSection(ttk.Frame):
         self,
         parent,
         title: str,
-        on_selected: Callable[[Any], None],
+        on_selected: Callable[[Value], None],
         expanded: bool = True,
         *args,
         **kwargs
@@ -92,14 +93,14 @@ class CollapsibleSection(ttk.Frame):
 
     def add_entry(
         self,
-        obj: Any,
-        text: str | None = None
+        obj: Value
     ):
         entry = ObjectEntry(
             self.content,
             obj,
             self.on_selected,
-            text=text
+            title=obj.name,
+            description=obj.description
         )
 
         entry.pack(

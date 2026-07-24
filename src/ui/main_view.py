@@ -18,20 +18,93 @@
 
 from tkinter import ttk
 
-from ui.add_value_window import AddValueWindow
+from .sections.left_panel import LeftPanel
+from .sections.data_view import DataView
+from .sections.editor_view import EditorView
 
 
 class MainView(ttk.Frame):
-    def __init__(self, parent):
-        super().__init__(parent)
+    """
+    Main application view.
 
-        self.parent = parent
+    Layout:
+        Left panel | Data view
+                   | Editor view
+    """
 
-        ttk.Button(
+    def __init__(self, parent, *args, **kwargs):
+        super().__init__(parent, *args, **kwargs)
+
+        self._create_layout()
+
+    def _create_layout(self):
+        # Main horizontal split
+        self.columnconfigure(0, weight=0)
+        self.columnconfigure(1, weight=1)
+
+        self.rowconfigure(0, weight=1)
+
+        self.left_panel = LeftPanel(
             self,
-            text="Add value",
-            command=self.open_add_value
-        ).pack()
+            on_selected=self._on_object_selected
+        )
 
-    def open_add_value(self):
-        AddValueWindow(self.parent)
+        self.left_panel.configure(
+            width=250
+        )
+
+        self.left_panel.grid_propagate(False)
+
+        self.left_panel.grid(
+            row=0,
+            column=0,
+            sticky="nsew"
+        )
+
+        # Right side split vertically
+        self.right_panel = ttk.Frame(self)
+
+        self.right_panel.grid(
+            row=0,
+            column=1,
+            sticky="nsew"
+        )
+
+        self.right_panel.columnconfigure(
+            0,
+            weight=1
+        )
+
+        self.right_panel.rowconfigure(
+            0,
+            weight=1
+        )
+
+        self.right_panel.rowconfigure(
+            1,
+            weight=1
+        )
+
+        self.data_view = DataView(
+            self.right_panel
+        )
+
+        self.data_view.grid(
+            row=0,
+            column=0,
+            sticky="nsew"
+        )
+
+        self.editor_view = EditorView(
+            self.right_panel
+        )
+
+        self.editor_view.grid(
+            row=1,
+            column=0,
+            sticky="nsew"
+        )
+
+    def _on_object_selected(self, obj):
+        self.data_view.show(obj)
+        self.editor_view.show(obj)

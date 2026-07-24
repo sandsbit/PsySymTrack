@@ -18,7 +18,9 @@
 
 import tkinter as tk
 from tkinter import ttk
-from typing import Callable, Any
+from typing import Callable
+
+from tracking.values import Value
 
 
 class ObjectEntry(ttk.Frame):
@@ -32,8 +34,8 @@ class ObjectEntry(ttk.Frame):
     def __init__(
         self,
         parent,
-        obj: Any,
-        on_selected: Callable[[Any], None],
+        obj: Value,
+        on_selected: Callable[[Value], None],
         title: str,
         description: str | None = None,
         icon: tk.PhotoImage | None = None,
