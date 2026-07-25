@@ -111,6 +111,7 @@ class EditorView(ttk.Frame):
 
         self._update_week_display()
         self._build_editor()
+        self._refresh_current_value()
 
     # ------------------------------------------------------------------
     # Week handling
