@@ -1,0 +1,238 @@
+[
+  {
+        "id": "sleep_onset",
+        "name": "Sleep onset time",
+        "description": "How quickly do you fall asleep",
+        "category": "Mental",
+        "min_value": 0,
+        "max_value": 4,
+        "value_descriptions": [
+            "mostly <5 min",
+            "mostly 5-30 min",
+            "sometimes 30-60 min",
+            "mostly 30-60 min",
+            "mostly >60 min"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 1,
+        "normal_max": 1,
+        "not_severly_abormal_min": 0,
+        "not_severly_abormal_max": 3
+    },
+  {
+        "id": "sleep_maintenance",
+        "name": "Sleep maintenance",
+        "description": "Whether you can stay asleep throughout the night",
+        "category": "Mental",
+        "min_value": 0,
+        "max_value": 3,
+        "value_descriptions": [
+            "I usually sleep deeply",
+            "Restless, light sleep; few brief awakenings",
+            "At least one awakening a night",
+            "Often 2+ awakenings, 20+ min"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 0,
+        "normal_max": 0,
+        "not_severly_abormal_min": 0,
+        "not_severly_abormal_max": 2
+    },
+  {
+        "id": "sleep_early_awakening",
+        "name": "Early awakenings",
+        "description": "How early do I you get up in the morning",
+        "category": "Mental",
+        "min_value": 0,
+        "max_value": 3,
+        "value_descriptions": [
+            "Mostly awake <30 min before expected time",
+            "Sometimes awake >30min before expected time",
+            "Awake ~1h before expected time with repeated sleep",
+            "Awake >1h before expected time and staying awake"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 0,
+        "normal_max": 0,
+        "not_severly_abormal_min": 0,
+        "not_severly_abormal_max": 2
+    },
+  {
+        "id": "sleep_duration",
+        "name": "Sleep duration",
+        "description": "Amount of sleep per day",
+        "category": "Mental",
+        "min_value": -3,
+        "max_value": 3,
+        "value_descriptions": [
+            "<2h a day",
+            "3-4h a day",
+            "5-6h a day",
+            "7-8h a day",
+            "9-10h a day",
+            "11-12h a day",
+            ">12h a day"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 0,
+        "normal_max": 0,
+        "not_severly_abormal_min": -1,
+        "not_severly_abormal_max": 1
+    },
+  {
+        "id": "mood",
+        "name": "Mood",
+        "description": "Your average mood throughout the week",
+        "category": "Mental",
+        "min_value": -3,
+        "max_value": 3,
+        "value_descriptions": [
+            "Constantly happy and euphoric",
+            "Mostly happy",
+            "Somewhat more happy than usual",
+            "Normal mood",
+            "Somewhat more sad than usual",
+            "Mostly sad",
+            "Constantly sad and miserable"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": -1,
+        "normal_max": 1,
+        "not_severly_abormal_min": -2,
+        "not_severly_abormal_max": 2
+    },
+  {
+        "id": "cognitive_concentration",
+        "name": "Concentration",
+        "description": "Changes in attention span",
+        "category": "Mental",
+        "min_value": 0,
+        "max_value": 3,
+        "value_descriptions": [
+            "Normal attention span",
+            "Mild transitive concentration difficulties",
+            "Can't concentrate most of the time",
+            "Can't even read due to poor concentration"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 0,
+        "normal_max": 1,
+        "not_severly_abormal_min": 0,
+        "not_severly_abormal_max": 2
+    },
+  {
+        "id": "self_image",
+        "name": "Self-image",
+        "description": "How do you see yourself",
+        "category": "Mental",
+        "min_value": 0,
+        "max_value": 3,
+        "value_descriptions": [
+            "I see myself as equally worthwhile and deserving as other people",
+            "I am more self-blaming than usual",
+            "I largely believe that I cause problems for others",
+            "I think almost constantly about major and minor defects in myself"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 0,
+        "normal_max": 1,
+        "not_severly_abormal_min": 0,
+        "not_severly_abormal_max": 2
+    },
+  {
+        "id": "suicide",
+        "name": "Death and suicide thoughts",
+        "description": "Thoughts about dying or actions",
+        "category": "Mental",
+        "min_value": 0,
+        "max_value": 3,
+        "value_descriptions": [
+            "I do not think of suicide or death",
+            "I feel that life is empty or wonder if it’s worth living",
+            "I think of suicide or death several times a week for several minutes",
+            "I think of suicide or death several times a day in some detail, or I have made specific plans for suicide or have actually tried to take my life"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 0,
+        "normal_max": 0,
+        "not_severly_abormal_min": 0,
+        "not_severly_abormal_max": 1
+    },
+  {
+        "id": "general_interest",
+        "name": "General interest",
+        "description": "How interested you are in other people or activities",
+        "category": "Mental",
+        "min_value": -3,
+        "max_value": 3,
+        "value_descriptions": [
+            "I want to hang out constantly and I'm interested in everything",
+            "High interest in both old and new activities",
+            "Generally more interested",
+            "As usual",
+            "Generally less interested",
+            "Interest in one or two of former activities",
+            "Virtually no interest in formerly pursued activities"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": -1,
+        "normal_max": 1,
+        "not_severly_abormal_min": -2,
+        "not_severly_abormal_max": 2
+    },
+  {
+        "id": "energy",
+        "name": "Energy level",
+        "description": "How physically active and productive you feel",
+        "category": "Mental",
+        "min_value": -3,
+        "max_value": 3,
+        "value_descriptions": [
+            "Extremely productive and active",
+            "Active all day with no tiredness",
+            "Less tired than usual",
+            "Normal energy level",
+            "Get tired more easily",
+            "Big effort needed for any activity",
+            "Can't do almost anything"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": -1,
+        "normal_max": 1,
+        "not_severly_abormal_min": -2,
+        "not_severly_abormal_max": 2
+    },
+  {
+        "id": "agitation",
+        "name": "Agitation and restlessness/slowing down",
+        "description": "How restless or slowed down you feel",
+        "category": "Mental",
+        "min_value": -3,
+        "max_value": 3,
+        "value_descriptions": [
+            "Speaking extremely fast, unable to stay seated",
+            "Fast thinking and speech, restless, respond quickly",
+            "Often fidgety, wringing my hands, or need to shift how I am sitting",
+            "Usual",
+            "Thinking slowed down/voice sounds dull or flat",
+            "Thinking and verbal response noticeably slowed",
+            "Unable to respond to questions without extreme effort."
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": -1,
+        "normal_max": 1,
+        "not_severly_abormal_min": -2,
+        "not_severly_abormal_max": 2
+    }
+]

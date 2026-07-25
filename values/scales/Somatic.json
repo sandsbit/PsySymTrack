@@ -1,0 +1,48 @@
+[
+  {
+        "id": "appetite",
+        "name": "Appetite",
+        "description": "Your average appetite",
+        "category": "Somatic",
+        "min_value": -3,
+        "max_value": 3,
+        "value_descriptions": [
+            "Eat rarely; not every day; only after considerable effort",
+            "Much less food; have to make myself eat",
+            "Little less food/less often",
+            "As usual",
+            "Little more food/more often",
+            "Eat noticeably more than usual",
+            "Overeating both at and between meals"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": -1,
+        "normal_max": 1,
+        "not_severly_abormal_min": -2,
+        "not_severly_abormal_max": 2
+    },
+    {
+        "id": "weight_tmp_scale",
+        "name": "Weight change (temporary scale)",
+        "description": "How your weight has changed",
+        "category": "Somatic",
+        "min_value": -3,
+        "max_value": 3,
+        "value_descriptions": [
+            "Weight loss >3 kg",
+            "Weight loss >1 kg",
+            "Minor weight loss",
+            "Stable",
+            "Minor weight gain",
+            "Weight gain >1 kg",
+            "Weight gain >3 kg"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": -1,
+        "normal_max": 1,
+        "not_severly_abormal_min": -2,
+        "not_severly_abormal_max": 2
+    }
+]
