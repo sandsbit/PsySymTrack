@@ -32,7 +32,6 @@ class Metric(ABC):
 
     user_data: BasicUserData
 
-    @abstractmethod
     def __init__(self, user_data: BasicUserData):
         self.user_data = user_data
 
@@ -103,15 +102,15 @@ class Metric(ABC):
         if cls.RESULT_NOT_SEVERELY_ABNORMAL_MIN is not None and cls.RESULT_NORMAL_MIN is None:
             raise ValueError(f"{cls.__name__}: RESULT_NORMAL_MIN must be set when RESULT_NOT_SEVERELY_ABNORMAL_MIN is set")
 
-        if cls.RESULT_NOT_SEVERELY_ABNORMAL_MIN is not None and cls.RESULT_NOT_SEVERELY_ABNORMAL_MIN < cls.RESULT_NORMAL_MIN:
-            raise ValueError(f"{cls.__name__}: RESULT_NOT_SEVERELY_ABNORMAL_MIN must be >= RESULT_NORMAL_MIN")
+        if cls.RESULT_NOT_SEVERELY_ABNORMAL_MIN is not None and cls.RESULT_NOT_SEVERELY_ABNORMAL_MIN > cls.RESULT_NORMAL_MIN:
+            raise ValueError(f"{cls.__name__}: RESULT_NOT_SEVERELY_ABNORMAL_MIN must be <= RESULT_NORMAL_MIN")
 
         if cls.RESULT_NOT_SEVERELY_ABNORMAL_MAX is not None and cls.RESULT_NORMAL_MAX is None:
             raise ValueError(
                 f"{cls.__name__}: RESULT_NORMAL_MAX must be set when RESULT_NOT_SEVERELY_ABNORMAL_MAX is set")
 
-        if cls.RESULT_NOT_SEVERELY_ABNORMAL_MAX is not None and cls.RESULT_NOT_SEVERELY_ABNORMAL_MAX > cls.RESULT_NORMAL_MAX:
-            raise ValueError(f"{cls.__name__}: RESULT_NOT_SEVERELY_ABNORMAL_MAX must be <= RESULT_NORMAL_MAX")
+        if cls.RESULT_NOT_SEVERELY_ABNORMAL_MAX is not None and cls.RESULT_NOT_SEVERELY_ABNORMAL_MAX < cls.RESULT_NORMAL_MAX:
+            raise ValueError(f"{cls.__name__}: RESULT_NOT_SEVERELY_ABNORMAL_MAX must be >= RESULT_NORMAL_MAX")
 
     @abstractmethod
     def calculate(self, params: dict[str, int | float], history: dict[str, list[tuple[datetime, int]]] | None = None) -> float | None:
