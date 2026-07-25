@@ -15,8 +15,9 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
-
+import importlib
 import inspect
+import pkgutil
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
 from typing import ClassVar
@@ -121,10 +122,9 @@ type MetricT = type[Metric]
 
 def get_all_metrics() -> list[MetricT]:
     """Get all children classes of Metric in data.metrics package"""
-    metric_classes = []
-    for _, module in inspect.getmembers(metrics, inspect.ismodule):
-        metric_classes += [mcls for _, mcls in inspect.getmembers(module, inspect.isclass) if isinstance(mcls, Metric)]
-    return metric_classes
+    for _, module_name, _ in pkgutil.iter_modules(metrics.__path__):
+        importlib.import_module(f"{metrics.__name__}.{module_name}")
+    return Metric.__subclasses__()
 
 def evaluate_metric(metric_cls: MetricT, user_data: BasicUserData, storage: ValuesStorage, date: datetime) -> float | None:
     metric = metric_cls(user_data)
