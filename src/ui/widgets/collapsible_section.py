@@ -19,6 +19,7 @@
 from tkinter import ttk
 from typing import Callable
 
+from tracking.metrics import Metric
 from tracking.values import Value
 from .object_entry import ObjectEntry
 
@@ -93,15 +94,24 @@ class CollapsibleSection(ttk.Frame):
 
     def add_entry(
         self,
-        obj: Value
+        obj: Value | Metric
     ):
-        entry = ObjectEntry(
-            self.content,
-            obj,
-            self.on_selected,
-            title=obj.name,
-            description=obj.description
-        )
+        if isinstance(obj, Value):
+            entry = ObjectEntry(
+                self.content,
+                obj,
+                self.on_selected,
+                title=obj.name,
+                description=obj.description
+            )
+        else:
+            entry = ObjectEntry(
+                self.content,
+                obj,
+                self.on_selected,
+                title=obj.NAME,
+                description=obj.DESCRIPTION
+            )
 
         entry.pack(
             fill="x"

@@ -19,6 +19,7 @@
 from tkinter import ttk
 from typing import Callable
 
+from tracking.metrics import get_all_metrics, Metric
 from ui.misc.scrollable_frame import ScrollableFrame
 from ui.widgets.collapsible_section import CollapsibleSection
 from ui.add_value_window import AddValueWindow
@@ -101,12 +102,14 @@ class LeftPanel(ttk.Frame):
         for category, values in scales.items():
             self._add_section(category, values)
         self._add_section("Physical values", manager.physical_values())
-        print('')
+
+        metrics = get_all_metrics()
+        self._add_section("Metrics", metrics)
 
     def _add_section(
         self,
         title: str,
-        objects: list[Value]
+        objects: list[Value | type[Metric]]
     ):
         section = CollapsibleSection(
             self.scrollable.scrollable_frame,

@@ -20,8 +20,10 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from datetime import datetime, timedelta
 
+from general.userdata import load_user_data
 from tracking.values import Value, ScaleValue, PhysicalValue
 from tracking.valuestorsage import ValuesStorage
+from tracking.metrics import Metric, evaluate_metric
 
 class EditorView(ttk.Frame):
     """
@@ -35,7 +37,7 @@ class EditorView(ttk.Frame):
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
 
-        self.value: Value | None = None
+        self.value: Value | type[Metric] | None = None
 
         self.current_week = self._week_start(
             datetime.now()
@@ -177,6 +179,9 @@ class EditorView(ttk.Frame):
         elif isinstance(self.value, PhysicalValue):
             self._build_physical_editor()
 
+        elif issubclass(self.value, Metric):
+            self._build_metric_editor()
+
     def _refresh_current_value(self):
         """
         Refresh selection/input when week changes.
@@ -207,6 +212,39 @@ class EditorView(ttk.Frame):
                 if current_value is not None:
                     self.physical_entry.delete(0, tk.END)
                     self.physical_entry.insert(0, str(current_value))
+            elif issubclass(self.value, Metric):
+                metric_value = evaluate_metric(self.value, load_user_data(), storage, self.current_week)
+                if metric_value is None:
+                    self.metric_value_label.configure(
+                        text="—"
+                    )
+
+                    self.metric_progress["value"] = 0
+
+                    self.metric_interp_label.configure(text="<UNK>")
+                    self.metric_interpretation_label.configure(
+                        text="Interpretation: N/A"
+                    )
+                else:
+                    self.metric_value_label.configure(text=str(metric_value))
+                    progress = (
+                        metric_value - self.value.RESULT_MIN
+                    ) / (
+                        self.value.RESULT_MAX - self.value.RESULT_MIN
+                    )
+                    self.metric_progress["value"] = progress * 100
+
+                    self.metric_interpretation_label.configure(
+                        text="Interpretation: N/A"
+                    )
+                    int_text = ''
+                    for minv, maxv, desc in self.value.INTERP:
+                        int_text += f"{minv}-{maxv}: {desc}\n"
+                        if minv <= metric_value <= maxv:
+                            self.metric_interpretation_label.configure(
+                                text="Interpretation: " + desc
+                            )
+                    self.metric_interp_label.configure(text=int_text)
         finally:
             storage.close()
 
@@ -310,3 +348,69 @@ class EditorView(ttk.Frame):
             storage.edit_value(self.value.id, date, value)
         finally:
             storage.close()
+
+    # ========= Metrics ========
+
+    def _build_metric_editor(self):
+        assert issubclass(self.value, Metric)
+
+        #
+        # Current value
+        #
+
+        self.metric_value_label = ttk.Label(
+            self.editor_frame,
+            font=("", 18, "bold")
+        )
+
+        self.metric_value_label.pack(
+            pady=(5, 10)
+        )
+
+        #
+        # Progress bar
+        #
+
+        self.metric_progress = ttk.Progressbar(
+            self.editor_frame,
+            orient="horizontal",
+            mode="determinate",
+            maximum=100
+        )
+
+        self.metric_progress.pack(
+            fill="x",
+            padx=10
+        )
+
+        #
+        # General interpretation
+        #
+
+        self.metric_interp_label = ttk.Label(
+            self.editor_frame,
+            wraplength=450,
+            justify="left"
+        )
+        self.metric_interp_label.pack(
+            anchor="w",
+            padx=10,
+            pady=(10, 0)
+        )
+
+        #
+        # Current interpretation
+        #
+
+        self.metric_interpretation_label = ttk.Label(
+            self.editor_frame,
+            foreground="red",
+            wraplength=450,
+            justify="left"
+        )
+
+        self.metric_interpretation_label.pack(
+            anchor="w",
+            padx=10,
+            pady=(5, 0)
+        )
