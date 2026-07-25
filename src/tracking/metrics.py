@@ -16,10 +16,16 @@
 # You should have received a copy of the GNU General Public License
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
 
+import inspect
 from abc import ABC, abstractmethod
+from datetime import datetime, timedelta
 from typing import ClassVar
 
 from general.userdata import BasicUserData
+from data import metrics
+from tracking.valuestorsage import ValuesStorage
+
+_HISTORY_TIMEDELTA = timedelta(days=31)
 
 class Metric(ABC):
     """Base class for all Metrics - properties that are calculated based on values"""
@@ -108,5 +114,33 @@ class Metric(ABC):
             raise ValueError(f"{cls.__name__}: RESULT_NOT_SEVERELY_ABNORMAL_MAX must be <= RESULT_NORMAL_MAX")
 
     @abstractmethod
-    def calculate(self, params: dict[str, int | float], history: dict[str, list[int | float]] | None = None) -> float:
+    def calculate(self, params: dict[str, int | float], history: dict[str, list[tuple[datetime, int]]] | None = None) -> float | None:
         pass
+
+type MetricT = type[Metric]
+
+def get_all_metrics() -> list[MetricT]:
+    """Get all children classes of Metric in data.metrics package"""
+    metric_classes = []
+    for _, module in inspect.getmembers(metrics, inspect.ismodule):
+        metric_classes += [mcls for _, mcls in inspect.getmembers(module, inspect.isclass) if isinstance(mcls, Metric)]
+    return metric_classes
+
+def evaluate_metric(metric_cls: MetricT, user_data: BasicUserData, storage: ValuesStorage, date: datetime) -> float | None:
+    metric = metric_cls(user_data)
+
+    params = {}
+    for param_id in metric_cls.USED_PARAMS_IDS:
+        value = storage.get_value(param_id, date)
+        if value is None:
+            return None
+        params[param_id] = value
+
+    if metric_cls.NEEDS_HISTORY:
+        history = {}
+        for param_id in metric_cls.NEEDS_HISTORY_FOR:
+            history[param_id] = storage.get_range(param_id, (date - _HISTORY_TIMEDELTA), date)
+
+        return metric.calculate(params, history)
+
+    return metric.calculate(params)
