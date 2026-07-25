@@ -48,6 +48,7 @@ class Metric(ABC):
     RESULT_NORMAL_MAX: ClassVar[float | None]
     RESULT_NOT_SEVERELY_ABNORMAL_MIN: ClassVar[float | None]
     RESULT_NOT_SEVERELY_ABNORMAL_MAX: ClassVar[float | None]
+    INTERP: ClassVar[list[tuple[int, int, str]] | None]
 
     def __init_subclass__(cls) -> None:
         super().__init_subclass__()

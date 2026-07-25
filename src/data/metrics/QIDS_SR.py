@@ -58,6 +58,13 @@ class QIDS_SR_16(Metric):
     RESULT_NORMAL_MAX = 5
     RESULT_NOT_SEVERELY_ABNORMAL_MIN = 0
     RESULT_NOT_SEVERELY_ABNORMAL_MAX = 15
+    INTERP = [
+        (0, 5, "Normal / No Depression"),
+        (6, 10, "Mild Depression"),
+        (11, 15, "Moderate Depression"),
+        (16, 20, "Severe Depression"),
+        (21, 27, "Very Severe Depression")
+    ]
 
     def calculate(self, params: dict[str, int | float],
                   history: dict[str, list[tuple[datetime, int]]] | None = None) -> float | None:
