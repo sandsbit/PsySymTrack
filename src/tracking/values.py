@@ -56,14 +56,14 @@ class ScaleValue(Value):
     has_inactive_values: bool
     active_values: list[bool] | None
 
-    normal_min: int
-    normal_max: int
+    normal_min: float
+    normal_max: float
     # i.e. mildly abnormal range + normal range
-    not_severly_abormal_min: int | None
-    not_severly_abormal_max: int | None
+    not_severly_abormal_min: float | None
+    not_severly_abormal_max: float | None
 
     def __post_init__(self):
-        """Checking whether all rules are complied with."""
+        """Checking whether all rules are complied with and smooth ranges."""
         if self.min_value > self.max_value:
             raise ValueError("min_value must be less than max_value")
         if self.normal_min > self.normal_max:
@@ -76,6 +76,13 @@ class ScaleValue(Value):
             raise ValueError("not_severly_abormal_min must be less than normal_min")
         if (self.not_severly_abormal_max is not None) and (self.not_severly_abormal_max < self.normal_max):
             raise ValueError("not_severly_abormal_max must be greater than normal_max")
+
+        self.normal_min -= 0.5
+        self.normal_max += 0.5
+        if self.not_severly_abormal_min is not None:
+            self.not_severly_abormal_min -= 0.5
+        if self.not_severly_abormal_max is not None:
+            self.not_severly_abormal_max += 0.5
 
     def active_value_description_pairs(self) -> list[tuple[int, str]]:
         """Returns a list of active values and their descriptions in ascending order."""

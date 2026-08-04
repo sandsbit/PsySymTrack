@@ -209,7 +209,6 @@ class DataView(ttk.Frame):
                 else:
                     self.ax.axhspan(self.current_object.normal_max, max_value, color="red", alpha=0.2)
         else:
-            self.current_object = Metric
             if self.current_object.RESULT_NORMAL_MIN is not None:
                 normal_max = self.current_object.RESULT_NORMAL_MAX if self.current_object.RESULT_NORMAL_MAX is not None else self.current_object.RESULT_MAX
                 self.ax.axhspan(self.current_object.RESULT_NORMAL_MIN, normal_max, color="green", alpha=0.2)
