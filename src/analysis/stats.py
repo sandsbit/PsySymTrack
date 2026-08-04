@@ -26,7 +26,7 @@ from dataclasses import dataclass
 from scipy.stats import pearsonr
 
 from general.userdata import load_user_data
-from tracking.metrics import Metric, evaluate_metric
+from tracking.metrics import Metric, evaluate_metric, get_all_metrics
 from tracking.values import Value, ValuesManager, ScaleValue, PhysicalValue
 from tracking.valuestorsage import ValuesStorage
 
@@ -208,9 +208,86 @@ def _get_warning_for_value(value: Value) -> WarningsResult.WarningDescription | 
     )
 
 
+def _get_warning_for_metric(metric: type[Metric]) -> WarningsResult.WarningDescription | None:
+    metric_values = get_points(metric, DateRange.YEARS_5)
+
+    is_abnormal: Callable[[Value], bool]
+    is_severely_abnormal: Callable[[Value], bool]
+    # TODO: the small second hell should also be no longer
+    is_abnormal = lambda val: (((metric.RESULT_NORMAL_MIN is not None) and
+                               (val < metric.RESULT_NORMAL_MIN) and (metric.RESULT_NOT_SEVERELY_ABNORMAL_MIN is None or val >= metric.RESULT_NOT_SEVERELY_ABNORMAL_MIN)) or
+                               (metric.RESULT_NORMAL_MAX is not None) and (val > metric.RESULT_NORMAL_MAX) and
+                               (metric.RESULT_NOT_SEVERELY_ABNORMAL_MAX is None or val <= metric.RESULT_NOT_SEVERELY_ABNORMAL_MAX))
+    is_severely_abnormal = lambda val: (
+            (metric.RESULT_NOT_SEVERELY_ABNORMAL_MIN is not None and val < metric.RESULT_NOT_SEVERELY_ABNORMAL_MIN) or
+            (metric.RESULT_NOT_SEVERELY_ABNORMAL_MAX is not None and val > metric.RESULT_NOT_SEVERELY_ABNORMAL_MAX)
+    )
+
+    metric_values = metric_values[::-1]
+    severely_abnormal_streak = is_severely_abnormal(metric_values[0])
+    abnormal_streak = is_abnormal(metric_values[0]) or severely_abnormal_streak
+    abnormal_streak_since: datetime | None = None
+    abnormal_streak_length = 0
+    severely_abnormal_streak_length = 0
+    severely_abnormal_streak_since: datetime | None = None
+    for i in range(1, len(metric_values)):
+        val = metric_values[i][1]
+        if (not abnormal_streak) and (not severely_abnormal_streak):
+            break
+
+        if severely_abnormal_streak:
+            severely_abnormal_streak_length += 1
+            severely_abnormal_streak_since = metric_values[i-1][0]
+            severely_abnormal_streak = is_severely_abnormal(val)
+
+        if abnormal_streak:
+            abnormal_streak_length += 1
+            abnormal_streak_since = metric_values[i-1][0]
+            abnormal_streak = is_abnormal(val) | is_severely_abnormal(val)
+
+            if not abnormal_streak:
+                next_abnormal = (i + 1 < len(metric_values)) and (is_abnormal(metric_values[i + 1][1]) or is_severely_abnormal(metric_values[i + 1][1]))
+                next_next_abnormal = (i + 2 < len(metric_values)) and (is_abnormal(metric_values[i + 2][1]) or is_severely_abnormal(metric_values[i + 2][1]))
+                if next_abnormal and next_next_abnormal:
+                    abnormal_streak = True
+
+    if abnormal_streak_since is None:
+        assert(abnormal_streak_length == 0)
+        return None
+
+    assert(abnormal_streak_length != 0)
+
+    return WarningsResult.WarningDescription(
+        abnormal_weeks=round((datetime.now() - abnormal_streak_since).days / 7.0),
+        mean_episode_value=np.mean(list(zip(*metric_values))[1][:abnormal_streak_length]),
+        severely_abnormal_weeks= None if severely_abnormal_streak_since is None
+        else round((datetime.now() - severely_abnormal_streak_since).days / 7.0),
+        mean_severe_episode_value= None if severely_abnormal_streak_since is None
+        else np.mean(list(zip(*metric_values))[1][:severely_abnormal_streak_length])
+    )
+
+STATS_WARN_WEEKS_CUTOFF = 4
+
 def get_warnings() -> WarningsResult:
     results = WarningsResult({}, {}, {}, {})
 
     manager = ValuesManager()
-    values = [value for category in manager.scale_values() for value in category]
+    values = [value for category in manager.scale_values().values() for value in category]
     values += manager.physical_values()
+    for value in values:
+        warning = _get_warning_for_value(value)
+        if warning is not None:
+            if warning.abnormal_weeks > STATS_WARN_WEEKS_CUTOFF:
+                results.values_old[value] = warning
+            else:
+                results.values_new[value] = warning
+
+    for metric in get_all_metrics():
+        warning = _get_warning_for_metric(metric)
+        if warning is not None:
+            if warning.abnormal_weeks > STATS_WARN_WEEKS_CUTOFF:
+                results.metrics_old[metric] = warning
+            else:
+                results.metrics_new[metric] = warning
+
+    return results
