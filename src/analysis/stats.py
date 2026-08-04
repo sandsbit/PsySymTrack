@@ -25,6 +25,8 @@ from datetime import timedelta, datetime
 from dataclasses import dataclass
 from scipy.stats import pearsonr
 
+from tracking.metrics import Metric
+from tracking.values import Value, ValuesManager, ScaleValue, PhysicalValue
 from tracking.valuestorsage import ValuesStorage
 
 class DateRange(Enum):
@@ -87,3 +89,104 @@ def get_stats(vid: str, date_range: DateRange) -> TrackingStatistics:
         rho=rho,
         p=p
     )
+
+@dataclass
+class WarningsResult:
+    @dataclass
+    class WarningDescription:
+        mean_episode_value: float
+        abnormal_weeks: int
+        mean_severe_episode_value: float | None
+        severely_abnormal_weeks: int | None
+
+    values_new: dict[Value, WarningDescription]
+    values_old: dict[Value, WarningDescription]
+    metrics_new: dict[type[Metric], WarningDescription]
+    metrics_old: dict[type[Metric], WarningDescription]
+
+def _get_warning_for_value(value: Value) -> WarningsResult.WarningDescription | None:
+    storage = ValuesStorage()
+    values = []
+    try:
+        values = storage.get_range(
+            value.id,
+            datetime(1970, 1, 1, 0, 0, 0, 0),
+            datetime.now()
+        )
+    finally:
+        storage.close()
+
+    is_abnormal: Callable[[Value], bool]
+    is_severely_abnormal: Callable[[Value], bool]
+    # TODO: the hell below should be eradicated ASAP
+    if isinstance(value, ScaleValue):
+        is_abnormal = lambda val: (
+                ((val < value.normal_min) and (value.not_severly_abormal_min is None or val >= value.not_severly_abormal_min)) or
+                                   ((val > value.normal_max) and (value.not_severly_abormal_max is None or val <= value.not_severly_abormal_max))
+        )
+        is_severely_abnormal = lambda val: (
+                (value.not_severly_abormal_min is not None and val < value.not_severly_abormal_min) or
+                (value.not_severly_abormal_max is not None and val > value.not_severly_abormal_max)
+        )
+    elif isinstance(value, PhysicalValue):
+        is_abnormal = lambda val: (((value.normal_min is not None) and
+                                   (val < value.normal_min) and (value.not_severly_abormal_min is None or val >= value.not_severly_abormal_min)) or
+                                   (value.normal_max is not None) and (val > value.normal_max) and
+                                   (value.not_severly_abormal_max is None or val <= value.not_severly_abormal_max))
+        is_severely_abnormal = lambda val: (
+                (value.not_severly_abormal_min is not None and val < value.not_severly_abormal_min) or
+                (value.not_severly_abormal_max is not None and val > value.not_severly_abormal_max)
+        )
+    else:
+        raise ValueError("Unrecognized child class of Value: only ScaleValue and PhysicalValue are supported.")
+
+    values = values[::-1]
+    severely_abnormal_streak = is_severely_abnormal(values[0])
+    abnormal_streak = is_abnormal(values[0]) or severely_abnormal_streak
+    abnormal_streak_since: datetime | None = None
+    abnormal_streak_length = 0
+    severely_abnormal_streak_length = 0
+    severely_abnormal_streak_since: datetime | None = None
+    for i in range(1, len(values)):
+        val = values[i][1]
+        if (not abnormal_streak) and (not severely_abnormal_streak):
+            break
+
+        if severely_abnormal_streak:
+            severely_abnormal_streak_length += 1
+            severely_abnormal_streak_since = values[i-1][0]
+            severely_abnormal_streak = is_severely_abnormal(val)
+
+        if abnormal_streak:
+            abnormal_streak_length += 1
+            abnormal_streak_since = values[i-1][0]
+            abnormal_streak = is_abnormal(val) | is_severely_abnormal(val)
+
+            if not abnormal_streak:
+                next_abnormal = (i + 1 < len(values)) and (is_abnormal(values[i + 1][1]) or is_severely_abnormal(values[i + 1][1]))
+                next_next_abnormal = (i + 2 < len(values)) and (is_abnormal(values[i + 2][1]) or is_severely_abnormal(values[i + 2][1]))
+                if next_abnormal and next_next_abnormal:
+                    abnormal_streak = True
+
+    if abnormal_streak_since is None:
+        assert(abnormal_streak_length == 0)
+        return None
+
+    assert(abnormal_streak_length != 0)
+
+    return WarningsResult.WarningDescription(
+        abnormal_weeks=round((datetime.now() - abnormal_streak_since).days / 7.0),
+        mean_episode_value=np.mean(list(zip(*values))[1][:abnormal_streak_length]),
+        severely_abnormal_weeks= None if severely_abnormal_streak_since is None
+        else round((datetime.now() - severely_abnormal_streak_since).days / 7.0),
+        mean_severe_episode_value= None if severely_abnormal_streak_since is None
+        else np.mean(list(zip(*values))[1][:severely_abnormal_streak_length])
+    )
+
+
+def get_warnings() -> WarningsResult:
+    results = WarningsResult({}, {}, {}, {})
+
+    manager = ValuesManager()
+    values = [value for category in manager.scale_values() for value in category]
+    values += manager.physical_values()
