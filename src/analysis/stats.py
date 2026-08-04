@@ -25,7 +25,8 @@ from datetime import timedelta, datetime
 from dataclasses import dataclass
 from scipy.stats import pearsonr
 
-from tracking.metrics import Metric
+from general.userdata import load_user_data
+from tracking.metrics import Metric, evaluate_metric
 from tracking.values import Value, ValuesManager, ScaleValue, PhysicalValue
 from tracking.valuestorsage import ValuesStorage
 
@@ -60,7 +61,7 @@ def _monday_before(dt: datetime) -> datetime:
     monday = dt - timedelta(days=dt.weekday())
     return monday.replace(hour=0, minute=0, second=0, microsecond=0)
 
-def _get_series(vid: str, date_range: DateRange) -> tuple[list[datetime], list[float]]:
+def _get_values_series(vid: str, date_range: DateRange) -> tuple[list[datetime], list[float]]:
     storage = ValuesStorage()
     try:
         end = _monday_before(datetime.now())
@@ -70,12 +71,33 @@ def _get_series(vid: str, date_range: DateRange) -> tuple[list[datetime], list[f
     finally:
         storage.close()
 
+def _points_for_metric(metric: type[Metric], date_range: DateRange) -> tuple[npt.NDArray[datetime], npt.NDArray[np.float64]]:
+    date = _monday_before(datetime.now())
+    end = _monday_before(date - date_range.get_timedelta())
+    storage = ValuesStorage()
+    try:
+        dates = []
+        values = []
+        while date >= end:
+
+            result = evaluate_metric(metric, load_user_data(), storage, date)
+            if result is not None:
+                dates.append(date)
+                values.append(result)
+
+            date -= timedelta(days=7)
+        return (np.array(dates), np.array(values))
+    finally:
+        storage.close()
 
 # noinspection PyTypeChecker
-def get_points(vid: str, date_range: DateRange) -> tuple[npt.NDArray[datetime], npt.NDArray[np.float64]]:
-    return tuple(map(np.array, zip(*_get_series(vid, date_range), strict=True)))
+def get_points(vid: str | type[Metric], date_range: DateRange) -> tuple[npt.NDArray[datetime], npt.NDArray[np.float64]]:
+    if type(vid) is str:
+        return tuple(map(np.array, zip(*_get_values_series(vid, date_range), strict=True)))
+    else:
+        return _points_for_metric(vid, date_range)
 
-def get_stats(vid: str, date_range: DateRange) -> TrackingStatistics | None:
+def get_stats(vid: str| type[Metric], date_range: DateRange) -> TrackingStatistics | None:
     dates, values = get_points(vid, date_range)
     if len(values) < 2:
         return None

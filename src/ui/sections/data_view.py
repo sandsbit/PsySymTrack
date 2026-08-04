@@ -25,7 +25,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 from analysis.stats import DateRange, TrackingStatistics, get_stats, get_points
 from tracking.metrics import Metric
-from tracking.values import Value
+from tracking.values import Value, ScaleValue, PhysicalValue
 
 
 class DataView(ttk.Frame):
@@ -137,24 +137,42 @@ class DataView(ttk.Frame):
     def _date_range_changed(self, _event: tk.Event) -> None:
         self._refresh()
 
+    @staticmethod
+    def _monday_before(dt: datetime) -> datetime:
+        monday = dt - timedelta(days=dt.weekday())
+        return monday.replace(hour=0, minute=0, second=0, microsecond=0)
+
     def _refresh(self) -> None:
         if self.current_object is None:
             return
 
         selected_range = DateRange(self.date_range_var.get())
 
-        statistics = get_stats(self.current_object.id, selected_range)
+        if isinstance(self.current_object, Value):
+            statistics = get_stats(self.current_object.id, selected_range)
+        else:
+            statistics = get_stats(self.current_object, selected_range)
+
         if statistics is not None:
             self._update_statistics(statistics)
 
         self.ax.clear()
 
-        dates, values = get_points(self.current_object.id, selected_range)
+        if isinstance(self.current_object, Value):
+            dates, values = get_points(self.current_object.id, selected_range)
+        else:
+            dates, values = get_points(self.current_object, selected_range)
         self.ax.plot(dates, values)
 
         now = datetime.now()
-        self.ax.set_xlim(now - selected_range.get_timedelta(), now)
-        self.ax.set_ylim(self.current_object.min_value, self.current_object.max_value)
+        self.ax.set_xlim(self._monday_before(now - selected_range.get_timedelta()), now)
+        if isinstance(self.current_object, Value) and self.current_object.min_value is not None and self.current_object.max_value is not None:
+            self.ax.set_ylim(self.current_object.min_value, self.current_object.max_value)
+        elif (self.current_object.RESULT_MIN is not None and self.current_object.RESULT_MAX is not None):
+            self.ax.set_ylim(self.current_object.RESULT_MIN, self.current_object.RESULT_MAX)
+        elif isinstance(self.current_object, PhysicalValue):
+            self.ax.set_ylim(min(np.min(values), 0), np.max(values) * 1.2)
+
 
         self.ax.set_title(self.current_object.name)
         self.ax.set_xlabel("Date")
