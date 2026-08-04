@@ -75,8 +75,10 @@ def _get_series(vid: str, date_range: DateRange) -> tuple[list[datetime], list[f
 def get_points(vid: str, date_range: DateRange) -> tuple[npt.NDArray[datetime], npt.NDArray[np.float64]]:
     return tuple(map(np.array, zip(*_get_series(vid, date_range), strict=True)))
 
-def get_stats(vid: str, date_range: DateRange) -> TrackingStatistics:
-    dates, values = get_points(vid, date_range)[1]
+def get_stats(vid: str, date_range: DateRange) -> TrackingStatistics | None:
+    dates, values = get_points(vid, date_range)
+    if len(values) < 2:
+        return None
     dates = np.array([(date - dates[0]).days for date in dates])
     rho, p = pearsonr(dates, values)
     return TrackingStatistics(
