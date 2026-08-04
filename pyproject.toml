@@ -5,7 +5,10 @@ build-backend = "hatchling.build"
 [project]
 name = "PsySymTrack"
 version = "1.0"
-dependencies = []
+dependencies = [
+  "numpy",
+  "scipy"
+]
 requires-python = ">=3.12"
 authors = [
   {name = "Nikita Serbs", email = "nikitaserba@icloud.com"}
