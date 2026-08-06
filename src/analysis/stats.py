@@ -251,8 +251,7 @@ def _get_warning_for_metric(metric: type[Metric]) -> WarningsResult.WarningDescr
                 if next_abnormal and next_next_abnormal:
                     abnormal_streak = True
 
-    if abnormal_streak_since is None:
-        assert(abnormal_streak_length == 0)
+    if abnormal_streak_since is None or abnormal_streak_length == 1:
         return None
 
     assert(abnormal_streak_length != 0)
