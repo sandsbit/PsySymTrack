@@ -21,6 +21,7 @@ from typing import Callable
 
 from tracking.metrics import get_all_metrics, Metric
 from ui.misc.scrollable_frame import ScrollableFrame
+from ui.warning_window import WarningsWindow
 from ui.widgets.collapsible_section import CollapsibleSection
 from ui.add_value_window import AddValueWindow
 
@@ -50,7 +51,7 @@ class LeftPanel(ttk.Frame):
         self._create_layout()
 
     def _create_layout(self):
-        self.rowconfigure(1, weight=1)
+        self.rowconfigure(2, weight=1)
         self.columnconfigure(0, weight=1)
 
         self.add_button = ttk.Button(
@@ -58,9 +59,22 @@ class LeftPanel(ttk.Frame):
             text="Add",
             command=self._open_add_window
         )
+        self.warn_button = ttk.Button(
+            self,
+            text="Warnings",
+            command=self._open_warnings_window
+        )
 
         self.add_button.grid(
             row=0,
+            column=0,
+            sticky="ew",
+            padx=5,
+            pady=5
+        )
+
+        self.warn_button.grid(
+            row=1,
             column=0,
             sticky="ew",
             padx=5,
@@ -72,7 +86,7 @@ class LeftPanel(ttk.Frame):
         )
 
         self.scrollable.grid(
-            row=1,
+            row=2,
             column=0,
             sticky="nsew"
         )
@@ -86,6 +100,9 @@ class LeftPanel(ttk.Frame):
             self,
             on_saved=self.reload
         )
+
+    def _open_warnings_window(self):
+        WarningsWindow(self)
 
     def reload(self):
         """
