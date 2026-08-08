@@ -21,3 +21,6 @@ from datetime import datetime, timedelta
 def monday_before(dt: datetime) -> datetime:
     monday = dt - timedelta(days=dt.weekday())
     return monday.replace(hour=0, minute=0, second=0, microsecond=0)
+
+def n_weeks_before(dt: datetime, n: int) -> datetime:
+    return monday_before(dt) - timedelta(days=n * 7)
