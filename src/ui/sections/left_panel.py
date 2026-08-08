@@ -20,6 +20,7 @@ from tkinter import ttk
 from typing import Callable
 
 from tracking.metrics import get_all_metrics, Metric
+from ui.alerts_window import AlertsWindow
 from ui.misc.scrollable_frame import ScrollableFrame
 from ui.warning_window import WarningsWindow
 from ui.widgets.collapsible_section import CollapsibleSection
@@ -51,7 +52,7 @@ class LeftPanel(ttk.Frame):
         self._create_layout()
 
     def _create_layout(self):
-        self.rowconfigure(2, weight=1)
+        self.rowconfigure(3, weight=1)
         self.columnconfigure(0, weight=1)
 
         self.add_button = ttk.Button(
@@ -63,6 +64,11 @@ class LeftPanel(ttk.Frame):
             self,
             text="Warnings",
             command=self._open_warnings_window
+        )
+        self.alerts_button = ttk.Button(
+            self,
+            text="Alerts",
+            command=self._open_alerts_window
         )
 
         self.add_button.grid(
@@ -81,12 +87,20 @@ class LeftPanel(ttk.Frame):
             pady=5
         )
 
+        self.warn_button.grid(
+            row=2,
+            column=0,
+            sticky="ew",
+            padx=5,
+            pady=5
+        )
+
         self.scrollable = ScrollableFrame(
             self
         )
 
         self.scrollable.grid(
-            row=2,
+            row=3,
             column=0,
             sticky="nsew"
         )
@@ -103,6 +117,9 @@ class LeftPanel(ttk.Frame):
 
     def _open_warnings_window(self):
         WarningsWindow(self)
+
+    def _open_alerts_window(self):
+        AlertsWindow(self)
 
     def reload(self):
         """
