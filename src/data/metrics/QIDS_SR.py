@@ -78,7 +78,7 @@ class QIDS_SR_16(Metric):
         total_score += abs(params["appetite"])
         total_score += abs(params["weight_tmp_scale"])
         total_score += params["cognitive_concentration"]
-        total_score += params["self_image"]
+        total_score += params["self_image"] if params["self_image"] >= 0 else 0
         total_score += params["suicide"]
         total_score += params["general_interest"] if params["general_interest"] >= 0 else 0
         total_score += params["energy"] if params["energy"] >= 0 else 0

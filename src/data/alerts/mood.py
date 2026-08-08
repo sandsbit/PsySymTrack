@@ -20,6 +20,7 @@ import numpy as np
 from datetime import timedelta, datetime
 
 from analysis.alerts import Alert, AlertGen
+from data.metrics.ASRM import ASRM
 from data.metrics.QIDS_SR import QIDS_SR_16
 from tracking.metrics import Metric
 from utils import dateutil
@@ -27,15 +28,11 @@ from utils import dateutil
 
 class MoodEpisodeAlerts(AlertGen):
     USED_PARAMS_IDS = []
-    USED_METRICS = [QIDS_SR_16]
+    USED_METRICS = [QIDS_SR_16, ASRM]
     GIVE_HISTORY_FOR = timedelta(days=31)
 
-    def generate_alert(
-            self,
-            values: dict[str, list[tuple[datetime, float]]],
-            metrics: dict[type[Metric], list[tuple[datetime, float]]]
-    ) -> Alert | None:
-        depression_score = metrics[QIDS_SR_16]
+    @staticmethod
+    def _depression_alert(depression_score: list[tuple[datetime, float]]) -> Alert | None:
         if len(depression_score) < 2:
             return None
 
@@ -64,4 +61,50 @@ class MoodEpisodeAlerts(AlertGen):
         else:
             return None
 
-        # TODO: manic and mixed
+    @staticmethod
+    def _mania_alert(mania_score: list[tuple[datetime, float]]) -> Alert | None:
+        if len(mania_score) < 1:
+            return None
+
+        if mania_score[-1][0] < dateutil.n_weeks_before(datetime.now(), 1):
+            return None
+
+        severity_score = max(np.mean(list(zip(*mania_score))[1]), mania_score[-1][1])
+        if 6 <= severity_score <= 9.5:
+            return Alert(
+                name="Hypomania Alert",
+                description=f"Possible hypomania (or mania) with mean ASRM (adapted) score of {severity_score}/20",
+                severity=Alert.AlertSeverity.WARNING
+            )
+        elif 9.5 <= severity_score <= 14.5:
+            return Alert(
+                name="Mania Alert",
+                description=f"Possible mania (or hypomania) with mean ASRM (adapted) score of {severity_score}/20",
+                severity=Alert.AlertSeverity.IMPORTANT
+            )
+        elif 14.5 <= severity_score <= 20:
+            return Alert(
+                name="Severe Mania Alert",
+                description=f"Possible mania (or hypomania) with mean ASRM (adapted) score of {severity_score}/20",
+                severity=Alert.AlertSeverity.CRITICAL
+            )
+        else:
+            return None
+
+    def generate_alert(
+            self,
+            values: dict[str, list[tuple[datetime, float]]],
+            metrics: dict[type[Metric], list[tuple[datetime, float]]]
+    ) -> Alert | None:
+        depression_alert = self._depression_alert(metrics[QIDS_SR_16])
+        mania_alert = self._mania_alert(metrics[ASRM])
+
+        if (depression_alert is not None and depression_alert.AlertSeverity != Alert.AlertSeverity.WARNING) and mania_alert is not None:
+            return Alert(
+                name="Mixed Episode Alert",
+                description="Possible depression/(hypo)mania with mixed features!",
+                severity=Alert.AlertSeverity.CRITICAL
+            )
+        if mania_alert is not None:
+            return mania_alert
+        return depression_alert
