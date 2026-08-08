@@ -237,5 +237,145 @@
         "normal_max": 1,
         "not_severly_abormal_min": -2,
         "not_severly_abormal_max": 2
+    },
+  {
+        "id": "anxiety1",
+        "name": "Feeling nervous, anxious or on edge",
+        "description": "",
+        "category": "Mental",
+        "min_value": 0,
+        "max_value": 3,
+        "value_descriptions": [
+            "Not at all",
+            "Several days",
+            "More than half the days",
+            "Nearly every day"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 0,
+        "normal_max": 0,
+        "not_severly_abormal_min": 0,
+        "not_severly_abormal_max": 2
+    },
+  {
+        "id": "anxiety2",
+        "name": "Not being able to stop or control worrying",
+        "description": "",
+        "category": "Mental",
+        "min_value": 0,
+        "max_value": 3,
+        "value_descriptions": [
+            "Not at all",
+            "Several days",
+            "More than half the days",
+            "Nearly every day"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 0,
+        "normal_max": 0,
+        "not_severly_abormal_min": 0,
+        "not_severly_abormal_max": 2
+    },
+  {
+        "id": "anxiety3",
+        "name": "Worrying too much about different things",
+        "description": "",
+        "category": "Mental",
+        "min_value": 0,
+        "max_value": 3,
+        "value_descriptions": [
+            "Not at all",
+            "Several days",
+            "More than half the days",
+            "Nearly every day"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 0,
+        "normal_max": 0,
+        "not_severly_abormal_min": 0,
+        "not_severly_abormal_max": 2
+    },
+  {
+        "id": "anxiety4",
+        "name": "Trouble relaxing",
+        "description": "",
+        "category": "Mental",
+        "min_value": 0,
+        "max_value": 3,
+        "value_descriptions": [
+            "Not at all",
+            "Several days",
+            "More than half the days",
+            "Nearly every day"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 0,
+        "normal_max": 0,
+        "not_severly_abormal_min": 0,
+        "not_severly_abormal_max": 2
+    },
+  {
+        "id": "anxiety5",
+        "name": "Being so restless that it is hard to sit still",
+        "description": "",
+        "category": "Mental",
+        "min_value": 0,
+        "max_value": 3,
+        "value_descriptions": [
+            "Not at all",
+            "Several days",
+            "More than half the days",
+            "Nearly every day"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 0,
+        "normal_max": 0,
+        "not_severly_abormal_min": 0,
+        "not_severly_abormal_max": 2
+    },
+  {
+        "id": "anxiety6",
+        "name": "Becoming easily annoyed or irritable",
+        "description": "",
+        "category": "Mental",
+        "min_value": 0,
+        "max_value": 3,
+        "value_descriptions": [
+            "Not at all",
+            "Several days",
+            "More than half the days",
+            "Nearly every day"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 0,
+        "normal_max": 0,
+        "not_severly_abormal_min": 0,
+        "not_severly_abormal_max": 2
+    },
+  {
+        "id": "anxiety7",
+        "name": "Feeling afraid as if something awful might happen",
+        "description": "",
+        "category": "Mental",
+        "min_value": 0,
+        "max_value": 3,
+        "value_descriptions": [
+            "Not at all",
+            "Several days",
+            "More than half the days",
+            "Nearly every day"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 0,
+        "normal_max": 0,
+        "not_severly_abormal_min": 0,
+        "not_severly_abormal_max": 2
     }
 ]
