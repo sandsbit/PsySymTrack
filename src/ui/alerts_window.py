@@ -20,6 +20,8 @@ import tkinter as tk
 from tkinter import ttk
 
 from analysis.alerts import generate_alerts, Alert
+from general.userdata import load_user_data
+from tracking.valuestorsage import ValuesStorage
 from ui.misc.scrollable_frame import ScrollableFrame
 
 
@@ -45,13 +47,17 @@ class AlertsWindow(tk.Toplevel):
     def reload(self) -> None:
         self.blocks_frame.clear()
 
-        warnings = generate_alerts()
-        for warning in warnings:
-            self.add_block(
-                severity=warning.severity,
-                title=warning.name,
-                description=warning.description
-            )
+        storage = ValuesStorage()
+        try:
+            warnings = generate_alerts(load_user_data(), storage)
+            for warning in warnings:
+                self.add_block(
+                    severity=warning.severity,
+                    title=warning.name,
+                    description=warning.description
+                )
+        finally:
+            storage.close()
 
     def add_block(
         self,
