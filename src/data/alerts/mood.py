@@ -39,7 +39,7 @@ class MoodEpisodeAlerts(AlertGen):
         if len(depression_score) < 2:
             return None
 
-        if depression_score[0][0] < dateutil.n_weeks_before(datetime.now(), 1):
+        if depression_score[-1][0] < dateutil.n_weeks_before(datetime.now(), 1):
             return None
 
         severity_score = np.mean(zip(*depression_score)[1])
