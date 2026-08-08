@@ -19,13 +19,13 @@
 import numpy as np
 from datetime import timedelta, datetime
 
-from analysis.alerts import Alert
+from analysis.alerts import Alert, AlertGen
 from data.metrics.QIDS_SR import QIDS_SR_16
 from tracking.metrics import Metric
 from utils import dateutil
 
 
-class MoodEpisodeAlerts(Alert):
+class MoodEpisodeAlerts(AlertGen):
     USED_PARAMS_IDS: []
     USED_METRICS: [QIDS_SR_16]
     GIVE_HISTORY_FOR: timedelta(days=31)
@@ -63,5 +63,5 @@ class MoodEpisodeAlerts(Alert):
             )
         else:
             return None
-        
+
         # TODO: manic and mixed
