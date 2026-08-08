@@ -52,7 +52,7 @@ class MoodEpisodeAlerts(AlertGen):
             )
         elif 10.5 <= severity_score <= 14.5:
             return Alert(
-                name="Moderatre Anxiety Alert",
+                name="Moderate Anxiety Alert",
                 description=f"Moderate anxiety with mean GAD-7 score of {severity_score}/21",
                 severity=Alert.AlertSeverity.IMPORTANT
             )
