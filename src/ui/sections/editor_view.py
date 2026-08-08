@@ -20,6 +20,8 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from datetime import datetime, timedelta
 
+import dateutil
+
 from general.userdata import load_user_data
 from tracking.values import Value, ScaleValue, PhysicalValue
 from tracking.valuestorsage import ValuesStorage
@@ -39,7 +41,7 @@ class EditorView(ttk.Frame):
 
         self.value: Value | type[Metric] | None = None
 
-        self.current_week = self._week_start(
+        self.current_week = dateutil.monday_before(
             datetime.now()
         )
 
@@ -107,7 +109,7 @@ class EditorView(ttk.Frame):
         """
         self.value = value
 
-        self.current_week = self._week_start(
+        self.current_week = self.dateutil.monday_before(
             datetime.now()
         )
 
@@ -118,18 +120,6 @@ class EditorView(ttk.Frame):
     # ------------------------------------------------------------------
     # Week handling
     # ------------------------------------------------------------------
-
-    def _week_start(self, date: datetime) -> datetime:
-        """
-        Return Monday 00:00 of the given week.
-        """
-        return datetime(
-            date.year,
-            date.month,
-            date.day
-        ) - timedelta(
-            days=date.weekday()
-        )
 
     def _change_week(self, offset: int):
         self.current_week += timedelta(
@@ -147,7 +137,7 @@ class EditorView(ttk.Frame):
         except ValueError:
             return
 
-        self.current_week = self._week_start(
+        self.current_week = self.dateutil.monday_before(
             date
         )
 

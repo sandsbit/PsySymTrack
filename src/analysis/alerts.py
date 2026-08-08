@@ -27,6 +27,7 @@ from general.userdata import BasicUserData
 from tracking.metrics import Metric, evaluate_metric
 from data import alerts
 from tracking.valuestorsage import ValuesStorage
+from utils import dateutil
 
 
 @dataclass
@@ -67,15 +68,11 @@ def get_all_alerts() -> list[AlertGenT]:
         importlib.import_module(f"{alerts.__name__}.{module_name}")
     return AlertGen.__subclasses__()
 
-def _monday_before(dt: datetime) -> datetime:
-    monday = dt - timedelta(days=dt.weekday())
-    return monday.replace(hour=0, minute=0, second=0, microsecond=0)
-
 def evaluate_alert(alert_cls: AlertGenT, user_data: BasicUserData, storage: ValuesStorage) -> Alert | None:
     alert_gen = alert_cls(user_data)
 
-    end = _monday_before(datetime.now())
-    start = _monday_before(end - alert_cls.GIVE_HISTORY_FOR)
+    end = dateutil.monday_before(datetime.now())
+    start = dateutil.monday_before(end - alert_cls.GIVE_HISTORY_FOR)
 
     params = {}
     for param_id in alert_gen.USED_PARAMS_IDS:

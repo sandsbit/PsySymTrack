@@ -29,6 +29,7 @@ from general.userdata import load_user_data
 from tracking.metrics import Metric, evaluate_metric, get_all_metrics
 from tracking.values import Value, ValuesManager, ScaleValue, PhysicalValue
 from tracking.valuestorsage import ValuesStorage
+from utils import dateutil
 
 class DateRange(Enum):
     DAYS_60 = "60 days"
@@ -57,23 +58,20 @@ class TrackingStatistics:
     rho: float
     p: float
 
-def _monday_before(dt: datetime) -> datetime:
-    monday = dt - timedelta(days=dt.weekday())
-    return monday.replace(hour=0, minute=0, second=0, microsecond=0)
 
 def _get_values_series(vid: str, date_range: DateRange) -> tuple[list[datetime], list[float]]:
     storage = ValuesStorage()
     try:
-        end = _monday_before(datetime.now())
-        start = _monday_before(end - date_range.get_timedelta())
+        end = dateutil.monday_before(datetime.now())
+        start = dateutil.monday_before(end - date_range.get_timedelta())
         values = storage.get_range(vid, start, end)
         return values
     finally:
         storage.close()
 
 def _points_for_metric(metric: type[Metric], date_range: DateRange) -> tuple[npt.NDArray[datetime], npt.NDArray[np.float64]]:
-    date = _monday_before(datetime.now())
-    end = _monday_before(date - date_range.get_timedelta())
+    date = dateutil.monday_before(datetime.now())
+    end = dateutil.monday_before(date - date_range.get_timedelta())
     storage = ValuesStorage()
     try:
         dates = []
