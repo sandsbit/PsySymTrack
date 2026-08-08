@@ -62,7 +62,7 @@ class AlertGen(ABC):
 
 type AlertGenT = type[AlertGen]
 
-def get_all_metrics() -> list[AlertGenT]:
+def get_all_alerts() -> list[AlertGenT]:
     for _, module_name, _ in pkgutil.iter_modules(alerts.__path__):
         importlib.import_module(f"{alerts.__name__}.{module_name}")
     return AlertGen.__subclasses__()
@@ -94,3 +94,15 @@ def evaluate_alert(alert_cls: AlertGenT, user_data: BasicUserData, storage: Valu
             date += timedelta(days=7)
 
     return alert_gen.generate_alert(params, metrics)
+
+def generate_alerts(user_data: BasicUserData, storage: ValuesStorage) -> list[Alert]:
+    alerts = []
+
+    for alertT in get_all_alerts():
+        alert = evaluate_alert(alertT, user_data, storage)
+        if alert is not None:
+            alerts.append(alert)
+
+    alerts.sort(key=lambda x: x.severity.value, reverse=True)
+
+    return alerts
