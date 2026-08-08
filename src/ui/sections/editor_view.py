@@ -20,12 +20,11 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from datetime import datetime, timedelta
 
-import dateutil
-
 from general.userdata import load_user_data
 from tracking.values import Value, ScaleValue, PhysicalValue
 from tracking.valuestorsage import ValuesStorage
 from tracking.metrics import Metric, evaluate_metric
+from utils import dateutil
 
 class EditorView(ttk.Frame):
     """
