@@ -26,9 +26,9 @@ from utils import dateutil
 
 
 class MoodEpisodeAlerts(AlertGen):
-    USED_PARAMS_IDS: []
-    USED_METRICS: [QIDS_SR_16]
-    GIVE_HISTORY_FOR: timedelta(days=31)
+    USED_PARAMS_IDS = []
+    USED_METRICS = [QIDS_SR_16]
+    GIVE_HISTORY_FOR = timedelta(days=31)
 
     def generate_alert(
             self,
