@@ -87,7 +87,7 @@ class LeftPanel(ttk.Frame):
             pady=5
         )
 
-        self.warn_button.grid(
+        self.alerts_button.grid(
             row=2,
             column=0,
             sticky="ew",
