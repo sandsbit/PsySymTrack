@@ -108,7 +108,7 @@ class EditorView(ttk.Frame):
         """
         self.value = value
 
-        self.current_week = self.dateutil.monday_before(
+        self.current_week = dateutil.monday_before(
             datetime.now()
         )
 
