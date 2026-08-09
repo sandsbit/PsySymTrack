@@ -17,6 +17,8 @@
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
 
 import tkinter as tk
+import sys
+from pathlib import Path
 
 from PIL import Image, ImageTk
 
@@ -34,7 +36,9 @@ class Application(tk.Tk):
         width = 1200
         height = 800
 
-        self.wm_iconphoto(False, ImageTk.PhotoImage(Image.open("icons/icon.png")))
+        icon_path = Path(__file__).parent.parent.parent / "icons" / "icon.png"
+
+        self.wm_iconphoto(False, ImageTk.PhotoImage(Image.open(icon_path)))
 
         self.geometry(
             f"{width}x{height}"
