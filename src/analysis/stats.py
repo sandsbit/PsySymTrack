@@ -91,7 +91,10 @@ def _points_for_metric(metric: type[Metric], date_range: DateRange) -> tuple[npt
 # noinspection PyTypeChecker
 def get_points(vid: str | type[Metric], date_range: DateRange) -> tuple[npt.NDArray[datetime], npt.NDArray[np.float64]]:
     if type(vid) is str:
-        return tuple(map(np.array, zip(*_get_values_series(vid, date_range), strict=True)))
+        result = tuple(map(np.array, zip(*_get_values_series(vid, date_range), strict=True)))
+        if len(result) == 0:
+            return ([], [])
+        return result
     else:
         return _points_for_metric(vid, date_range)
 
