@@ -18,6 +18,8 @@
 
 import tkinter as tk
 
+from PIL import Image, ImageTk
+
 from .registration_view import RegistrationView
 from .main_view import MainView
 
@@ -31,6 +33,8 @@ class Application(tk.Tk):
         self.title(APP_NAME)
         width = 1200
         height = 800
+
+        self.wm_iconphoto(False, ImageTk.PhotoImage(Image.open("icons/icon.png")))
 
         self.geometry(
             f"{width}x{height}"
