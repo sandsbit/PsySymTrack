@@ -24,7 +24,7 @@ from data.metrics.ASRM import ASRM
 from tracking.metrics import Metric
 
 
-class MoodEpisodeAlerts(AlertGen):
+class LithiumAlerts(AlertGen):
     USED_PARAMS_IDS = ["lithium"]
     USED_METRICS = [ASRM]
     GIVE_HISTORY_FOR = timedelta(days=31*3)

@@ -25,7 +25,7 @@ from tracking.metrics import Metric
 from utils import dateutil
 
 
-class MoodEpisodeAlerts(AlertGen):
+class AnxietyAlerts(AlertGen):
     USED_PARAMS_IDS = []
     USED_METRICS = [GAD_7]
     GIVE_HISTORY_FOR = timedelta(days=31)
