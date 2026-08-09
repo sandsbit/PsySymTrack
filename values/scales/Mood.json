@@ -3,7 +3,7 @@
         "id": "sleep_onset",
         "name": "Sleep onset time",
         "description": "How quickly do you fall asleep",
-        "category": "Mental",
+        "category": "Mood",
         "min_value": 0,
         "max_value": 4,
         "value_descriptions": [
@@ -24,7 +24,7 @@
         "id": "sleep_maintenance",
         "name": "Sleep maintenance",
         "description": "Whether you can stay asleep throughout the night",
-        "category": "Mental",
+        "category": "Mood",
         "min_value": 0,
         "max_value": 3,
         "value_descriptions": [
@@ -44,7 +44,7 @@
         "id": "sleep_early_awakening",
         "name": "Early awakenings",
         "description": "How early do I you get up in the morning",
-        "category": "Mental",
+        "category": "Mood",
         "min_value": 0,
         "max_value": 3,
         "value_descriptions": [
@@ -64,7 +64,7 @@
         "id": "sleep_duration",
         "name": "Sleep duration",
         "description": "Amount of sleep per day",
-        "category": "Mental",
+        "category": "Mood",
         "min_value": -3,
         "max_value": 3,
         "value_descriptions": [
@@ -87,7 +87,7 @@
         "id": "mood",
         "name": "Mood",
         "description": "Your average mood throughout the week",
-        "category": "Mental",
+        "category": "Mood",
         "min_value": -3,
         "max_value": 3,
         "value_descriptions": [
@@ -110,7 +110,7 @@
         "id": "cognitive_concentration",
         "name": "Concentration",
         "description": "Changes in attention span",
-        "category": "Mental",
+        "category": "Mood",
         "min_value": 0,
         "max_value": 3,
         "value_descriptions": [
@@ -130,7 +130,7 @@
         "id": "self_image",
         "name": "Self-image",
         "description": "How do you see yourself",
-        "category": "Mental",
+        "category": "Mood",
         "min_value": -3,
         "max_value": 3,
         "value_descriptions": [
@@ -153,7 +153,7 @@
         "id": "suicide",
         "name": "Death and suicide thoughts",
         "description": "Thoughts about dying or actions",
-        "category": "Mental",
+        "category": "Mood",
         "min_value": 0,
         "max_value": 3,
         "value_descriptions": [
@@ -173,7 +173,7 @@
         "id": "general_interest",
         "name": "General interest",
         "description": "How interested you are in other people or activities",
-        "category": "Mental",
+        "category": "Mood",
         "min_value": -3,
         "max_value": 3,
         "value_descriptions": [
@@ -196,7 +196,7 @@
         "id": "energy",
         "name": "Energy level",
         "description": "How physically active and productive you feel",
-        "category": "Mental",
+        "category": "Mood",
         "min_value": -3,
         "max_value": 3,
         "value_descriptions": [
@@ -219,7 +219,7 @@
         "id": "agitation",
         "name": "Agitation and restlessness/slowing down",
         "description": "How restless or slowed down you feel",
-        "category": "Mental",
+        "category": "Mood",
         "min_value": -3,
         "max_value": 3,
         "value_descriptions": [

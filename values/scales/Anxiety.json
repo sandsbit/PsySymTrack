@@ -3,7 +3,7 @@
         "id": "anxiety1",
         "name": "Feeling nervous, anxious or on edge",
         "description": "",
-        "category": "Mental",
+        "category": "Anxiety",
         "min_value": 0,
         "max_value": 3,
         "value_descriptions": [
@@ -23,7 +23,7 @@
         "id": "anxiety2",
         "name": "Not being able to stop or control worrying",
         "description": "",
-        "category": "Mental",
+        "category": "Anxiety",
         "min_value": 0,
         "max_value": 3,
         "value_descriptions": [
@@ -43,7 +43,7 @@
         "id": "anxiety3",
         "name": "Worrying too much about different things",
         "description": "",
-        "category": "Mental",
+        "category": "Anxiety",
         "min_value": 0,
         "max_value": 3,
         "value_descriptions": [
@@ -63,7 +63,7 @@
         "id": "anxiety4",
         "name": "Trouble relaxing",
         "description": "",
-        "category": "Mental",
+        "category": "Anxiety",
         "min_value": 0,
         "max_value": 3,
         "value_descriptions": [
@@ -83,7 +83,7 @@
         "id": "anxiety5",
         "name": "Being so restless that it is hard to sit still",
         "description": "",
-        "category": "Mental",
+        "category": "Anxiety",
         "min_value": 0,
         "max_value": 3,
         "value_descriptions": [
@@ -103,7 +103,7 @@
         "id": "anxiety6",
         "name": "Becoming easily annoyed or irritable",
         "description": "",
-        "category": "Mental",
+        "category": "Anxiety",
         "min_value": 0,
         "max_value": 3,
         "value_descriptions": [
@@ -123,7 +123,7 @@
         "id": "anxiety7",
         "name": "Feeling afraid as if something awful might happen",
         "description": "",
-        "category": "Mental",
+        "category": "Anxiety",
         "min_value": 0,
         "max_value": 3,
         "value_descriptions": [
