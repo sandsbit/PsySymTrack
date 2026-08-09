@@ -18,7 +18,6 @@
 
 import tkinter as tk
 
-import dateutil
 import numpy as np
 
 from datetime import datetime, timedelta
@@ -29,6 +28,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from analysis.stats import DateRange, TrackingStatistics, get_stats, get_points
 from tracking.metrics import Metric
 from tracking.values import Value, ScaleValue, PhysicalValue
+from utils import dateutil
 
 
 class DataView(ttk.Frame):
