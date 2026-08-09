@@ -195,13 +195,6 @@ class ValuesManager:
             cls._instance._physical_values_custom += cls._instance._load_values_from_file(cls._instance._physicals_file_path, PhysicalValue)
         return cls._instance
 
-    def __init__(self):
-        """Loads predefined values that come with the app and custom values from disk."""
-        self._load_standard_scale_values()
-        self._load_standard_physical_values()
-        self._scale_values_custom += self._load_values_from_file(self._scales_file_path, ScaleValue)
-        self._physical_values_custom += self._load_values_from_file(self._physicals_file_path, PhysicalValue)
-
     def _load_standard_scale_values(self) -> None:
         """Loads predefined scale values that come with the app.
 

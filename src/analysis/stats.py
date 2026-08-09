@@ -141,6 +141,9 @@ def _get_warning_for_value(value: Value) -> WarningsResult.WarningDescription | 
     finally:
         storage.close()
 
+    if len(values) == 0:
+        return None
+
     is_abnormal: Callable[[Value], bool]
     is_severely_abnormal: Callable[[Value], bool]
     # TODO: the hell below should be eradicated ASAP
@@ -212,6 +215,9 @@ def _get_warning_for_value(value: Value) -> WarningsResult.WarningDescription | 
 def _get_warning_for_metric(metric: type[Metric]) -> WarningsResult.WarningDescription | None:
     metric_values = get_points(metric, DateRange.YEARS_5)
 
+    if len(metric_values[0]) == 0:
+        return None
+
     is_abnormal: Callable[[Value], bool]
     is_severely_abnormal: Callable[[Value], bool]
     # TODO: the small second hell should also be no longer
@@ -231,7 +237,7 @@ def _get_warning_for_metric(metric: type[Metric]) -> WarningsResult.WarningDescr
     abnormal_streak_length = 0
     severely_abnormal_streak_length = 0
     severely_abnormal_streak_since: datetime | None = None
-    for i in range(1, len(metric_values)):
+    for i in range(1, len(metric_values[0])):
         val = metric_values[1][i]
         if (not abnormal_streak) and (not severely_abnormal_streak):
             break

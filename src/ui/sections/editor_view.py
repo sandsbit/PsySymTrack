@@ -227,12 +227,13 @@ class EditorView(ttk.Frame):
                         text="Interpretation: N/A"
                     )
                     int_text = ''
-                    for minv, maxv, desc in self.value.INTERP:
-                        int_text += f"{minv}-{maxv}: {desc}\n"
-                        if minv <= metric_value <= maxv:
-                            self.metric_interpretation_label.configure(
-                                text="Interpretation: " + desc
-                            )
+                    if self.value.INTERP is not None:
+                        for minv, maxv, desc in self.value.INTERP:
+                            int_text += f"{minv}-{maxv}: {desc}\n"
+                            if minv <= metric_value <= maxv:
+                                self.metric_interpretation_label.configure(
+                                    text="Interpretation: " + desc
+                                )
                     self.metric_interp_label.configure(text=int_text)
         finally:
             storage.close()

@@ -166,9 +166,9 @@ class DataView(ttk.Frame):
         self.ax.set_xlim(dateutil.monday_before(now - selected_range.get_timedelta()), now)
         if isinstance(self.current_object, Value) and self.current_object.min_value is not None and self.current_object.max_value is not None:
             self.ax.set_ylim(self.current_object.min_value, self.current_object.max_value)
-        elif (self.current_object.RESULT_MIN is not None and self.current_object.RESULT_MAX is not None):
+        elif isinstance(self.current_object, type) and (self.current_object.RESULT_MIN is not None and self.current_object.RESULT_MAX is not None):
             self.ax.set_ylim(self.current_object.RESULT_MIN, self.current_object.RESULT_MAX)
-        elif isinstance(self.current_object, PhysicalValue):
+        elif isinstance(self.current_object, PhysicalValue) and len(values) > 0:
             self.ax.set_ylim(min(np.min(values), 0), np.max(values) * 1.2)
 
 
@@ -185,8 +185,12 @@ class DataView(ttk.Frame):
             else:
                 self.ax.axhspan(self.current_object.normal_max, self.current_object.max_value, color="yellow", alpha=0.2)
         elif isinstance(self.current_object, PhysicalValue):
-            abs_min = min(np.min(values), 0)
-            abs_max = np.max(values)
+            if len(values) > 0:
+                abs_min = min(np.min(values), 0)
+                abs_max = np.max(values)
+            else:
+                abs_min = 0
+                abs_max = 100
             if self.current_object.normal_min is not None:
                 normal_max = self.current_object.normal_max if self.current_object.normal_max is not None else abs_max
                 self.ax.axhspan(self.current_object.normal_min, normal_max, color="green", alpha=0.2)

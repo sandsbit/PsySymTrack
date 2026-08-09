@@ -33,7 +33,13 @@ class GAD_7(Metric):
     DESCRIPTION = "Screening tool for generalized anxiety disorder"
 
     USED_PARAMS_IDS = [
-        "sleep_onset"
+        "anxiety1",
+        "anxiety2",
+        "anxiety3",
+        "anxiety4",
+        "anxiety5",
+        "anxiety6",
+        "anxiety7",
     ]
     NEEDS_HISTORY = False
     NEEDS_HISTORY_FOR = None
@@ -55,7 +61,7 @@ class GAD_7(Metric):
                   history: dict[str, list[tuple[datetime, int]]] | None = None) -> float | None:
         total_score = 0
 
-        for i in range(1, 7):
-            total_score += params["anxiety" + str(i)]
+        for param in self.USED_PARAMS_IDS:
+            total_score += params[param]
 
         return total_score
