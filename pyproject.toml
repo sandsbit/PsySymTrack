@@ -1,0 +1,54 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "PsySymTrack"
+version = "1.0-beta.1"
+dependencies = [
+  "numpy",
+  "scipy",
+  "matplotlib",
+  "pillow"
+]
+requires-python = ">=3.12"
+authors = [
+  {name = "Nikita Serbs", email = "nikitaserba@icloud.com"}
+]
+maintainers = []
+description = "Psychiatric symptom tracker with basic analysis"
+readme = {file = "README.md", content-type = "text/markdown"}
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
+keywords = ["symptoms", "psychiatry"]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+
+  "Intended Audience :: Healthcare Industry",
+  "Intended Audience :: Science/Research",
+
+  "Natural Language :: English",
+
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: POSIX",
+  "Operating System :: MacOS",
+
+  "Programming Language :: Python",
+
+  "Topic :: Other/Nonlisted Topic"
+]
+
+[project.urls]
+Homepage = "https://github.com/sandsbit/PsySymTrack"
+Documentation = "https://github.com/sandsbit/PsySymTrack/wiki"
+Repository = "https://github.com/sandsbit/PsySymTrack.git"
+"Bug Tracker" = "https://github.com/sandsbit/PsySymTrack/issues"
+# Changelog = "https://github.com/me/spam/blob/master/CHANGELOG.md"
+
+[project.gui-scripts]
+app-main = "src:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra"

@@ -1,0 +1,317 @@
+[
+  {
+        "id": "bpd_a_abandonment",
+        "name": "Feelings of abandonment",
+        "description": "Worrying that someone important in your life is tired of you or is planning to leave you",
+        "category": "BPD",
+        "min_value": 1,
+        "max_value": 5,
+        "value_descriptions": [
+            "None/slight",
+            "Mild",
+            "Moderate",
+            "Severe",
+            "Extreme"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 1,
+        "normal_max": 2,
+        "not_severly_abormal_min": 1,
+        "not_severly_abormal_max": 3
+    },
+  {
+        "id": "bpd_a_splitting",
+        "name": "Splitting on friends/partners",
+        "description": "Major shifts in your opinions about others such as switching from believing someone is a loyal friend or partner to believing that person is untrustworthy and hurtful",
+        "category": "BPD",
+        "min_value": 1,
+        "max_value": 5,
+        "value_descriptions": [
+            "None/slight",
+            "Mild",
+            "Moderate",
+            "Severe",
+            "Extreme"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 1,
+        "normal_max": 2,
+        "not_severly_abormal_min": 1,
+        "not_severly_abormal_max": 3
+    },
+  {
+        "id": "bpd_a_self_image",
+        "name": "Self-image changes",
+        "description": "Extreme changes in how you see yourself. Shifting from feeling confident about who you are to feeling like you are evil, or that you don't even exist",
+        "category": "BPD",
+        "min_value": 1,
+        "max_value": 5,
+        "value_descriptions": [
+            "None/slight",
+            "Mild",
+            "Moderate",
+            "Severe",
+            "Extreme"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 1,
+        "normal_max": 2,
+        "not_severly_abormal_min": 1,
+        "not_severly_abormal_max": 3
+    },
+  {
+        "id": "bpd_a_mood_swings",
+        "name": "Mood swings",
+        "description": "Severe mood swings several times a day. Minor events cause major shifts in mood",
+        "category": "BPD",
+        "min_value": 1,
+        "max_value": 5,
+        "value_descriptions": [
+            "None/slight",
+            "Mild",
+            "Moderate",
+            "Severe",
+            "Extreme"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 1,
+        "normal_max": 2,
+        "not_severly_abormal_min": 1,
+        "not_severly_abormal_max": 3
+    },
+  {
+        "id": "bpd_a_dissociation",
+        "name": "Transient paranoia/dissociation",
+        "description": "Feeling paranoid or like you are losing touch with reality",
+        "category": "BPD",
+        "min_value": 1,
+        "max_value": 5,
+        "value_descriptions": [
+            "None/slight",
+            "Mild",
+            "Moderate",
+            "Severe",
+            "Extreme"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 1,
+        "normal_max": 2,
+        "not_severly_abormal_min": 1,
+        "not_severly_abormal_max": 3
+    },
+  {
+        "id": "bpd_a_angry",
+        "name": "Feeling angry",
+        "description": "Feeling angry",
+        "category": "BPD",
+        "min_value": 1,
+        "max_value": 5,
+        "value_descriptions": [
+            "None/slight",
+            "Mild",
+            "Moderate",
+            "Severe",
+            "Extreme"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 1,
+        "normal_max": 2,
+        "not_severly_abormal_min": 1,
+        "not_severly_abormal_max": 3
+    },
+  {
+        "id": "bpd_a_empty",
+        "name": "Feelings of emptiness",
+        "description": "Feelings of emptiness",
+        "category": "BPD",
+        "min_value": 1,
+        "max_value": 5,
+        "value_descriptions": [
+            "None/slight",
+            "Mild",
+            "Moderate",
+            "Severe",
+            "Extreme"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 1,
+        "normal_max": 2,
+        "not_severly_abormal_min": 1,
+        "not_severly_abormal_max": 3
+    },
+  {
+        "id": "bpd_a_suicide",
+        "name": "Feeling suicidal",
+        "description": "Feeling suicidal",
+        "category": "BPD",
+        "min_value": 1,
+        "max_value": 5,
+        "value_descriptions": [
+            "None/slight",
+            "Mild",
+            "Moderate",
+            "Severe",
+            "Extreme"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 1,
+        "normal_max": 2,
+        "not_severly_abormal_min": 1,
+        "not_severly_abormal_max": 3
+    },
+  {
+        "id": "bpd_b_abandonment",
+        "name": "Behavior against abandonment",
+        "description": "Going to extremes to try to keep someone from leaving you",
+        "category": "BPD",
+        "min_value": 1,
+        "max_value": 5,
+        "value_descriptions": [
+            "None/slight",
+            "Mild",
+            "Moderate",
+            "Severe",
+            "Extreme"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 1,
+        "normal_max": 2,
+        "not_severly_abormal_min": 1,
+        "not_severly_abormal_max": 3
+    },
+  {
+        "id": "bpd_b_suicide",
+        "name": "Self-harm/suicidal attempts",
+        "description": "Purposely doing something to injure yourself or making a suicide attempt",
+        "category": "BPD",
+        "min_value": 1,
+        "max_value": 5,
+        "value_descriptions": [
+            "None/slight",
+            "Mild",
+            "Moderate",
+            "Severe",
+            "Extreme"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 1,
+        "normal_max": 2,
+        "not_severly_abormal_min": 1,
+        "not_severly_abormal_max": 3
+    },
+  {
+        "id": "bpd_b_impulsivity",
+        "name": "Impulsive behavior",
+        "description": "Problems with impulsive behavior (not including suicide attempts or injuring yourself on purpose) Examples are: over-spending, risky sexual behavior, substance abuse, reckless driving, binge eating",
+        "category": "BPD",
+        "min_value": 1,
+        "max_value": 5,
+        "value_descriptions": [
+            "None/slight",
+            "Mild",
+            "Moderate",
+            "Severe",
+            "Extreme"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 1,
+        "normal_max": 2,
+        "not_severly_abormal_min": 1,
+        "not_severly_abormal_max": 3
+    },
+  {
+        "id": "bpd_b_anger",
+        "name": "Temper outbursts",
+        "description": "Temper outbursts or problems with anger leading to relationship problems, physical fights, or destruction of property",
+        "category": "BPD",
+        "min_value": 1,
+        "max_value": 5,
+        "value_descriptions": [
+            "None/slight",
+            "Mild",
+            "Moderate",
+            "Severe",
+            "Extreme"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 1,
+        "normal_max": 2,
+        "not_severly_abormal_min": 1,
+        "not_severly_abormal_max": 3
+    },
+  {
+        "id": "bpd_c_positive_behavior",
+        "name": "Positive behavior",
+        "description": "Choosing to use a positive activity in circumstances where you felt tempted to do something destructive or self-defeating",
+        "category": "BPD",
+        "min_value": 1,
+        "max_value": 5,
+        "value_descriptions": [
+            "Almost never",
+            "Sometimes",
+            "Half of the time",
+            "Most of the time",
+            "Almost always"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 4,
+        "normal_max": 5,
+        "not_severly_abormal_min": 2,
+        "not_severly_abormal_max": 5
+    },
+  {
+        "id": "bpd_c_noticing",
+        "name": "Noticing difficulties ahead",
+        "description": "Noticing ahead of time that something could cause you emotional difficulties and taking reasonable steps to avoid/prevent the problem",
+        "category": "BPD",
+        "min_value": 1,
+        "max_value": 5,
+        "value_descriptions": [
+            "Almost never",
+            "Sometimes",
+            "Half of the time",
+            "Most of the time",
+            "Almost always"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 4,
+        "normal_max": 5,
+        "not_severly_abormal_min": 2,
+        "not_severly_abormal_max": 5
+    },
+  {
+        "id": "bpd_c_therapy",
+        "name": "Adherence to therapy",
+        "description": "Following through with therapy plans to which you agreed (e.g., talk therapy, \"homework\" assignments, coming to appointments, medications, etc.)",
+        "category": "BPD",
+        "min_value": 1,
+        "max_value": 5,
+        "value_descriptions": [
+            "Almost never",
+            "Sometimes",
+            "Half of the time",
+            "Most of the time",
+            "Almost always"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 4,
+        "normal_max": 5,
+        "not_severly_abormal_min": 2,
+        "not_severly_abormal_max": 5
+    }
+]

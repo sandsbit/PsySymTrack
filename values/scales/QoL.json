@@ -1,0 +1,233 @@
+[
+  {
+        "id": "qol_tasks",
+        "name": "Getting started with tasks",
+        "description": "I found it difficult to get started with everyday tasks",
+        "category": "QoL",
+        "min_value": 0,
+        "max_value": 4,
+        "value_descriptions": [
+            "None of the time",
+            "Only occasionally",
+            "Sometimes",
+            "Often",
+            "Most or all of the time"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 0,
+        "normal_max": 0,
+        "not_severly_abormal_min": 0,
+        "not_severly_abormal_max": 2
+    },
+  {
+        "id": "qol_trust",
+        "name": "Trust",
+        "description": "I felt able to trust others",
+        "category": "QoL",
+        "min_value": 0,
+        "max_value": 4,
+        "value_descriptions": [
+            "None of the time",
+            "Only occasionally",
+            "Sometimes",
+            "Often",
+            "Most or all of the time"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 4,
+        "normal_max": 4,
+        "not_severly_abormal_min": 2,
+        "not_severly_abormal_max": 4
+    },
+  {
+        "id": "qol_coping",
+        "name": "Unable to cope",
+        "description": "I felt unable to cope",
+        "category": "QoL",
+        "min_value": 0,
+        "max_value": 4,
+        "value_descriptions": [
+            "None of the time",
+            "Only occasionally",
+            "Sometimes",
+            "Often",
+            "Most or all of the time"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 0,
+        "normal_max": 0,
+        "not_severly_abormal_min": 0,
+        "not_severly_abormal_max": 2
+    },
+  {
+        "id": "qol_do_things",
+        "name": "Do things",
+        "description": "I could do the things I wanted to do",
+        "category": "QoL",
+        "min_value": 0,
+        "max_value": 4,
+        "value_descriptions": [
+            "None of the time",
+            "Only occasionally",
+            "Sometimes",
+            "Often",
+            "Most or all of the time"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 4,
+        "normal_max": 4,
+        "not_severly_abormal_min": 2,
+        "not_severly_abormal_max": 4
+    },
+  {
+        "id": "qol_mood",
+        "name": "Good mood",
+        "description": "I felt happy",
+        "category": "QoL",
+        "min_value": 0,
+        "max_value": 4,
+        "value_descriptions": [
+            "None of the time",
+            "Only occasionally",
+            "Sometimes",
+            "Often",
+            "Most or all of the time"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 4,
+        "normal_max": 4,
+        "not_severly_abormal_min": 2,
+        "not_severly_abormal_max": 4
+    },
+  {
+        "id": "qol_life_worth",
+        "name": "Life not worth living",
+        "description": "I thought my life was not worth living",
+        "category": "QoL",
+        "min_value": 0,
+        "max_value": 4,
+        "value_descriptions": [
+            "None of the time",
+            "Only occasionally",
+            "Sometimes",
+            "Often",
+            "Most or all of the time"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 0,
+        "normal_max": 0,
+        "not_severly_abormal_min": 0,
+        "not_severly_abormal_max": 2
+    },
+  {
+        "id": "qol_joy",
+        "name": "Feeling of joy",
+        "description": "I enjoyed what I did",
+        "category": "QoL",
+        "min_value": 0,
+        "max_value": 4,
+        "value_descriptions": [
+            "None of the time",
+            "Only occasionally",
+            "Sometimes",
+            "Often",
+            "Most or all of the time"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 4,
+        "normal_max": 4,
+        "not_severly_abormal_min": 2,
+        "not_severly_abormal_max": 4
+    },
+  {
+        "id": "qol_hopeful",
+        "name": "Feeling of hopefulness",
+        "description": "I felt hopeful about my future",
+        "category": "QoL",
+        "min_value": 0,
+        "max_value": 4,
+        "value_descriptions": [
+            "None of the time",
+            "Only occasionally",
+            "Sometimes",
+            "Often",
+            "Most or all of the time"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 4,
+        "normal_max": 4,
+        "not_severly_abormal_min": 2,
+        "not_severly_abormal_max": 4
+    },
+  {
+        "id": "qol_lonely",
+        "name": "Loneliness",
+        "description": "I felt lonely",
+        "category": "QoL",
+        "min_value": 0,
+        "max_value": 4,
+        "value_descriptions": [
+            "None of the time",
+            "Only occasionally",
+            "Sometimes",
+            "Often",
+            "Most or all of the time"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 0,
+        "normal_max": 0,
+        "not_severly_abormal_min": 0,
+        "not_severly_abormal_max": 2
+    },
+  {
+        "id": "qol_confident",
+        "name": "Confidence",
+        "description": "I felt confident in myself",
+        "category": "QoL",
+        "min_value": 0,
+        "max_value": 4,
+        "value_descriptions": [
+            "None of the time",
+            "Only occasionally",
+            "Sometimes",
+            "Often",
+            "Most or all of the time"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 4,
+        "normal_max": 4,
+        "not_severly_abormal_min": 2,
+        "not_severly_abormal_max": 4
+    },
+  {
+        "id": "qol_physical",
+        "name": "Physical well-being",
+        "description": "Please describe your physicalhealth (problems with pain,mobility, difficulties caring for yourself or feeling physically unwell)",
+        "category": "QoL",
+        "min_value": 0,
+        "max_value": 4,
+        "value_descriptions": [
+            "Very severe problems",
+            "Severe problems",
+            "Moderate problems",
+            "Slight problems",
+            "No problems"
+        ],
+        "has_inactive_values": false,
+        "active_values": null,
+        "normal_min": 4,
+        "normal_max": 4,
+        "not_severly_abormal_min": 2,
+        "not_severly_abormal_max": 4
+    }
+]
