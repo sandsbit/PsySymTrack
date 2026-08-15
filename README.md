@@ -1,5 +1,8 @@
 # PsySymTrack
 Psychiatric symptom tracker with basic analysis (intended for personal use) [UNDER DEVELOPMENT]
+
+You can check out first beta in "Releases" section, but the full documentation will be only avaliable
+for first release version, which is coming out soon.
 # License
 ![GNU GPL v3 logo](https://www.gnu.org.cach3.com/graphics/gplv3-with-text-136x68.png)
 
@@ -19,6 +22,7 @@ along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
 * [Project releases](https://github.com/sandsbit/PsySymTrack/releases)
 * [Latest stable source code](https://github.com/sandsbit/PsySymTrack/tree/master)
 * [Latest non-stable source code](https://github.com/sandsbit/PsySymTrack/tree/develop)
+* [Changelog](https://github.com/sandsbit/PsySymTrack/blob/master/CHANGELOG.md)
 * [GNU GPL v3 text](https://github.com/sandsbit/PsySymTrack/blob/master/LICENSE)
 * [Documentation](https://github.com/sandsbit/PsySymTrack/wiki)
 * [Report bug](https://github.com/sandsbit/PsySymTrack/issues)
