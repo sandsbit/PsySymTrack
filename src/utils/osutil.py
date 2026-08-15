@@ -17,12 +17,13 @@
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
 
 import os
-import sys
 import platform
+import sys
 from enum import Enum
 from pathlib import Path
 
 from app_info import APP_NAME
+
 
 class OS(Enum):
     WINDOWS = 0
@@ -95,14 +96,16 @@ def get_app_data_dir() -> Path:
                 base_dir = Path.home()
                 data_dir = base_dir / f".{APP_NAME}"
 
-
+    # noinspection unbound-local-variable
     data_dir.mkdir(parents=True, exist_ok=True)
     return data_dir
 
 
 def get_working_dir_path() -> Path:
     """Returns directory where bundled app's files are located."""
-    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'): # running in a PyInstaller bundle
+    if getattr(sys, "frozen", False) and hasattr(
+        sys, "_MEIPASS"
+    ):  # running in a PyInstaller bundle
         if get_os() == OS.MACOS:
             return Path(__file__).resolve().parent.parent.parent / "Resources"
         else:
