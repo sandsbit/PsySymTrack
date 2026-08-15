@@ -43,7 +43,7 @@ Homepage = "https://github.com/sandsbit/PsySymTrack"
 Documentation = "https://github.com/sandsbit/PsySymTrack/wiki"
 Repository = "https://github.com/sandsbit/PsySymTrack.git"
 "Bug Tracker" = "https://github.com/sandsbit/PsySymTrack/issues"
-# Changelog = "https://github.com/me/spam/blob/master/CHANGELOG.md"
+Changelog = "https://github.com/sandsbit/PsySymTrack/blob/master/CHANGELOG.md"
 
 [project.gui-scripts]
 app-main = "src:main"
