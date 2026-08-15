@@ -12,7 +12,7 @@ a = Analysis(
         ('values/', 'values/'),
         ('icons/icon.png', 'icons/')
     ],
-    hiddenimports=[],
+    hiddenimports=['PIL._tkinter_finder'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
