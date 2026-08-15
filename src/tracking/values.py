@@ -21,6 +21,8 @@ from dataclasses import dataclass, asdict
 from pathlib import Path
 
 from utils import osutil
+from utils.osutil import get_working_dir_path
+
 
 @dataclass
 class Value:
@@ -201,7 +203,7 @@ class ValuesManager:
         Such scale values should be placed in <working dir>/values/scales/<category>.json
         files which represent a json list of objects with the same structure as 'ScaleValue'.
         """
-        scale_values_dir = Path(__file__).parent.parent.parent / "values" / "scales"
+        scale_values_dir = get_working_dir_path() / "values" / "scales"
         if not scale_values_dir.exists():
             return
         categories_files = scale_values_dir.glob("*.json")
@@ -219,7 +221,7 @@ class ValuesManager:
         Such physical values should be placed in <working dir>/values/physicals.json
         file which represents a json list of objects with the same structure as 'PhysicalValue'.
         """
-        physical_values_file = Path(__file__).parent.parent.parent / "values" / "physicals.json"
+        physical_values_file = get_working_dir_path() / "values" / "physicals.json"
         if physical_values_file.exists():
             values_obj_list = json.loads(physical_values_file.read_text(encoding="utf-8"))
             for value_obj in values_obj_list:
