@@ -18,13 +18,25 @@
 
 """Information about the app to use in code."""
 
+import sys
 import tomllib
-
-from utils.osutil import get_working_dir_path
+from pathlib import Path
 
 APP_NAME: str
 APP_VERSION: str
 APP_DESCRIPTION: str
+
+
+def get_working_dir_path() -> Path:
+    """Returns directory where bundled app's files are located."""
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):  # running in a PyInstaller bundle
+        if sys.platform == "darwin":
+            return Path(__file__).resolve().parent.parent / "Resources"
+        else:
+            return Path(__file__).resolve().parent
+    else:
+        return Path(__file__).resolve().parent.parent
+
 
 toml_path = get_working_dir_path() / "pyproject.toml"
 with toml_path.open("rb") as f:
