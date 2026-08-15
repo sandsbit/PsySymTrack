@@ -22,7 +22,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from utils.osutil import OS, get_app_data_dir, get_os
+from utils.osutil import OS, get_app_data_dir, get_os, get_working_dir_path
 
 
 class TestGetOS(unittest.TestCase):
@@ -115,6 +115,15 @@ class TestGetAppDataDir(unittest.TestCase):
             self.assertEqual(data_dir.parent, Path(temp_dir))
             self.assertTrue(data_dir.name.startswith("."))
             self.assertTrue(data_dir.exists())
+
+
+class TestGetWorkingDirectory(unittest.TestCase):
+    def test_returns_correct_directory(self):
+        wd = get_working_dir_path()
+
+        self.assertTrue(wd.exists())
+        self.assertTrue(wd.is_dir())
+        self.assertTrue((wd / "pyproject.toml").exists())
 
 
 if __name__ == "__main__":
