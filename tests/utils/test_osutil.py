@@ -125,6 +125,8 @@ class TestGetWorkingDirectory(unittest.TestCase):
         self.assertTrue(wd.is_dir())
         self.assertTrue((wd / "pyproject.toml").exists())
 
+    # Here should be tests for frozen case, but I don't know how to mock __file__ property of osutils
+
 
 if __name__ == "__main__":
     unittest.main()
