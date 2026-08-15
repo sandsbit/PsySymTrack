@@ -103,9 +103,7 @@ def get_app_data_dir() -> Path:
 
 def get_working_dir_path() -> Path:
     """Returns directory where bundled app's files are located."""
-    if getattr(sys, "frozen", False) and hasattr(
-        sys, "_MEIPASS"
-    ):  # running in a PyInstaller bundle
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):  # running in a PyInstaller bundle
         if get_os() == OS.MACOS:
             return Path(__file__).resolve().parent.parent.parent / "Resources"
         else:
