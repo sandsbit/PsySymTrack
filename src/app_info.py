@@ -18,4 +18,18 @@
 
 """Information about the app to use in code."""
 
-APP_NAME = "PsySymTrack"
+import tomllib
+
+from utils.osutil import get_working_dir_path
+
+APP_NAME: str
+APP_VERSION: str
+APP_DESCRIPTION: str
+
+toml_path = get_working_dir_path() / "pyproject.toml"
+with toml_path.open("rb") as f:
+    toml = tomllib.load(f)
+
+APP_NAME = toml["project"]["name"]
+APP_VERSION = toml["project"]["version"]
+APP_DESCRIPTION = toml["project"]["description"]

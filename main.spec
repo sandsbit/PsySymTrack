@@ -10,7 +10,8 @@ a = Analysis(
         ('LICENSE', '.'),
         ('CHANGELOG.md', '.'),
         ('values/', 'values/'),
-        ('icons/icon.png', 'icons/')
+        ('icons/icon.png', 'icons/'),
+        ('pyproject.toml', '.')
     ],
     hiddenimports=['PIL._tkinter_finder'],
     hookspath=[],
