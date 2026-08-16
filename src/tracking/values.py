@@ -17,8 +17,9 @@
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
 
 import json
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 from pathlib import Path
+from typing import TypeVar
 
 from utils import osutil
 from utils.osutil import get_working_dir_path
@@ -64,6 +65,7 @@ class ScaleValue(Value):
     not_severly_abormal_min: float | None
     not_severly_abormal_max: float | None
 
+    # noinspection bad-argument-type
     def __post_init__(self):
         """Checking whether all rules are complied with and smooth ranges."""
         if self.min_value > self.max_value:
@@ -79,13 +81,22 @@ class ScaleValue(Value):
         if (self.not_severly_abormal_max is not None) and (self.not_severly_abormal_max < self.normal_max):
             raise ValueError("not_severly_abormal_max must be greater than normal_max")
 
-        self.normal_min -= 0.5
-        self.normal_max += 0.5
-        if self.not_severly_abormal_min is not None:
-            self.not_severly_abormal_min -= 0.5
-        if self.not_severly_abormal_max is not None:
-            self.not_severly_abormal_max += 0.5
+        if self.has_inactive_values and (self.active_values is None):
+            raise ValueError("Active values must be set for a ScaleValue with has_inactive_values == True")
+        number_of_values = self.max_value - self.min_value + 1
+        if self.has_inactive_values and (len(self.active_values) != number_of_values):
+            raise ValueError(f"Invalid length of active values list: expected {number_of_values}, "
+                             f"got {len(self.active_values)}")
 
+        if type(self.normal_min) is int:
+            self.normal_min -= 0.5
+            self.normal_max += 0.5
+            if self.not_severly_abormal_min is not None:
+                self.not_severly_abormal_min -= 0.5
+            if self.not_severly_abormal_max is not None:
+                self.not_severly_abormal_max += 0.5
+
+    # noinspection bad-argument-type
     def active_value_description_pairs(self) -> list[tuple[int, str]]:
         """Returns a list of active values and their descriptions in ascending order."""
 
@@ -102,8 +113,9 @@ class ScaleValue(Value):
         return paired_values
 
 
+# noinspection pep8-naming
 def _TEST_example_ScaleValue() -> ScaleValue:
-    """Randmon ScaleValue for unit tests."""
+    """Random ScaleValue for unit tests."""
     return ScaleValue(
         id="unique_id_1",
         name="Test scale value",
@@ -123,7 +135,8 @@ def _TEST_example_ScaleValue() -> ScaleValue:
 @dataclass
 class PhysicalValue(Value):
     """
-        Stores values which can have any float value between two numbers (min_value, max_value).
+        Stores values which can have any float value between two numbers (min_value, max_value) (or
+        unlimited if both None).
 
         Example: weight, lithium blood level.
 
@@ -142,24 +155,26 @@ class PhysicalValue(Value):
     def __post_init__(self):
         """Checking whether all rules are complied with."""
         if (self.min_value is not None and self.max_value is not None) and (self.min_value > self.max_value):
-            raise ValueError("min_value must be less than max_value")
+            raise ValueError("min_value must be less or equal max_value")
         if (self.normal_min is not None and self.normal_max is not None) and (self.normal_min > self.normal_max):
-            raise ValueError("normal_min must be less than normal_max")
+            raise ValueError("normal_min must be less or equal normal_max")
         if (self.normal_min is not None and self.min_value is not None) and (self.normal_min < self.min_value):
-            raise ValueError("normal_min must be greater than min_value")
+            raise ValueError("normal_min must be greater or equal min_value")
         if (self.normal_max is not None and self.max_value is not None) and (self.normal_max > self.max_value):
-            raise ValueError("normal_max must be less than max_value")
+            raise ValueError("normal_max must be less or equal max_value")
         if self.not_severly_abormal_min is not None and self.normal_min is None:
             raise ValueError("normal_min must be defined if not_severly_abormal_min is defined")
         if self.not_severly_abormal_max is not None and self.normal_max is None:
             raise ValueError("normal_max must be defined if not_severly_abormal_max is defined")
         if (self.not_severly_abormal_min is not None) and (self.not_severly_abormal_min > self.normal_min):
-            raise ValueError("not_severly_abormal_min must be less than normal_min")
+            raise ValueError("not_severly_abormal_min must be less or equal normal_min")
         if (self.not_severly_abormal_max is not None) and (self.not_severly_abormal_max < self.normal_max):
-            raise ValueError("not_severly_abormal_max must be greater than normal_max")
+            raise ValueError("not_severly_abormal_max must be greater or equal normal_max")
 
+
+# noinspection pep8-naming
 def _TEST_example_PhysicalValue() -> PhysicalValue:
-    """Randmon PhysicalValue for unit tests."""
+    """Random PhysicalValue for unit tests."""
 
     return PhysicalValue(
         id="unique_id_2",
@@ -181,28 +196,30 @@ class ValuesManager:
     _physicals_file_path = osutil.get_app_data_dir() / "physicals.json"
 
     # Stored separately so that only custom values are saved on the disk.
-    _scale_values_standard: dict[str, list[ScaleValue]] = {}  # sorted by category
-    _physical_values_standard: list[PhysicalValue] = []
-    _scale_values_custom: list[ScaleValue] = []
-    _physical_values_custom: list[PhysicalValue] = []
+    _scale_values_standard: dict[str, list[ScaleValue]]  # sorted by category
+    _physical_values_standard: list[PhysicalValue]
+    _scale_values_custom: list[ScaleValue]
+    _physical_values_custom: list[PhysicalValue]
 
     def __new__(cls, *args, **kwargs):
-        """Singleton logic."""
+        """Singleton logic, load stndard and user-defined values."""
         if not cls._instance:
-            cls._instance = super(ValuesManager, cls).__new__(cls, *args, **kwargs)
+            cls._instance = super().__new__(cls, *args, **kwargs)
 
             cls._instance._load_standard_scale_values()
             cls._instance._load_standard_physical_values()
-            cls._instance._scale_values_custom +=  cls._instance._load_values_from_file(cls._instance._scales_file_path, ScaleValue)
-            cls._instance._physical_values_custom += cls._instance._load_values_from_file(cls._instance._physicals_file_path, PhysicalValue)
+            cls._instance._scale_values_custom = cls._instance._load_values_from_file(cls._instance._scales_file_path, ScaleValue)
+            cls._instance._physical_values_custom = cls._instance._load_values_from_file(cls._instance._physicals_file_path, PhysicalValue)
         return cls._instance
 
     def _load_standard_scale_values(self) -> None:
         """Loads predefined scale values that come with the app.
 
         Such scale values should be placed in <working dir>/values/scales/<category>.json
-        files which represent a json list of objects with the same structure as 'ScaleValue'.
+        files which represent a JSON list of objects with the same structure as 'ScaleValue'.
         """
+        self._scale_values_standard = {}
+
         scale_values_dir = get_working_dir_path() / "values" / "scales"
         if not scale_values_dir.exists():
             return
@@ -219,19 +236,23 @@ class ValuesManager:
         """Loads predefined physical values that come with the app.
 
         Such physical values should be placed in <working dir>/values/physicals.json
-        file which represents a json list of objects with the same structure as 'PhysicalValue'.
+        file which represents a JSON list of objects with the same structure as 'PhysicalValue'.
         """
+        self._physical_values_standard = []
+
         physical_values_file = get_working_dir_path() / "values" / "physicals.json"
         if physical_values_file.exists():
             values_obj_list = json.loads(physical_values_file.read_text(encoding="utf-8"))
             for value_obj in values_obj_list:
                 self._physical_values_standard.append(PhysicalValue(**value_obj))
 
+    T = TypeVar("T", bound=Value)
+    # noinspection pep8-naming
     @staticmethod
-    def _load_values_from_file(file: Path, Subtype: type[Value]) -> list[Value]:
-        """Loads a list of values from a json file.
+    def _load_values_from_file(file: Path, Subtype: type[T]) -> list[T]:
+        """Loads a list of values from a JSON file.
 
-        If file exists, it is parsed as a json list and every element of the list
+        If file exists, it is parsed as a JSON list and every element of the list
         is passed as kwargs to Subtype constructor. If file doesn't exist, empty
         list is returned."""
         if file.exists():
@@ -282,7 +303,7 @@ class ValuesManager:
         self._save_all()
 
     def _save_all(self) -> None:
-        """Save all sored custom values as a json files in the working directory. Paths to files
+        """Save all sored custom values as a JSON files in the working directory. Paths to files
         are defined above in the class."""
         obj_list = list(map(asdict, self._scale_values_custom))
         self._scales_file_path.write_text(json.dumps(obj_list, indent=4), encoding="utf-8")

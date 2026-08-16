@@ -15,15 +15,15 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
+
 import importlib
-import inspect
 import pkgutil
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
 from typing import ClassVar
 
-from general.userdata import BasicUserData
 from data import metrics
+from general.userdata import BasicUserData
 from tracking.valuestorsage import ValuesStorage
 
 _HISTORY_TIMEDELTA = timedelta(days=31)
@@ -72,7 +72,8 @@ class Metric(ABC):
             if name not in cls.__dict__:
                 raise ValueError(f"{cls.__name__} must define class variable {name}")
             if not isinstance(getattr(cls, name), expected_type):
-                raise ValueError(
+                # noinspection string-conversion-without-dunder-method
+                raise TypeError(
                     f"{cls.__name__}.{name} has invalid type: expected {expected_type}, got {type(getattr(cls, name))}")
 
         if cls.NEEDS_HISTORY_FOR is None and cls.NEEDS_HISTORY:
@@ -127,6 +128,7 @@ def get_all_metrics() -> list[MetricT]:
     return Metric.__subclasses__()
 
 def evaluate_metric(metric_cls: MetricT, user_data: BasicUserData, storage: ValuesStorage, date: datetime) -> float | None:
+    """Calculate metric on given date using given BasicUserData and values storage."""
     metric = metric_cls(user_data)
 
     params = {}
@@ -138,6 +140,7 @@ def evaluate_metric(metric_cls: MetricT, user_data: BasicUserData, storage: Valu
 
     if metric_cls.NEEDS_HISTORY:
         history = {}
+        # noinspection not-iterable
         for param_id in metric_cls.NEEDS_HISTORY_FOR:
             history[param_id] = storage.get_range(param_id, (date - _HISTORY_TIMEDELTA), date)
 

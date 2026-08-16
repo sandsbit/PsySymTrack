@@ -15,14 +15,21 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
+
 import dataclasses
-import unittest
 import json
 import tempfile
+import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from tracking.values import ScaleValue, PhysicalValue, ValuesManager, _TEST_example_ScaleValue, _TEST_example_PhysicalValue
+# noinspection protected-member
+from tracking.values import (
+    ScaleValue,
+    ValuesManager,
+    _TEST_example_PhysicalValue,
+    _TEST_example_ScaleValue,
+)
 
 
 class TestScaleValue(unittest.TestCase):
@@ -110,8 +117,6 @@ class TestLoadValuesFromFile(unittest.TestCase):
             dataclasses.asdict(original),
         )
 
-
-# TODO: unit tests missing getting new instance produces duplicates
 
 class TestValuesManager(unittest.TestCase):
 

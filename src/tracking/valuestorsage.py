@@ -49,12 +49,7 @@ class ValuesStorage:
         )
         self._connection.commit()
 
-    def edit_value(
-            self,
-            series_id: str,
-            date: datetime,
-            value: int | float,
-    ) -> None:
+    def edit_value(self, series_id: str, date: datetime, value: float) -> None:
         """Update an existing value or insert it if missing."""
         self._connection.execute(
             """
@@ -68,11 +63,7 @@ class ValuesStorage:
 
         self._connection.commit()
 
-    def delete_value(
-        self,
-        series_id: str,
-        date: datetime,
-    ) -> None:
+    def delete_value(self, series_id: str, date: datetime) -> None:
         """Delete a value.
 
         Raises:
@@ -93,11 +84,7 @@ class ValuesStorage:
 
         self._connection.commit()
 
-    def get_value(
-        self,
-        series_id: str,
-        date: datetime,
-    ) -> int | None:
+    def get_value(self, series_id: str, date: datetime) -> float | None:
         """Get a single value by date or None if no exists."""
         cursor = self._connection.execute(
             """
@@ -113,14 +100,9 @@ class ValuesStorage:
         if row is None:
             return None
 
-        return int(row[0])
+        return row[0]
 
-    def get_range(
-        self,
-        series_id: str,
-        start: datetime,
-        end: datetime,
-    ) -> list[tuple[datetime, int]]:
+    def get_range(self, series_id: str, start: datetime, end: datetime) -> list[tuple[datetime, int]]:
         """Get values in an inclusive date range in sorted order."""
         cursor = self._connection.execute(
             """

@@ -16,8 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
 
-import unittest
 import tempfile
+import unittest
 from datetime import datetime
 from pathlib import Path
 from unittest.mock import patch
@@ -49,18 +49,18 @@ class TestTimeSeriesStore(unittest.TestCase):
     def test_add_and_get_value(self) -> None:
         date = datetime(2026, 7, 20, 10, 30)
 
-        self.store.edit_value("weight", date, 75000)
+        self.store.edit_value("weight", date, 10.5)
 
         self.assertEqual(
             self.store.get_value("weight", date),
-            75000,
+            10.5
         )
 
     def test_get_missing_value_fails(self) -> None:
         self.assertIsNone(
             self.store.get_value(
                 "weight",
-                datetime(2026, 7, 20),
+                datetime(2026, 7, 20)
             )
         )
 
@@ -72,7 +72,7 @@ class TestTimeSeriesStore(unittest.TestCase):
 
         self.assertEqual(
             self.store.get_value("weight", date),
-            75500,
+            75500
         )
 
     def test_delete_existing_value(self) -> None:
@@ -81,34 +81,38 @@ class TestTimeSeriesStore(unittest.TestCase):
         self.store.edit_value("weight", date, 75000)
         self.store.delete_value("weight", date)
 
+        self.assertIsNone(
+            self.store.get_value("weight", date)
+        )
+
     def test_delete_missing_value_fails(self) -> None:
         with self.assertRaises(KeyError):
             self.store.delete_value(
                 "weight",
-                datetime(2026, 7, 20),
+                datetime(2026, 7, 20)
             )
 
     def test_get_range_returns_sorted_values(self) -> None:
         self.store.edit_value(
             "weight",
             datetime(2026, 7, 3),
-            73000,
+            73000
         )
         self.store.edit_value(
             "weight",
             datetime(2026, 7, 1),
-            72000,
+            72000
         )
         self.store.edit_value(
             "weight",
             datetime(2026, 7, 2),
-            72500,
+            72500
         )
 
         result = self.store.get_range(
             "weight",
             datetime(2026, 7, 1),
-            datetime(2026, 7, 3),
+            datetime(2026, 7, 3)
         )
 
         self.assertEqual(
@@ -116,8 +120,8 @@ class TestTimeSeriesStore(unittest.TestCase):
             [
                 (datetime(2026, 7, 1), 72000),
                 (datetime(2026, 7, 2), 72500),
-                (datetime(2026, 7, 3), 73000),
-            ],
+                (datetime(2026, 7, 3), 73000)
+            ]
         )
 
     def test_get_range_excludes_other_series(self) -> None:
@@ -129,12 +133,12 @@ class TestTimeSeriesStore(unittest.TestCase):
         result = self.store.get_range(
             "weight",
             datetime(2026, 1, 1),
-            datetime(2026, 12, 31),
+            datetime(2026, 12, 31)
         )
 
         self.assertEqual(
             result,
-            [(date, 75000)],
+            [(date, 75000)]
         )
 
     def test_multiple_series_can_have_same_date(self) -> None:
@@ -145,11 +149,11 @@ class TestTimeSeriesStore(unittest.TestCase):
 
         self.assertEqual(
             self.store.get_value("weight", date),
-            75000,
+            75000
         )
         self.assertEqual(
             self.store.get_value("blood_pressure", date),
-            120,
+            120
         )
 
     def test_data_survives_reopening(self) -> None:
@@ -163,7 +167,7 @@ class TestTimeSeriesStore(unittest.TestCase):
         try:
             self.assertEqual(
                 reopened_store.get_value("weight", date),
-                75000,
+                75000
             )
         finally:
             reopened_store.close()
