@@ -1,0 +1,40 @@
+APP_NAME = $$APPNAME$$
+FULL_APP_NAME = $$FULLAPPNAME$$
+PYEXEC = $$PYEXEC$$
+PREFIX = $$PREFIX$$
+FILE_PREFIX = $$FPREFIX$$
+
+default: build
+
+test:
+	PYTHONPATH=src $(PYEXEC) -m unittest discover tests/utils/
+	PYTHONPATH=src $(PYEXEC) -m unittest discover tests/tracking/
+	PYTHONPATH=src $(PYEXEC) -m unittest discover tests/general/
+
+build:
+    $(PYEXEC) -m PyInstaller --noconfirm main.spec
+    mkdir out
+    mv dist/main/main dist/main/$(APP_NAME)
+    mv dist/main/ dist/$(APP_NAME)/
+    tar -czvf out/$(FILE_PREFIX)-linux.tar.gz dist/$(APP_NAME)/
+    $$START_MACOS1$$
+    mkdir dist/macos_out
+    mv dist/main.app dist/macos_out/$(APP_NAME).app
+    ln -s /Applications/ dist/macos_out/Applications
+    hdiutil create -volname $(FULL_APP_NAME) -srcfolder dist/macos_out/ -ov -format UDZO out/$(FILE_PREFIX)-macos.dmg
+    $$END_MACOS1$$
+
+install:
+
+deb:
+
+rpm:
+
+clean:
+    rm -rf ./build/
+    rm -rf ./dist/
+    rm -rf ./out/
+
+dist-clean: clean
+    rm -f requirements.tmp
+    rm -f Makefile

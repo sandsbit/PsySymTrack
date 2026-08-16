@@ -38,6 +38,15 @@ classifiers = [
   "Topic :: Other/Nonlisted Topic"
 ]
 
+[project.optional-dependencies]
+build = [
+  "packaging"
+]
+lint = [
+  "ruff",
+  "mypy"
+]
+
 [project.urls]
 Homepage = "https://github.com/sandsbit/PsySymTrack"
 Documentation = "https://github.com/sandsbit/PsySymTrack/wiki"
@@ -52,3 +61,6 @@ app-main = "src:main"
 testpaths = ["tests"]
 pythonpath = ["src"]
 addopts = "-ra"
+
+[tool.ruff.lint]
+ignore = ["DTZ001"]
