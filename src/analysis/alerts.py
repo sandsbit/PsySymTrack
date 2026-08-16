@@ -15,23 +15,25 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
+
 import importlib
 import pkgutil
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
 from enum import Enum
 from typing import ClassVar
 
+from data import alerts
 from general.userdata import BasicUserData
 from tracking.metrics import Metric, evaluate_metric
-from data import alerts
 from tracking.valuestorsage import ValuesStorage
 from utils import dateutil
 
 
 @dataclass
 class Alert:
+    """Instances of this class are returned to describe alarms found by AlertGen."""
     class AlertSeverity(Enum):
         WARNING = 0
         IMPORTANT = 1
@@ -42,7 +44,8 @@ class Alert:
     severity: AlertSeverity
 
 class AlertGen(ABC):
-    """Base class for all Alerts - important notifications based on values and metrics."""
+    """Base class for all alert generators. Alerts are important notifications based on values and metrics
+    described by class Alert."""
 
     user_data: BasicUserData
 
@@ -93,13 +96,13 @@ def evaluate_alert(alert_cls: AlertGenT, user_data: BasicUserData, storage: Valu
     return alert_gen.generate_alert(params, metrics)
 
 def generate_alerts(user_data: BasicUserData, storage: ValuesStorage) -> list[Alert]:
-    alerts = []
+    alerts_list = []
 
     for alertT in get_all_alerts():
         alert = evaluate_alert(alertT, user_data, storage)
         if alert is not None:
-            alerts.append(alert)
+            alerts_list.append(alert)
 
-    alerts.sort(key=lambda x: x.severity.value, reverse=True)
+    alerts_list.sort(key=lambda x: x.severity.value, reverse=True)
 
-    return alerts
+    return alerts_list

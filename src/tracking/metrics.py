@@ -164,10 +164,15 @@ class MetricNameMigrationMeta(ABCMeta):
 class Metric(RangedEntity, ABC, metaclass=MetricNameMigrationMeta):
     """Base class for all Metrics - properties that are calculated based on values"""
 
-    user_data: BasicUserData
+    user_data: BasicUserData | None
 
-    def __init__(self, user_data: BasicUserData):
+    def __init__(self, user_data: BasicUserData | None):
         self.user_data = user_data
+
+    # It isn't good that both Metric and Value implement RangedEntity, but one
+    # is supposed to be used and instance and the other one as type. It creates
+    # problems down the way. Metric should be rewritten to be used as an instance
+    # in the future.
 
     # ==== About metric ====
     NAME: ClassVar[str]
@@ -176,12 +181,14 @@ class Metric(RangedEntity, ABC, metaclass=MetricNameMigrationMeta):
     USED_PARAMS_IDS: ClassVar[list[str]]
     NEEDS_HISTORY: ClassVar[bool]
     NEEDS_HISTORY_FOR: ClassVar[list[str] | None]
+    # -- depreceated --
     RESULT_MIN: ClassVar[float]
     RESULT_MAX: ClassVar[float]
     RESULT_NORMAL_MIN: ClassVar[float | None]
     RESULT_NORMAL_MAX: ClassVar[float | None]
     RESULT_NOT_SEVERELY_ABNORMAL_MIN: ClassVar[float | None]
     RESULT_NOT_SEVERELY_ABNORMAL_MAX: ClassVar[float | None]
+    # -- END --
     INTERP: ClassVar[list[tuple[int, int, str]] | None]
 
     def __init_subclass__(cls) -> None:
