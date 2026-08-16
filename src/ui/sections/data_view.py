@@ -162,6 +162,7 @@ class DataView(ttk.Frame):
             dates, values = get_points(self.current_object, selected_range)
         self.ax.plot(dates, values)
 
+        # TODO: migrate to +inf and -inf
         now = datetime.now()
         self.ax.set_xlim(dateutil.monday_before(now - selected_range.get_timedelta()), now)
         if isinstance(self.current_object, Value) and self.current_object.min_value is not None and self.current_object.max_value is not None:
