@@ -426,10 +426,10 @@ class ScaleForm(ttk.Frame):
                 self.entries["normal_max"].get()
             ),
 
-            not_severly_abormal_min=self._optional_int(
+            not_severely_abnormal_min=self._optional_int(
                 "not_severly_abormal_min"
             ),
-            not_severly_abormal_max=self._optional_int(
+            not_severely_abnormal_max=self._optional_int(
                 "not_severly_abormal_max"
             ),
         )

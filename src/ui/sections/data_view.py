@@ -174,14 +174,14 @@ class DataView(ttk.Frame):
 
         if isinstance(self.current_object, ScaleValue):
             self.ax.axhspan(self.current_object.normal_min, self.current_object.normal_max, color="green", alpha=0.2)
-            if self.current_object.not_severly_abormal_min is not None:
-                self.ax.axhspan(self.current_object.not_severly_abormal_min, self.current_object.normal_min, color="yellow", alpha=0.2)
-                self.ax.axhspan(self.current_object.min_value, self.current_object.not_severly_abormal_min, color="red", alpha=0.2)
+            if self.current_object.not_severely_abnormal_min is not None:
+                self.ax.axhspan(self.current_object.not_severely_abnormal_min, self.current_object.normal_min, color="yellow", alpha=0.2)
+                self.ax.axhspan(self.current_object.min_value, self.current_object.not_severely_abnormal_min, color="red", alpha=0.2)
             else:
                 self.ax.axhspan(self.current_object.min_value, self.current_object.normal_min, color="yellow", alpha=0.2)
-            if self.current_object.not_severly_abormal_max is not None:
-                self.ax.axhspan(self.current_object.normal_max, self.current_object.not_severly_abormal_max, color="yellow", alpha=0.2)
-                self.ax.axhspan(self.current_object.not_severly_abormal_max, self.current_object.max_value, color="red", alpha=0.2)
+            if self.current_object.not_severely_abnormal_max is not None:
+                self.ax.axhspan(self.current_object.normal_max, self.current_object.not_severely_abnormal_max, color="yellow", alpha=0.2)
+                self.ax.axhspan(self.current_object.not_severely_abnormal_max, self.current_object.max_value, color="red", alpha=0.2)
             else:
                 self.ax.axhspan(self.current_object.normal_max, self.current_object.max_value, color="yellow", alpha=0.2)
         elif isinstance(self.current_object, PhysicalValue):
@@ -195,18 +195,18 @@ class DataView(ttk.Frame):
                 normal_max = self.current_object.normal_max if self.current_object.normal_max is not None else abs_max
                 self.ax.axhspan(self.current_object.normal_min, normal_max, color="green", alpha=0.2)
                 min_value = self.current_object.min_value if self.current_object.min_value is not None else abs_min
-                if self.current_object.not_severly_abormal_min is not None:
-                    self.ax.axhspan(self.current_object.not_severly_abormal_min, self.current_object.normal_min, color="yellow", alpha=0.2)
-                    self.ax.axhspan(min_value, self.current_object.not_severly_abormal_min, color="red", alpha=0.2)
+                if self.current_object.not_severely_abnormal_min is not None:
+                    self.ax.axhspan(self.current_object.not_severely_abnormal_min, self.current_object.normal_min, color="yellow", alpha=0.2)
+                    self.ax.axhspan(min_value, self.current_object.not_severely_abnormal_min, color="red", alpha=0.2)
                 else:
                     self.ax.axhspan(min_value, self.current_object.normal_min, color="yellow", alpha=0.2)
             if self.current_object.normal_max is not None:
                 if self.current_object.normal_min is None:
                     self.ax.axhspan(abs_min, self.current_object.normal_max, color="green", alpha=0.2)
                 max_value = self.current_object.max_value if self.current_object.max_value is not None else abs_max
-                if self.current_object.not_severly_abormal_max is not None:
-                    self.ax.axhspan(self.current_object.normal_max, self.current_object.not_severly_abormal_max, color="yellow", alpha=0.2)
-                    self.ax.axhspan(self.current_object.not_severly_abormal_max, max_value, color="red", alpha=0.2)
+                if self.current_object.not_severely_abnormal_max is not None:
+                    self.ax.axhspan(self.current_object.normal_max, self.current_object.not_severely_abnormal_max, color="yellow", alpha=0.2)
+                    self.ax.axhspan(self.current_object.not_severely_abnormal_max, max_value, color="red", alpha=0.2)
                 else:
                     self.ax.axhspan(self.current_object.normal_max, max_value, color="red", alpha=0.2)
         else:

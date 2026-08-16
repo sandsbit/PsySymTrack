@@ -44,12 +44,12 @@ class GAD_7(Metric):
     NEEDS_HISTORY = False
     NEEDS_HISTORY_FOR = None
 
-    RESULT_MIN = 0
-    RESULT_MAX = 21
-    RESULT_NORMAL_MIN = 0
-    RESULT_NORMAL_MAX = 4
-    RESULT_NOT_SEVERELY_ABNORMAL_MIN = 0
-    RESULT_NOT_SEVERELY_ABNORMAL_MAX = 14
+    min_value = 0
+    max_value = 21
+    normal_min = 0
+    normal_max = 4
+    not_severely_abnormal_min = 0
+    not_severely_abnormal_max = 14
     INTERP = [
         (0, 4, "Minimal Anxiety"),
         (5, 9, "Mild Anxiety"),

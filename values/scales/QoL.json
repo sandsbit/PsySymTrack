@@ -17,8 +17,8 @@
         "active_values": null,
         "normal_min": 0,
         "normal_max": 0,
-        "not_severly_abormal_min": 0,
-        "not_severly_abormal_max": 2
+        "not_severely_abnormal_min": 0,
+        "not_severely_abnormal_max": 2
     },
   {
         "id": "qol_trust",
@@ -38,8 +38,8 @@
         "active_values": null,
         "normal_min": 4,
         "normal_max": 4,
-        "not_severly_abormal_min": 2,
-        "not_severly_abormal_max": 4
+        "not_severely_abnormal_min": 2,
+        "not_severely_abnormal_max": 4
     },
   {
         "id": "qol_coping",
@@ -59,8 +59,8 @@
         "active_values": null,
         "normal_min": 0,
         "normal_max": 0,
-        "not_severly_abormal_min": 0,
-        "not_severly_abormal_max": 2
+        "not_severely_abnormal_min": 0,
+        "not_severely_abnormal_max": 2
     },
   {
         "id": "qol_do_things",
@@ -80,8 +80,8 @@
         "active_values": null,
         "normal_min": 4,
         "normal_max": 4,
-        "not_severly_abormal_min": 2,
-        "not_severly_abormal_max": 4
+        "not_severely_abnormal_min": 2,
+        "not_severely_abnormal_max": 4
     },
   {
         "id": "qol_mood",
@@ -101,8 +101,8 @@
         "active_values": null,
         "normal_min": 4,
         "normal_max": 4,
-        "not_severly_abormal_min": 2,
-        "not_severly_abormal_max": 4
+        "not_severely_abnormal_min": 2,
+        "not_severely_abnormal_max": 4
     },
   {
         "id": "qol_life_worth",
@@ -122,8 +122,8 @@
         "active_values": null,
         "normal_min": 0,
         "normal_max": 0,
-        "not_severly_abormal_min": 0,
-        "not_severly_abormal_max": 2
+        "not_severely_abnormal_min": 0,
+        "not_severely_abnormal_max": 2
     },
   {
         "id": "qol_joy",
@@ -143,8 +143,8 @@
         "active_values": null,
         "normal_min": 4,
         "normal_max": 4,
-        "not_severly_abormal_min": 2,
-        "not_severly_abormal_max": 4
+        "not_severely_abnormal_min": 2,
+        "not_severely_abnormal_max": 4
     },
   {
         "id": "qol_hopeful",
@@ -164,8 +164,8 @@
         "active_values": null,
         "normal_min": 4,
         "normal_max": 4,
-        "not_severly_abormal_min": 2,
-        "not_severly_abormal_max": 4
+        "not_severely_abnormal_min": 2,
+        "not_severely_abnormal_max": 4
     },
   {
         "id": "qol_lonely",
@@ -185,8 +185,8 @@
         "active_values": null,
         "normal_min": 0,
         "normal_max": 0,
-        "not_severly_abormal_min": 0,
-        "not_severly_abormal_max": 2
+        "not_severely_abnormal_min": 0,
+        "not_severely_abnormal_max": 2
     },
   {
         "id": "qol_confident",
@@ -206,8 +206,8 @@
         "active_values": null,
         "normal_min": 4,
         "normal_max": 4,
-        "not_severly_abormal_min": 2,
-        "not_severly_abormal_max": 4
+        "not_severely_abnormal_min": 2,
+        "not_severely_abnormal_max": 4
     },
   {
         "id": "qol_physical",
@@ -227,7 +227,7 @@
         "active_values": null,
         "normal_min": 4,
         "normal_max": 4,
-        "not_severly_abormal_min": 2,
-        "not_severly_abormal_max": 4
+        "not_severely_abnormal_min": 2,
+        "not_severely_abnormal_max": 4
     }
 ]

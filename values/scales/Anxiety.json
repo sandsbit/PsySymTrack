@@ -16,8 +16,8 @@
         "active_values": null,
         "normal_min": 0,
         "normal_max": 0,
-        "not_severly_abormal_min": 0,
-        "not_severly_abormal_max": 2
+        "not_severely_abnormal_min": 0,
+        "not_severely_abnormal_max": 2
     },
   {
         "id": "anxiety2",
@@ -36,8 +36,8 @@
         "active_values": null,
         "normal_min": 0,
         "normal_max": 0,
-        "not_severly_abormal_min": 0,
-        "not_severly_abormal_max": 2
+        "not_severely_abnormal_min": 0,
+        "not_severely_abnormal_max": 2
     },
   {
         "id": "anxiety3",
@@ -56,8 +56,8 @@
         "active_values": null,
         "normal_min": 0,
         "normal_max": 0,
-        "not_severly_abormal_min": 0,
-        "not_severly_abormal_max": 2
+        "not_severely_abnormal_min": 0,
+        "not_severely_abnormal_max": 2
     },
   {
         "id": "anxiety4",
@@ -76,8 +76,8 @@
         "active_values": null,
         "normal_min": 0,
         "normal_max": 0,
-        "not_severly_abormal_min": 0,
-        "not_severly_abormal_max": 2
+        "not_severely_abnormal_min": 0,
+        "not_severely_abnormal_max": 2
     },
   {
         "id": "anxiety5",
@@ -96,8 +96,8 @@
         "active_values": null,
         "normal_min": 0,
         "normal_max": 0,
-        "not_severly_abormal_min": 0,
-        "not_severly_abormal_max": 2
+        "not_severely_abnormal_min": 0,
+        "not_severely_abnormal_max": 2
     },
   {
         "id": "anxiety6",
@@ -116,8 +116,8 @@
         "active_values": null,
         "normal_min": 0,
         "normal_max": 0,
-        "not_severly_abormal_min": 0,
-        "not_severly_abormal_max": 2
+        "not_severely_abnormal_min": 0,
+        "not_severely_abnormal_max": 2
     },
   {
         "id": "anxiety7",
@@ -136,7 +136,7 @@
         "active_values": null,
         "normal_min": 0,
         "normal_max": 0,
-        "not_severly_abormal_min": 0,
-        "not_severly_abormal_max": 2
+        "not_severely_abnormal_min": 0,
+        "not_severely_abnormal_max": 2
     }
 ]

@@ -18,16 +18,16 @@
 
 import json
 from dataclasses import asdict, dataclass
-from enum import Enum
 from pathlib import Path
 from typing import TypeVar
 
+from tracking.basics import RangedEntity
 from utils import osutil
 from utils.osutil import get_working_dir_path
 
 
 @dataclass
-class Value:
+class Value(RangedEntity):
     """
     Parent class for two major types of values stored in the app. See children below.
 
@@ -41,60 +41,8 @@ class Value:
     name: str  # human-readable
     description: str
 
-    min_value: float
-    max_value: float
-    normal_min: float
-    normal_max: float
-    # i.e. mildly abnormal range + normal range
-    not_severly_abormal_min: float
-    not_severly_abormal_max: float
-
-    # noinspection bad-argument-type
     def __post_init__(self):
-        """Checking whether all rules are complied with and smooth ranges."""
-        if self.min_value > self.max_value:
-            raise ValueError("min_value must be less than max_value")
-        if self.normal_min > self.normal_max:
-            raise ValueError("normal_min must be less than normal_max")
-        if self.normal_min < self.min_value:
-            raise ValueError("normal_min must be greater than min_value")
-        if self.normal_max > self.max_value:
-            raise ValueError("normal_max must be less than max_value")
-        if self.not_severly_abormal_min > self.normal_min:
-            raise ValueError("not_severly_abormal_min must be less than normal_min")
-        if self.not_severly_abormal_max < self.normal_max:
-            raise ValueError("not_severly_abormal_max must be greater than normal_max")
-
-    class RangeValue(Enum):
-        NOT_ALLOWED = 0
-        NORMAL = 1
-        MILDLY_ABNORMAL = 2
-        SEVERELY_ABNORMAL = 3
-
-    def check_range_for_value(self, value: float) -> RangeValue:
-        if self.normal_min <= value <= self.normal_max:
-            return Value.RangeValue.NORMAL
-        elif self.not_severly_abormal_min <= value <= self.not_severly_abormal_max:
-            return Value.RangeValue.MILDLY_ABNORMAL
-        elif value < self.min_value or value > self.max_value:
-            return Value.RangeValue.NOT_ALLOWED
-        else:
-            return Value.RangeValue.SEVERELY_ABNORMAL
-
-    def is_allowed(self, value: float) -> bool:
-        return self.check_range_for_value(value) != Value.RangeValue.NOT_ALLOWED
-
-    def is_normal(self, value: float) -> bool:
-        return self.check_range_for_value(value) == Value.RangeValue.NORMAL
-
-    def is_mildly_abnormal(self, value: float) -> bool:
-        return self.check_range_for_value(value) == Value.RangeValue.MILDLY_ABNORMAL
-
-    def is_severely_abnormal(self, value: float) -> bool:
-        return self.check_range_for_value(value) == Value.RangeValue.SEVERELY_ABNORMAL
-
-    def is_abnormal(self, value: float) -> bool:
-        return self.check_range_for_value(value) in [Value.RangeValue.MILDLY_ABNORMAL, Value.RangeValue.SEVERELY_ABNORMAL]
+        super()._check_fields()
 
 
 @dataclass
@@ -133,10 +81,10 @@ class ScaleValue(Value):
         if type(self.normal_min) is int:
             self.normal_min -= 0.5
             self.normal_max += 0.5
-            if self.not_severly_abormal_min is not None:
-                self.not_severly_abormal_min -= 0.5
-            if self.not_severly_abormal_max is not None:
-                self.not_severly_abormal_max += 0.5
+            if self.not_severely_abnormal_min is not None:
+                self.not_severely_abnormal_min -= 0.5
+            if self.not_severely_abnormal_max is not None:
+                self.not_severely_abnormal_max += 0.5
 
     # noinspection bad-argument-type
     def active_value_description_pairs(self) -> list[tuple[int, str]]:
@@ -170,8 +118,8 @@ def _TEST_example_ScaleValue() -> ScaleValue:
         active_values=None,
         normal_min=3,
         normal_max=3,
-        not_severly_abormal_min=2,
-        not_severly_abormal_max=4
+        not_severely_abnormal_min=2,
+        not_severely_abnormal_max=4
     )
 
 @dataclass
@@ -195,13 +143,13 @@ class PhysicalValue(Value):
             raise ValueError("normal_min must be greater or equal min_value")
         if (self.normal_max is not None and self.max_value is not None) and (self.normal_max > self.max_value):
             raise ValueError("normal_max must be less or equal max_value")
-        if self.not_severly_abormal_min is not None and self.normal_min is None:
+        if self.not_severely_abnormal_min is not None and self.normal_min is None:
             raise ValueError("normal_min must be defined if not_severly_abormal_min is defined")
-        if self.not_severly_abormal_max is not None and self.normal_max is None:
+        if self.not_severely_abnormal_max is not None and self.normal_max is None:
             raise ValueError("normal_max must be defined if not_severly_abormal_max is defined")
-        if (self.not_severly_abormal_min is not None) and (self.not_severly_abormal_min > self.normal_min):
+        if (self.not_severely_abnormal_min is not None) and (self.not_severely_abnormal_min > self.normal_min):
             raise ValueError("not_severly_abormal_min must be less or equal normal_min")
-        if (self.not_severly_abormal_max is not None) and (self.not_severly_abormal_max < self.normal_max):
+        if (self.not_severely_abnormal_max is not None) and (self.not_severely_abnormal_max < self.normal_max):
             raise ValueError("not_severly_abormal_max must be greater or equal normal_max")
 
 
@@ -217,8 +165,8 @@ def _TEST_example_PhysicalValue() -> PhysicalValue:
         max_value=10.5,
         normal_min=-3,
         normal_max=3,
-        not_severly_abormal_min=-5,
-        not_severly_abormal_max=5,
+        not_severely_abnormal_min=-5,
+        not_severely_abnormal_max=5,
     )
 
 class ValuesManager:

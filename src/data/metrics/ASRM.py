@@ -39,12 +39,12 @@ class ASRM(Metric):
     NEEDS_HISTORY = False
     NEEDS_HISTORY_FOR = None
 
-    RESULT_MIN = 0
-    RESULT_MAX = 20
-    RESULT_NORMAL_MIN = 0
-    RESULT_NORMAL_MAX = 5
-    RESULT_NOT_SEVERELY_ABNORMAL_MIN = 0
-    RESULT_NOT_SEVERELY_ABNORMAL_MAX = 9
+    min_value = 0
+    max_value = 20
+    normal_min = 0
+    normal_max = 5
+    not_severely_abnormal_min = 0
+    not_severely_abnormal_max = 9
     INTERP = [
         (0, 5, "Normal / No MMania"),
         (6, 9, "Possible Hypomania"),

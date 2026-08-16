@@ -17,18 +17,151 @@
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
 
 import importlib
+import math
 import pkgutil
-from abc import ABC, abstractmethod
+import warnings
+from abc import ABC, ABCMeta, abstractmethod
 from datetime import datetime, timedelta
 from typing import ClassVar
 
 from data import metrics
 from general.userdata import BasicUserData
+from tracking.basics import RangedEntity
 from tracking.valuestorsage import ValuesStorage
 
 _HISTORY_TIMEDELTA = timedelta(days=31)
 
-class Metric(ABC):
+
+# noinspection unresolved-references,attribute-outside-init
+class MetricNameMigrationMeta(ABCMeta):
+    @property
+    def RESULT_MIN(cls) -> float:
+        warnings.warn(
+            "Old (capitalized) range fields are deprecated; use the ones from RangedEntity instead",
+            DeprecationWarning,
+            stacklevel=2
+        )
+        return cls.min_value
+
+    @RESULT_MIN.setter
+    def RESULT_MIN(cls, value: float | None):
+        warnings.warn(
+            "Old (capitalized) range fields are deprecated; use the ones from RangedEntity instead",
+            DeprecationWarning,
+            stacklevel=2
+        )
+        if value is None:
+            cls.min_value = -math.inf
+        else:
+            cls.min_value = value
+
+    @property
+    def RESULT_MAX(cls) -> float:
+        warnings.warn(
+            "Old (capitalized) range fields are deprecated; use the ones from RangedEntity instead",
+            DeprecationWarning,
+            stacklevel=2
+        )
+        return cls.max_value
+
+    @RESULT_MAX.setter
+    def RESULT_MAX(cls, value: float | None):
+        warnings.warn(
+            "Old (capitalized) range fields are deprecated; use the ones from RangedEntity instead",
+            DeprecationWarning,
+            stacklevel=2
+        )
+        if value is None:
+            cls.max_value = math.inf
+        else:
+            cls.max_value = value
+
+    @property
+    def RESULT_NORMAL_MIN(cls) -> float:
+        warnings.warn(
+            "Old (capitalized) range fields are deprecated; use the ones from RangedEntity instead",
+            DeprecationWarning,
+            stacklevel=2
+        )
+        return cls.normal_min
+
+    @RESULT_NORMAL_MIN.setter
+    def RESULT_NORMAL_MIN(cls, value: float | None):
+        warnings.warn(
+            "Old (capitalized) range fields are deprecated; use the ones from RangedEntity instead",
+            DeprecationWarning,
+            stacklevel=2
+        )
+        if value is None:
+            cls.normal_min = -math.inf
+        else:
+            cls.normal_min = value
+
+    @property
+    def RESULT_NORMAL_MAX(cls) -> float:
+        warnings.warn(
+            "Old (capitalized) range fields are deprecated; use the ones from RangedEntity instead",
+            DeprecationWarning,
+            stacklevel=2
+        )
+        return cls.normal_max
+
+    @RESULT_NORMAL_MAX.setter
+    def RESULT_NORMAL_MAX(cls, value: float | None):
+        warnings.warn(
+            "Old (capitalized) range fields are deprecated; use the ones from RangedEntity instead",
+            DeprecationWarning,
+            stacklevel=2
+        )
+        if value is None:
+            cls.normal_max = math.inf
+        else:
+            cls.normal_max = value
+
+    @property
+    def RESULT_NOT_SEVERELY_ABNORMAL_MIN(cls) -> float:
+        warnings.warn(
+            "Old (capitalized) range fields are deprecated; use the ones from RangedEntity instead",
+            DeprecationWarning,
+            stacklevel=2
+        )
+        return cls.not_severely_abnormal_min
+
+    @RESULT_NOT_SEVERELY_ABNORMAL_MIN.setter
+    def RESULT_NOT_SEVERELY_ABNORMAL_MIN(cls, value: float | None):
+        warnings.warn(
+            "Old (capitalized) range fields are deprecated; use the ones from RangedEntity instead",
+            DeprecationWarning,
+            stacklevel=2
+        )
+        if value is None:
+            cls.not_severely_abnormal_min = -math.inf
+        else:
+            cls.not_severely_abnormal_min = value
+
+    @property
+    def RESULT_NOT_SEVERELY_ABNORMAL_MAX(cls) -> float:
+        warnings.warn(
+            "Old (capitalized) range fields are deprecated; use the ones from RangedEntity instead",
+            DeprecationWarning,
+            stacklevel=2
+        )
+        return cls.not_severely_abnormal_max
+
+    @RESULT_NOT_SEVERELY_ABNORMAL_MAX.setter
+    def RESULT_NOT_SEVERELY_ABNORMAL_MAX(cls, value: float | None):
+        warnings.warn(
+            "Old (capitalized) range fields are deprecated; use the ones from RangedEntity instead",
+            DeprecationWarning,
+            stacklevel=2
+        )
+        if value is None:
+            cls.not_severely_abnormal_max = math.inf
+        else:
+            cls.not_severely_abnormal_max = value
+
+
+class Metric(RangedEntity, ABC, metaclass=MetricNameMigrationMeta):
     """Base class for all Metrics - properties that are calculated based on values"""
 
     user_data: BasicUserData
@@ -52,20 +185,14 @@ class Metric(ABC):
     INTERP: ClassVar[list[tuple[int, int, str]] | None]
 
     def __init_subclass__(cls) -> None:
-        super().__init_subclass__()
+        RangedEntity.__init_subclass__()
 
         required_fields = {
             "NAME": str,
             "DESCRIPTION": str,
             "USED_PARAMS_IDS": list,
             "NEEDS_HISTORY": bool,
-            "NEEDS_HISTORY_FOR": (list, type(None)),
-            "RESULT_MIN": (float, int),
-            "RESULT_MAX": (float, int),
-            "RESULT_NORMAL_MIN": (float, int, type(None)),
-            "RESULT_NORMAL_MAX": (float, int, type(None)),
-            "RESULT_NOT_SEVERELY_ABNORMAL_MIN": (float, int, type(None)),
-            "RESULT_NOT_SEVERELY_ABNORMAL_MAX": (float, int, type(None)),
+            "NEEDS_HISTORY_FOR": (list, type(None))
         }
 
         for name, expected_type in required_fields.items():
@@ -79,41 +206,19 @@ class Metric(ABC):
         if cls.NEEDS_HISTORY_FOR is None and cls.NEEDS_HISTORY:
             raise ValueError(f"{cls.__name__}.NEEDS_HISTORY_FOR cannot be None when NEEDS_HISTORY is True")
 
-        ranges = [
-            ("RESULT", cls.RESULT_MIN, cls.RESULT_MAX),
-            ("RESULT_NORMAL", cls.RESULT_NORMAL_MIN, cls.RESULT_NORMAL_MAX),
-            ("RESULT_NOT_SEVERELY_ABNORMAL", cls.RESULT_NOT_SEVERELY_ABNORMAL_MIN,
-             cls.RESULT_NOT_SEVERELY_ABNORMAL_MAX),
-        ]
-
-        for name, minimum, maximum in ranges:
-            if minimum is not None and maximum is not None and minimum > maximum:
-                raise ValueError(f"{cls.__name__}: {name}_MIN must be <= {name}_MAX")
-
-        if cls.RESULT_NORMAL_MIN is not None and cls.RESULT_MIN is not None and cls.RESULT_NORMAL_MIN < cls.RESULT_MIN:
-            raise ValueError(f"{cls.__name__}: RESULT_NORMAL_MIN must be >= RESULT_MIN")
-
-        if cls.RESULT_NORMAL_MIN is not None and cls.RESULT_MAX is not None and cls.RESULT_NORMAL_MIN > cls.RESULT_MAX:
-            raise ValueError(f"{cls.__name__}: RESULT_NORMAL_MIN must be <= RESULT_MAX")
-
-        if cls.RESULT_NORMAL_MAX is not None and cls.RESULT_MIN is not None and cls.RESULT_NORMAL_MAX < cls.RESULT_MIN:
-            raise ValueError(f"{cls.__name__}: RESULT_NORMAL_MAX must be >= RESULT_MIN")
-
-        if cls.RESULT_NORMAL_MAX is not None and cls.RESULT_MAX is not None and cls.RESULT_NORMAL_MAX > cls.RESULT_MAX:
-            raise ValueError(f"{cls.__name__}: RESULT_NORMAL_MAX must be <= RESULT_MAX")
-
-        if cls.RESULT_NOT_SEVERELY_ABNORMAL_MIN is not None and cls.RESULT_NORMAL_MIN is None:
-            raise ValueError(f"{cls.__name__}: RESULT_NORMAL_MIN must be set when RESULT_NOT_SEVERELY_ABNORMAL_MIN is set")
-
-        if cls.RESULT_NOT_SEVERELY_ABNORMAL_MIN is not None and cls.RESULT_NOT_SEVERELY_ABNORMAL_MIN > cls.RESULT_NORMAL_MIN:
-            raise ValueError(f"{cls.__name__}: RESULT_NOT_SEVERELY_ABNORMAL_MIN must be <= RESULT_NORMAL_MIN")
-
-        if cls.RESULT_NOT_SEVERELY_ABNORMAL_MAX is not None and cls.RESULT_NORMAL_MAX is None:
-            raise ValueError(
-                f"{cls.__name__}: RESULT_NORMAL_MAX must be set when RESULT_NOT_SEVERELY_ABNORMAL_MAX is set")
-
-        if cls.RESULT_NOT_SEVERELY_ABNORMAL_MAX is not None and cls.RESULT_NOT_SEVERELY_ABNORMAL_MAX < cls.RESULT_NORMAL_MAX:
-            raise ValueError(f"{cls.__name__}: RESULT_NOT_SEVERELY_ABNORMAL_MAX must be >= RESULT_NORMAL_MAX")
+        # Sadly it is code duplication from RangedEntity class. I haven't found a way to avoid it.
+        if cls.min_value > cls.max_value:
+            raise ValueError("min_value must be less than max_value")
+        if cls.normal_min > cls.normal_max:
+            raise ValueError("normal_min must be less than normal_max")
+        if cls.normal_min < cls.min_value:
+            raise ValueError("normal_min must be greater than min_value")
+        if cls.normal_max > cls.max_value:
+            raise ValueError("normal_max must be less than max_value")
+        if cls.not_severely_abnormal_min > cls.normal_min:
+            raise ValueError("not_severly_abormal_min must be less than normal_min")
+        if cls.not_severely_abnormal_max < cls.normal_max:
+            raise ValueError("not_severly_abormal_max must be greater than normal_max")
 
     @abstractmethod
     def calculate(self, params: dict[str, int | float], history: dict[str, list[tuple[datetime, int]]] | None = None) -> float | None:

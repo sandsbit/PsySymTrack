@@ -17,8 +17,8 @@
         "active_values": null,
         "normal_min": 1,
         "normal_max": 1,
-        "not_severly_abormal_min": 0,
-        "not_severly_abormal_max": 3
+        "not_severely_abnormal_min": 0,
+        "not_severely_abnormal_max": 3
     },
   {
         "id": "sleep_maintenance",
@@ -37,8 +37,8 @@
         "active_values": null,
         "normal_min": 0,
         "normal_max": 0,
-        "not_severly_abormal_min": 0,
-        "not_severly_abormal_max": 2
+        "not_severely_abnormal_min": 0,
+        "not_severely_abnormal_max": 2
     },
   {
         "id": "sleep_early_awakening",
@@ -57,8 +57,8 @@
         "active_values": null,
         "normal_min": 0,
         "normal_max": 0,
-        "not_severly_abormal_min": 0,
-        "not_severly_abormal_max": 2
+        "not_severely_abnormal_min": 0,
+        "not_severely_abnormal_max": 2
     },
   {
         "id": "sleep_duration",
@@ -80,8 +80,8 @@
         "active_values": null,
         "normal_min": 0,
         "normal_max": 0,
-        "not_severly_abormal_min": -1,
-        "not_severly_abormal_max": 1
+        "not_severely_abnormal_min": -1,
+        "not_severely_abnormal_max": 1
     },
   {
         "id": "mood",
@@ -103,8 +103,8 @@
         "active_values": null,
         "normal_min": -1,
         "normal_max": 1,
-        "not_severly_abormal_min": -2,
-        "not_severly_abormal_max": 2
+        "not_severely_abnormal_min": -2,
+        "not_severely_abnormal_max": 2
     },
   {
         "id": "cognitive_concentration",
@@ -123,8 +123,8 @@
         "active_values": null,
         "normal_min": 0,
         "normal_max": 1,
-        "not_severly_abormal_min": 0,
-        "not_severly_abormal_max": 2
+        "not_severely_abnormal_min": 0,
+        "not_severely_abnormal_max": 2
     },
   {
         "id": "self_image",
@@ -146,8 +146,8 @@
         "active_values": null,
         "normal_min": 0,
         "normal_max": 1,
-        "not_severly_abormal_min": -1,
-        "not_severly_abormal_max": 2
+        "not_severely_abnormal_min": -1,
+        "not_severely_abnormal_max": 2
     },
   {
         "id": "suicide",
@@ -166,8 +166,8 @@
         "active_values": null,
         "normal_min": 0,
         "normal_max": 0,
-        "not_severly_abormal_min": 0,
-        "not_severly_abormal_max": 1
+        "not_severely_abnormal_min": 0,
+        "not_severely_abnormal_max": 1
     },
   {
         "id": "general_interest",
@@ -189,8 +189,8 @@
         "active_values": null,
         "normal_min": -1,
         "normal_max": 1,
-        "not_severly_abormal_min": -2,
-        "not_severly_abormal_max": 2
+        "not_severely_abnormal_min": -2,
+        "not_severely_abnormal_max": 2
     },
   {
         "id": "energy",
@@ -212,8 +212,8 @@
         "active_values": null,
         "normal_min": -1,
         "normal_max": 1,
-        "not_severly_abormal_min": -2,
-        "not_severly_abormal_max": 2
+        "not_severely_abnormal_min": -2,
+        "not_severely_abnormal_max": 2
     },
   {
         "id": "agitation",
@@ -235,7 +235,7 @@
         "active_values": null,
         "normal_min": -1,
         "normal_max": 1,
-        "not_severly_abormal_min": -2,
-        "not_severly_abormal_max": 2
+        "not_severely_abnormal_min": -2,
+        "not_severely_abnormal_max": 2
     }
 ]

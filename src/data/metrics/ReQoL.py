@@ -44,12 +44,12 @@ class ReQoL_10(Metric):
     NEEDS_HISTORY = False
     NEEDS_HISTORY_FOR = None
 
-    RESULT_MIN = 0
-    RESULT_MAX = 40
-    RESULT_NORMAL_MIN = None
-    RESULT_NORMAL_MAX = None
-    RESULT_NOT_SEVERELY_ABNORMAL_MIN = None
-    RESULT_NOT_SEVERELY_ABNORMAL_MAX = None
+    min_value = 0
+    max_value = 40
+    normal_min = 0
+    normal_max = 40
+    not_severely_abnormal_min = 0
+    not_severely_abnormal_max = 40
     INTERP = None
 
     def calculate(self, params: dict[str, int | float],

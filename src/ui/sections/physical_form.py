@@ -198,10 +198,10 @@ class PhysicalForm(ttk.Frame):
                 "normal_max"
             ),
 
-            not_severly_abormal_min=self._optional_float(
+            not_severely_abnormal_min=self._optional_float(
                 "not_severly_abormal_min"
             ),
-            not_severly_abormal_max=self._optional_float(
+            not_severely_abnormal_max=self._optional_float(
                 "not_severly_abormal_max"
             ),
         )

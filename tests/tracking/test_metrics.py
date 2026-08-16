@@ -35,12 +35,12 @@ class TestMetricsPostInit(unittest.TestCase):
                 USED_PARAMS_IDS = []  # noqa: RUF012
                 NEEDS_HISTORY = False
                 NEEDS_HISTORY_FOR = None
-                RESULT_MIN = 1
-                RESULT_MAX = 5
-                RESULT_NORMAL_MIN = 3
-                RESULT_NORMAL_MAX = 3
-                RESULT_NOT_SEVERELY_ABNORMAL_MIN = 2
-                RESULT_NOT_SEVERELY_ABNORMAL_MAX = 4
+                min_value = 1
+                max_value = 5
+                normal_min = 3
+                normal_max = 3
+                not_severely_abnormal_min = 2
+                not_severely_abnormal_max = 4
                 INTERP = None
 
                 def calculate(
@@ -59,12 +59,12 @@ class TestMetricsPostInit(unittest.TestCase):
                 USED_PARAMS_IDS = []  # noqa: RUF012
                 NEEDS_HISTORY = True
                 NEEDS_HISTORY_FOR = "None"
-                RESULT_MIN = 1
-                RESULT_MAX = 5
-                RESULT_NORMAL_MIN = 3
-                RESULT_NORMAL_MAX = 3
-                RESULT_NOT_SEVERELY_ABNORMAL_MIN = 2
-                RESULT_NOT_SEVERELY_ABNORMAL_MAX = 4
+                min_value = 1
+                max_value = 5
+                normal_min = 3
+                normal_max = 3
+                not_severely_abnormal_min = 2
+                not_severely_abnormal_max = 4
                 INTERP = None
 
                 def calculate(
@@ -83,12 +83,12 @@ class TestMetricsPostInit(unittest.TestCase):
                 USED_PARAMS_IDS = []  # noqa: RUF012
                 NEEDS_HISTORY = False
                 NEEDS_HISTORY_FOR = None
-                RESULT_MIN = 6
-                RESULT_MAX = 5
-                RESULT_NORMAL_MIN = 3
-                RESULT_NORMAL_MAX = 3
-                RESULT_NOT_SEVERELY_ABNORMAL_MIN = 2
-                RESULT_NOT_SEVERELY_ABNORMAL_MAX = 4
+                min_value = 6
+                max_value = 5
+                normal_min = 3
+                normal_max = 3
+                not_severely_abnormal_min = 2
+                not_severely_abnormal_max = 4
                 INTERP = None
 
                 def calculate(
@@ -107,12 +107,12 @@ class TestMetricsPostInit(unittest.TestCase):
                 USED_PARAMS_IDS = []  # noqa: RUF012
                 NEEDS_HISTORY = False
                 NEEDS_HISTORY_FOR = None
-                RESULT_MIN = 1
-                RESULT_MAX = 5
-                RESULT_NORMAL_MIN = 4
-                RESULT_NORMAL_MAX = 3
-                RESULT_NOT_SEVERELY_ABNORMAL_MIN = 2
-                RESULT_NOT_SEVERELY_ABNORMAL_MAX = 4
+                min_value = 1
+                max_value = 5
+                normal_min = 4
+                normal_max = 3
+                not_severely_abnormal_min = 2
+                not_severely_abnormal_max = 4
                 INTERP = None
 
                 def calculate(
@@ -131,12 +131,12 @@ class TestMetricsPostInit(unittest.TestCase):
                 USED_PARAMS_IDS = []  # noqa: RUF012
                 NEEDS_HISTORY = False
                 NEEDS_HISTORY_FOR = None
-                RESULT_MIN = 1
-                RESULT_MAX = 5
-                RESULT_NORMAL_MIN = 3
-                RESULT_NORMAL_MAX = 3
-                RESULT_NOT_SEVERELY_ABNORMAL_MIN = 5
-                RESULT_NOT_SEVERELY_ABNORMAL_MAX = 4
+                min_value = 1
+                max_value = 5
+                normal_min = 3
+                normal_max = 3
+                not_severely_abnormal_min = 5
+                not_severely_abnormal_max = 4
                 INTERP = None
 
                 def calculate(
@@ -155,12 +155,12 @@ class TestMetricsPostInit(unittest.TestCase):
                 USED_PARAMS_IDS = []  # noqa: RUF012
                 NEEDS_HISTORY = False
                 NEEDS_HISTORY_FOR = None
-                RESULT_MIN = 1
-                RESULT_MAX = 5
-                RESULT_NORMAL_MIN = -5
-                RESULT_NORMAL_MAX = 5
-                RESULT_NOT_SEVERELY_ABNORMAL_MIN = 2
-                RESULT_NOT_SEVERELY_ABNORMAL_MAX = 4
+                min_value = 1
+                max_value = 5
+                normal_min = -5
+                normal_max = 5
+                not_severely_abnormal_min = 2
+                not_severely_abnormal_max = 4
                 INTERP = None
 
                 def calculate(
@@ -179,12 +179,12 @@ class TestMetricsPostInit(unittest.TestCase):
                 USED_PARAMS_IDS = []  # noqa: RUF012
                 NEEDS_HISTORY = False
                 NEEDS_HISTORY_FOR = None
-                RESULT_MIN = 1
-                RESULT_MAX = 5
-                RESULT_NORMAL_MIN = 2
-                RESULT_NORMAL_MAX = 4
-                RESULT_NOT_SEVERELY_ABNORMAL_MIN = 3
-                RESULT_NOT_SEVERELY_ABNORMAL_MAX = 3
+                min_value = 1
+                max_value = 5
+                normal_min = 2
+                normal_max = 4
+                not_severely_abnormal_min = 3
+                not_severely_abnormal_max = 3
                 INTERP = None
 
                 def calculate(
@@ -204,12 +204,12 @@ class TestMetricMethods(unittest.TestCase):
         USED_PARAMS_IDS = ["test_id1", "test_id2"]  # noqa: RUF012
         NEEDS_HISTORY = False
         NEEDS_HISTORY_FOR = None
-        RESULT_MIN = 1
-        RESULT_MAX = 5
-        RESULT_NORMAL_MIN = 3
-        RESULT_NORMAL_MAX = 3
-        RESULT_NOT_SEVERELY_ABNORMAL_MIN = 2
-        RESULT_NOT_SEVERELY_ABNORMAL_MAX = 4
+        min_value = 1
+        max_value = 5
+        normal_min = 3
+        normal_max = 3
+        not_severely_abnormal_min = 2
+        not_severely_abnormal_max = 4
         INTERP = None
 
         def calculate(

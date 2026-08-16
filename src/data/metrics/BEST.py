@@ -17,6 +17,8 @@
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
 from datetime import datetime
 
+import math
+
 from tracking.metrics import Metric
 
 class BEST(Metric):
@@ -49,12 +51,12 @@ class BEST(Metric):
     NEEDS_HISTORY = False
     NEEDS_HISTORY_FOR = None
 
-    RESULT_MIN = 12
-    RESULT_MAX = 72
-    RESULT_NORMAL_MIN = None
-    RESULT_NORMAL_MAX = None
-    RESULT_NOT_SEVERELY_ABNORMAL_MIN = None
-    RESULT_NOT_SEVERELY_ABNORMAL_MAX = None
+    min_value = 12
+    max_value = 72
+    normal_min = 12
+    normal_max = 72
+    not_severely_abnormal_min = 12
+    not_severely_abnormal_max = 72
     INTERP = None
 
     def calculate(self, params: dict[str, int | float],

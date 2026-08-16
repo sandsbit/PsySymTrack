@@ -19,8 +19,8 @@
         "active_values": null,
         "normal_min": -1,
         "normal_max": 1,
-        "not_severly_abormal_min": -2,
-        "not_severly_abormal_max": 2
+        "not_severely_abnormal_min": -2,
+        "not_severely_abnormal_max": 2
     },
     {
         "id": "weight_tmp_scale",
@@ -42,7 +42,7 @@
         "active_values": null,
         "normal_min": -1,
         "normal_max": 1,
-        "not_severly_abormal_min": -2,
-        "not_severly_abormal_max": 2
+        "not_severely_abnormal_min": -2,
+        "not_severely_abnormal_max": 2
     }
 ]

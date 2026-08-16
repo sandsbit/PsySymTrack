@@ -17,8 +17,8 @@
         "active_values": null,
         "normal_min": 1,
         "normal_max": 2,
-        "not_severly_abormal_min": 1,
-        "not_severly_abormal_max": 3
+        "not_severely_abnormal_min": 1,
+        "not_severely_abnormal_max": 3
     },
   {
         "id": "bpd_a_splitting",
@@ -38,8 +38,8 @@
         "active_values": null,
         "normal_min": 1,
         "normal_max": 2,
-        "not_severly_abormal_min": 1,
-        "not_severly_abormal_max": 3
+        "not_severely_abnormal_min": 1,
+        "not_severely_abnormal_max": 3
     },
   {
         "id": "bpd_a_self_image",
@@ -59,8 +59,8 @@
         "active_values": null,
         "normal_min": 1,
         "normal_max": 2,
-        "not_severly_abormal_min": 1,
-        "not_severly_abormal_max": 3
+        "not_severely_abnormal_min": 1,
+        "not_severely_abnormal_max": 3
     },
   {
         "id": "bpd_a_mood_swings",
@@ -80,8 +80,8 @@
         "active_values": null,
         "normal_min": 1,
         "normal_max": 2,
-        "not_severly_abormal_min": 1,
-        "not_severly_abormal_max": 3
+        "not_severely_abnormal_min": 1,
+        "not_severely_abnormal_max": 3
     },
   {
         "id": "bpd_a_dissociation",
@@ -101,8 +101,8 @@
         "active_values": null,
         "normal_min": 1,
         "normal_max": 2,
-        "not_severly_abormal_min": 1,
-        "not_severly_abormal_max": 3
+        "not_severely_abnormal_min": 1,
+        "not_severely_abnormal_max": 3
     },
   {
         "id": "bpd_a_angry",
@@ -122,8 +122,8 @@
         "active_values": null,
         "normal_min": 1,
         "normal_max": 2,
-        "not_severly_abormal_min": 1,
-        "not_severly_abormal_max": 3
+        "not_severely_abnormal_min": 1,
+        "not_severely_abnormal_max": 3
     },
   {
         "id": "bpd_a_empty",
@@ -143,8 +143,8 @@
         "active_values": null,
         "normal_min": 1,
         "normal_max": 2,
-        "not_severly_abormal_min": 1,
-        "not_severly_abormal_max": 3
+        "not_severely_abnormal_min": 1,
+        "not_severely_abnormal_max": 3
     },
   {
         "id": "bpd_a_suicide",
@@ -164,8 +164,8 @@
         "active_values": null,
         "normal_min": 1,
         "normal_max": 2,
-        "not_severly_abormal_min": 1,
-        "not_severly_abormal_max": 3
+        "not_severely_abnormal_min": 1,
+        "not_severely_abnormal_max": 3
     },
   {
         "id": "bpd_b_abandonment",
@@ -185,8 +185,8 @@
         "active_values": null,
         "normal_min": 1,
         "normal_max": 2,
-        "not_severly_abormal_min": 1,
-        "not_severly_abormal_max": 3
+        "not_severely_abnormal_min": 1,
+        "not_severely_abnormal_max": 3
     },
   {
         "id": "bpd_b_suicide",
@@ -206,8 +206,8 @@
         "active_values": null,
         "normal_min": 1,
         "normal_max": 2,
-        "not_severly_abormal_min": 1,
-        "not_severly_abormal_max": 3
+        "not_severely_abnormal_min": 1,
+        "not_severely_abnormal_max": 3
     },
   {
         "id": "bpd_b_impulsivity",
@@ -227,8 +227,8 @@
         "active_values": null,
         "normal_min": 1,
         "normal_max": 2,
-        "not_severly_abormal_min": 1,
-        "not_severly_abormal_max": 3
+        "not_severely_abnormal_min": 1,
+        "not_severely_abnormal_max": 3
     },
   {
         "id": "bpd_b_anger",
@@ -248,8 +248,8 @@
         "active_values": null,
         "normal_min": 1,
         "normal_max": 2,
-        "not_severly_abormal_min": 1,
-        "not_severly_abormal_max": 3
+        "not_severely_abnormal_min": 1,
+        "not_severely_abnormal_max": 3
     },
   {
         "id": "bpd_c_positive_behavior",
@@ -269,8 +269,8 @@
         "active_values": null,
         "normal_min": 4,
         "normal_max": 5,
-        "not_severly_abormal_min": 2,
-        "not_severly_abormal_max": 5
+        "not_severely_abnormal_min": 2,
+        "not_severely_abnormal_max": 5
     },
   {
         "id": "bpd_c_noticing",
@@ -290,8 +290,8 @@
         "active_values": null,
         "normal_min": 4,
         "normal_max": 5,
-        "not_severly_abormal_min": 2,
-        "not_severly_abormal_max": 5
+        "not_severely_abnormal_min": 2,
+        "not_severely_abnormal_max": 5
     },
   {
         "id": "bpd_c_therapy",
@@ -311,7 +311,7 @@
         "active_values": null,
         "normal_min": 4,
         "normal_max": 5,
-        "not_severly_abormal_min": 2,
-        "not_severly_abormal_max": 5
+        "not_severely_abnormal_min": 2,
+        "not_severely_abnormal_max": 5
     }
 ]

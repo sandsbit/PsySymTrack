@@ -44,8 +44,8 @@ class TestValueRanges(unittest.TestCase):
             max_value=5,
             normal_min=3,
             normal_max=3,
-            not_severly_abormal_min=2,
-            not_severly_abormal_max=4
+            not_severely_abnormal_min=2,
+            not_severely_abnormal_max=4
         )
 
 
@@ -92,8 +92,8 @@ class TestValueRanges(unittest.TestCase):
             max_value=0,
             normal_min=-10,
             normal_max=0,
-            not_severly_abormal_min=-100,
-            not_severly_abormal_max=0,
+            not_severely_abnormal_min=-100,
+            not_severely_abnormal_max=0,
         )
 
 
