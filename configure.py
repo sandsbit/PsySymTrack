@@ -133,6 +133,7 @@ if __name__ == "__main__":
     makefile_text = (Path(__file__).resolve().parent / "Makefile.in").read_text(encoding='utf-8')
 
     makefile_text = makefile_text.replace("$$APPNAME$$", app_name)
+    makefile_text = makefile_text.replace("$$VERSION$$", app_version)
     makefile_text = makefile_text.replace("$$FULLAPPNAME$$", '"' + app_name + ' ' + app_version + '"')
     makefile_text = makefile_text.replace("$$PYEXEC$$", pyexec)
     makefile_text = makefile_text.replace("$$PREFIX$$", args.prefix)
