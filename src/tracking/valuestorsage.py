@@ -129,8 +129,8 @@ class ValuesStorage:
 
 @contextlib.contextmanager
 def open_manager() -> Generator[ValuesStorage, None, None]:
-    manager = ValuesManager()
+    storage = ValuesStorage()
     try:
-        yield manager
+        yield storage
     finally:
-        manager.close()
+        storage.close()
