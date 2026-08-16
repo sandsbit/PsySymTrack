@@ -63,4 +63,4 @@ pythonpath = ["src"]
 addopts = "-ra"
 
 [tool.ruff.lint]
-ignore = ["DTZ001"]
+ignore = ["DTZ001", "DTZ005"]
