@@ -18,6 +18,7 @@
 
 import json
 from dataclasses import asdict, dataclass
+from enum import Enum
 from pathlib import Path
 from typing import TypeVar
 
@@ -27,10 +28,73 @@ from utils.osutil import get_working_dir_path
 
 @dataclass
 class Value:
-    """Parent class for two major types of values stored in the app. See children below."""
+    """
+    Parent class for two major types of values stored in the app. See children below.
+
+    Resul will be interpreted as follows:
+    - Severely abnormal: (-oo, not_severly_abormal_min) U (not_severly_abormal_max, +oo)
+    - Abnormal: [not_severly_abormal_min, normal_min) U (normal_max, not_severly_abormal_max]
+    - Normal: [normal_min, normal_max]
+    You can use +inf and -inf for setting up ranges.
+    """
     id: str  # unique
     name: str  # human-readable
     description: str
+
+    min_value: float
+    max_value: float
+    normal_min: float
+    normal_max: float
+    # i.e. mildly abnormal range + normal range
+    not_severly_abormal_min: float
+    not_severly_abormal_max: float
+
+    # noinspection bad-argument-type
+    def __post_init__(self):
+        """Checking whether all rules are complied with and smooth ranges."""
+        if self.min_value > self.max_value:
+            raise ValueError("min_value must be less than max_value")
+        if self.normal_min > self.normal_max:
+            raise ValueError("normal_min must be less than normal_max")
+        if self.normal_min < self.min_value:
+            raise ValueError("normal_min must be greater than min_value")
+        if self.normal_max > self.max_value:
+            raise ValueError("normal_max must be less than max_value")
+        if self.not_severly_abormal_min > self.normal_min:
+            raise ValueError("not_severly_abormal_min must be less than normal_min")
+        if self.not_severly_abormal_max < self.normal_max:
+            raise ValueError("not_severly_abormal_max must be greater than normal_max")
+
+    class RangeValue(Enum):
+        NOT_ALLOWED = 0
+        NORMAL = 1
+        MILDLY_ABNORMAL = 2
+        SEVERELY_ABNORMAL = 3
+
+    def check_range_for_value(self, value: float) -> RangeValue:
+        if self.normal_min <= value <= self.normal_max:
+            return Value.RangeValue.NORMAL
+        elif self.not_severly_abormal_min <= value <= self.not_severly_abormal_max:
+            return Value.RangeValue.MILDLY_ABNORMAL
+        elif value < self.min_value or value > self.max_value:
+            return Value.RangeValue.NOT_ALLOWED
+        else:
+            return Value.RangeValue.SEVERELY_ABNORMAL
+
+    def is_allowed(self, value: float) -> bool:
+        return self.check_range_for_value(value) != Value.RangeValue.NOT_ALLOWED
+
+    def is_normal(self, value: float) -> bool:
+        return self.check_range_for_value(value) == Value.RangeValue.NORMAL
+
+    def is_mildly_abnormal(self, value: float) -> bool:
+        return self.check_range_for_value(value) == Value.RangeValue.MILDLY_ABNORMAL
+
+    def is_severely_abnormal(self, value: float) -> bool:
+        return self.check_range_for_value(value) == Value.RangeValue.SEVERELY_ABNORMAL
+
+    def is_abnormal(self, value: float) -> bool:
+        return self.check_range_for_value(value) in [Value.RangeValue.MILDLY_ABNORMAL, Value.RangeValue.SEVERELY_ABNORMAL]
 
 
 @dataclass
@@ -44,12 +108,7 @@ class ScaleValue(Value):
     to True and specify which values are active using bool mask 'active_values' of size
     (max_value - min_value + 1).
 
-    Resul will be interpreted as follows:
-    - Severely abnormal: (-oo, not_severly_abormal_min) U (not_severly_abormal_max, +oo)
-    - Abnormal: [not_severly_abormal_min, normal_min) U (normal_max, not_severly_abormal_max]
-    - Normal: [normal_min, normal_max]
-    Treat 'not_severly_abormal_min' and 'not_severly_abormal_max' as -oo and +oo respectively
-    if None.
+    For normal/abnormal interpretation check docs for 'Value'.
     """
     category: str
 
@@ -59,27 +118,10 @@ class ScaleValue(Value):
     has_inactive_values: bool
     active_values: list[bool] | None
 
-    normal_min: float
-    normal_max: float
-    # i.e. mildly abnormal range + normal range
-    not_severly_abormal_min: float | None
-    not_severly_abormal_max: float | None
-
     # noinspection bad-argument-type
     def __post_init__(self):
         """Checking whether all rules are complied with and smooth ranges."""
-        if self.min_value > self.max_value:
-            raise ValueError("min_value must be less than max_value")
-        if self.normal_min > self.normal_max:
-            raise ValueError("normal_min must be less than normal_max")
-        if self.normal_min < self.min_value:
-            raise ValueError("normal_min must be greater than min_value")
-        if self.normal_max > self.max_value:
-            raise ValueError("normal_max must be less than max_value")
-        if (self.not_severly_abormal_min is not None) and (self.not_severly_abormal_min > self.normal_min):
-            raise ValueError("not_severly_abormal_min must be less than normal_min")
-        if (self.not_severly_abormal_max is not None) and (self.not_severly_abormal_max < self.normal_max):
-            raise ValueError("not_severly_abormal_max must be greater than normal_max")
+        super().__post_init__()
 
         if self.has_inactive_values and (self.active_values is None):
             raise ValueError("Active values must be set for a ScaleValue with has_inactive_values == True")
@@ -140,17 +182,8 @@ class PhysicalValue(Value):
 
         Example: weight, lithium blood level.
 
-        For normal/abnormal interpretation check docs for 'ScaleValue'. The difference is that
-        physical values can have no set normal range (in that case 'normal_min' and 'normal_max'
-        are both None).
+        For normal/abnormal interpretation check docs for 'Value'.
         """
-    min_value: float | None
-    max_value: float | None
-    normal_min: float | None
-    normal_max: float | None
-    # i.e. mildly abnormal range + normal range
-    not_severly_abormal_min: float | None
-    not_severly_abormal_max: float | None
 
     def __post_init__(self):
         """Checking whether all rules are complied with."""

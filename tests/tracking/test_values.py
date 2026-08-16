@@ -18,6 +18,7 @@
 
 import dataclasses
 import json
+import math
 import tempfile
 import unittest
 from pathlib import Path
@@ -26,14 +27,99 @@ from unittest.mock import patch
 # noinspection protected-member
 from tracking.values import (
     ScaleValue,
+    Value,
     ValuesManager,
     _TEST_example_PhysicalValue,
     _TEST_example_ScaleValue,
 )
 
 
-class TestScaleValue(unittest.TestCase):
+class TestValueRanges(unittest.TestCase):
+    def test_defined_ranges(self):
+        value = Value(
+            id="id",
+            name="Name",
+            description="Desc",
+            min_value=1,
+            max_value=5,
+            normal_min=3,
+            normal_max=3,
+            not_severly_abormal_min=2,
+            not_severly_abormal_max=4
+        )
 
+
+        self.assertFalse(value.is_allowed(0))
+        self.assertTrue(value.is_allowed(1))
+        self.assertTrue(value.is_allowed(3))
+        self.assertTrue(value.is_allowed(5))
+        self.assertFalse(value.is_allowed(6))
+
+        self.assertEqual(value.check_range_for_value(1), Value.RangeValue.SEVERELY_ABNORMAL)
+        self.assertTrue(value.is_severely_abnormal(1))
+        self.assertTrue(value.is_abnormal(1))
+        self.assertFalse(value.is_mildly_abnormal(1))
+        self.assertFalse(value.is_normal(1))
+
+        self.assertEqual(value.check_range_for_value(2), Value.RangeValue.MILDLY_ABNORMAL)
+        self.assertFalse(value.is_severely_abnormal(2))
+        self.assertTrue(value.is_abnormal(2))
+        self.assertTrue(value.is_mildly_abnormal(2))
+        self.assertFalse(value.is_normal(2))
+
+        self.assertEqual(value.check_range_for_value(3), Value.RangeValue.NORMAL)
+        self.assertFalse(value.is_abnormal(3))
+        self.assertTrue(value.is_normal(3))
+
+        self.assertEqual(value.check_range_for_value(4), Value.RangeValue.MILDLY_ABNORMAL)
+        self.assertFalse(value.is_severely_abnormal(4))
+        self.assertTrue(value.is_abnormal(4))
+        self.assertTrue(value.is_mildly_abnormal(4))
+        self.assertFalse(value.is_normal(4))
+
+        self.assertEqual(value.check_range_for_value(5), Value.RangeValue.SEVERELY_ABNORMAL)
+        self.assertTrue(value.is_severely_abnormal(5))
+        self.assertTrue(value.is_abnormal(5))
+        self.assertFalse(value.is_mildly_abnormal(5))
+        self.assertFalse(value.is_normal(5))
+
+    def test_unlimited_ranges(self):
+        value = Value(
+            id="id",
+            name="Name",
+            description="Desc",
+            min_value=-math.inf,
+            max_value=0,
+            normal_min=-10,
+            normal_max=0,
+            not_severly_abormal_min=-100,
+            not_severly_abormal_max=0,
+        )
+
+
+        self.assertTrue(value.is_allowed(-9999))
+        self.assertTrue(value.is_allowed(-0.5))
+        self.assertTrue(value.is_allowed(0))
+        self.assertFalse(value.is_allowed(1))
+
+        self.assertEqual(value.check_range_for_value(-1000), Value.RangeValue.SEVERELY_ABNORMAL)
+        self.assertTrue(value.is_severely_abnormal(-1000))
+        self.assertTrue(value.is_abnormal(-1000))
+        self.assertFalse(value.is_mildly_abnormal(-1000))
+        self.assertFalse(value.is_normal(-1000))
+
+        self.assertEqual(value.check_range_for_value(-50), Value.RangeValue.MILDLY_ABNORMAL)
+        self.assertFalse(value.is_severely_abnormal(-50))
+        self.assertTrue(value.is_abnormal(-50))
+        self.assertTrue(value.is_mildly_abnormal(-50))
+        self.assertFalse(value.is_normal(-50))
+
+        self.assertEqual(value.check_range_for_value(0), Value.RangeValue.NORMAL)
+        self.assertFalse(value.is_abnormal(0))
+        self.assertTrue(value.is_normal(0))
+
+
+class TestScaleValue(unittest.TestCase):
     def test_active_value_description_pairs_returns_only_active_values(self):
         value = _TEST_example_ScaleValue()
         value.min_value = 1
@@ -82,7 +168,6 @@ class TestScaleValue(unittest.TestCase):
 
 
 class TestLoadValuesFromFile(unittest.TestCase):
-
     def test_missing_file_returns_empty_list(self):
         result = ValuesManager._load_values_from_file(
             Path("does_not_exist.json"),
@@ -119,7 +204,6 @@ class TestLoadValuesFromFile(unittest.TestCase):
 
 
 class TestValuesManager(unittest.TestCase):
-
     def setUp(self):
         self.temp_dir = tempfile.TemporaryDirectory()
 
