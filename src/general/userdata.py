@@ -17,11 +17,12 @@
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
 
 import json
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 from datetime import datetime
 from enum import Enum
 
 from utils import osutil
+
 
 class Sex(Enum):
     MALE = "male"
