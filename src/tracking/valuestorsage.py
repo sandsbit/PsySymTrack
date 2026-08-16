@@ -15,10 +15,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
-
+import contextlib
 import sqlite3
 from datetime import datetime
+from typing import Generator
 
+from tracking.values import ValuesManager
 from utils import osutil
 
 
@@ -123,3 +125,12 @@ class ValuesStorage:
             (datetime.fromisoformat(timestamp), int(value))
             for timestamp, value in cursor.fetchall()
         ]
+
+
+@contextlib.contextmanager
+def open_manager() -> Generator[ValuesStorage, None, None]:
+    manager = ValuesManager()
+    try:
+        yield manager
+    finally:
+        manager.close()
