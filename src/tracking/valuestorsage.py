@@ -15,12 +15,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
+
 import contextlib
 import sqlite3
+from collections.abc import Generator
 from datetime import datetime
-from typing import Generator
 
-from tracking.values import ValuesManager
 from utils import osutil
 
 
