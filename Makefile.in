@@ -11,6 +11,7 @@ test:
 	PYTHONPATH=src $(PYEXEC) -m unittest discover tests/utils/
 	PYTHONPATH=src $(PYEXEC) -m unittest discover tests/tracking/
 	PYTHONPATH=src $(PYEXEC) -m unittest discover tests/general/
+	PYTHONPATH=src $(PYEXEC) -m unittest discover tests/analysis/
 
 build:
     $(PYEXEC) -m PyInstaller --noconfirm main.spec
