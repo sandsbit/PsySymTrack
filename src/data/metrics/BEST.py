@@ -1,3 +1,4 @@
+# noqa: N999
 # PsySymTrack
 # Psychiatric symptom tracker with basic analysis
 # Copyright (C) 2026 Nikita Serba. All rights reserved
@@ -15,11 +16,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
-from datetime import datetime
 
-import math
+from datetime import datetime
+from typing import ClassVar
 
 from tracking.metrics import Metric
+
 
 class BEST(Metric):
     """
@@ -28,10 +30,10 @@ class BEST(Metric):
     12...72
     """
 
-    NAME = "BEST"
-    DESCRIPTION = "Borderline Evaluation of Severity over Time"
+    NAME: ClassVar = "BEST"
+    DESCRIPTION: ClassVar = "Borderline Evaluation of Severity over Time"
 
-    USED_PARAMS_IDS = [
+    USED_PARAMS_IDS: ClassVar = [
         "bpd_a_abandonment",
         "bpd_a_splitting",
         "bpd_a_self_image",
@@ -48,8 +50,8 @@ class BEST(Metric):
         "bpd_c_noticing",
         "bpd_c_therapy"
     ]
-    NEEDS_HISTORY = False
-    NEEDS_HISTORY_FOR = None
+    NEEDS_HISTORY: ClassVar = False
+    NEEDS_HISTORY_FOR: ClassVar = None
 
     min_value = 12
     max_value = 72
@@ -57,28 +59,16 @@ class BEST(Metric):
     normal_max = 72
     not_severely_abnormal_min = 12
     not_severely_abnormal_max = 72
-    INTERP = None
+    INTERP: ClassVar = None
 
     def calculate(self, params: dict[str, int | float],
                   history: dict[str, list[tuple[datetime, int]]] | None = None) -> float | None:
         total_score = 15
 
-        total_score += params["bpd_a_abandonment"]
-        total_score += params["bpd_a_splitting"]
-        total_score += params["bpd_a_self_image"]
-        total_score += params["bpd_a_mood_swings"]
-        total_score += params["bpd_a_dissociation"]
-        total_score += params["bpd_a_angry"]
-        total_score += params["bpd_a_empty"]
-        total_score += params["bpd_a_suicide"]
-
-        total_score += params["bpd_b_abandonment"]
-        total_score += params["bpd_b_suicide"]
-        total_score += params["bpd_b_impulsivity"]
-        total_score += params["bpd_b_anger"]
-
-        total_score -= params["bpd_c_positive_behavior"]
-        total_score -= params["bpd_c_noticing"]
-        total_score -= params["bpd_c_therapy"]
+        for param_id in self.USED_PARAMS_IDS:
+            if param_id.startswith("bpd_c"):
+                total_score -= params[param_id]
+            else:
+                total_score += params[param_id]
 
         return total_score

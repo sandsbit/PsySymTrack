@@ -1,3 +1,4 @@
+# noqa: N999
 # PsySymTrack
 # Psychiatric symptom tracker with basic analysis
 # Copyright (C) 2026 Nikita Serba. All rights reserved
@@ -15,10 +16,14 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
+
 from datetime import datetime
+from typing import ClassVar
 
 from tracking.metrics import Metric
 
+
+# noinspection pep8-naming
 class QIDS_SR_16(Metric):
     """
     The QIDS-SR16 can be useful in identifying depressive symptom severity and changes in these symptoms over time.
@@ -31,10 +36,10 @@ class QIDS_SR_16(Metric):
     Very Severe Depression 21-27
     """
 
-    NAME = "QIDS-SR16"
-    DESCRIPTION = "Quick self-report depressive symptoms severity scale"
+    NAME: ClassVar = "QIDS-SR16"
+    DESCRIPTION: ClassVar = "Quick self-report depressive symptoms severity scale"
 
-    USED_PARAMS_IDS = [
+    USED_PARAMS_IDS: ClassVar = [
         "sleep_onset",
         "sleep_maintenance",
         "sleep_early_awakening",
@@ -49,8 +54,8 @@ class QIDS_SR_16(Metric):
         "energy",
         "agitation"
     ]
-    NEEDS_HISTORY = False
-    NEEDS_HISTORY_FOR = None
+    NEEDS_HISTORY: ClassVar = False
+    NEEDS_HISTORY_FOR: ClassVar = None
 
     min_value = 0
     max_value = 27
@@ -58,7 +63,7 @@ class QIDS_SR_16(Metric):
     normal_max = 5
     not_severely_abnormal_min = 0
     not_severely_abnormal_max = 15
-    INTERP = [
+    INTERP: ClassVar = [
         (0, 5, "Normal / No Depression"),
         (6, 10, "Mild Depression"),
         (11, 15, "Moderate Depression"),
@@ -73,15 +78,15 @@ class QIDS_SR_16(Metric):
         total_score += (params["sleep_onset"] - 1) if params["sleep_onset"] >= 2 else 0
         total_score += params["sleep_maintenance"]
         total_score += params["sleep_early_awakening"]
-        total_score += params["sleep_duration"] if params["sleep_duration"] >= 0 else 0
-        total_score += params["mood"] if params["mood"] >= 0 else 0
+        total_score += max(params["sleep_duration"], 0)
+        total_score += max(params["mood"], 0)
         total_score += abs(params["appetite"])
         total_score += abs(params["weight_tmp_scale"])
         total_score += params["cognitive_concentration"]
-        total_score += params["self_image"] if params["self_image"] >= 0 else 0
+        total_score += max(params["self_image"], 0)
         total_score += params["suicide"]
-        total_score += params["general_interest"] if params["general_interest"] >= 0 else 0
-        total_score += params["energy"] if params["energy"] >= 0 else 0
+        total_score += max(params["general_interest"], 0)
+        total_score += max(params["energy"], 0)
         total_score += abs(params["agitation"])
 
         return total_score

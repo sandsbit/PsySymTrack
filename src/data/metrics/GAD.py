@@ -1,3 +1,4 @@
+# noqa: N999
 # PsySymTrack
 # Psychiatric symptom tracker with basic analysis
 # Copyright (C) 2026 Nikita Serba. All rights reserved
@@ -15,11 +16,15 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
-from datetime import datetime
 
+from typing import ClassVar
+
+from data.metrics.templates import SimpleSummator
 from tracking.metrics import Metric
 
-class GAD_7(Metric):
+
+# noinspection pep8-naming
+class GAD_7(SimpleSummator, Metric):
     """
     The Generalized Anxiety Disorder 7-item (GAD-7) is a easy to perform initial screening tool for generalized anxiety disorder.
 
@@ -29,10 +34,10 @@ class GAD_7(Metric):
     Score greater than 15: Severe Anxiety
     """
 
-    NAME = "GAD-7"
-    DESCRIPTION = "Screening tool for generalized anxiety disorder"
+    NAME: ClassVar = "GAD-7"
+    DESCRIPTION: ClassVar = "Screening tool for generalized anxiety disorder"
 
-    USED_PARAMS_IDS = [
+    USED_PARAMS_IDS: ClassVar = [
         "anxiety1",
         "anxiety2",
         "anxiety3",
@@ -41,8 +46,8 @@ class GAD_7(Metric):
         "anxiety6",
         "anxiety7",
     ]
-    NEEDS_HISTORY = False
-    NEEDS_HISTORY_FOR = None
+    NEEDS_HISTORY: ClassVar = False
+    NEEDS_HISTORY_FOR: ClassVar = None
 
     min_value = 0
     max_value = 21
@@ -50,18 +55,9 @@ class GAD_7(Metric):
     normal_max = 4
     not_severely_abnormal_min = 0
     not_severely_abnormal_max = 14
-    INTERP = [
+    INTERP: ClassVar = [
         (0, 4, "Minimal Anxiety"),
         (5, 9, "Mild Anxiety"),
         (10, 14, "Moderate Anxiety"),
         (15, 21, "Severe Anxiety")
     ]
-
-    def calculate(self, params: dict[str, int | float],
-                  history: dict[str, list[tuple[datetime, int]]] | None = None) -> float | None:
-        total_score = 0
-
-        for param in self.USED_PARAMS_IDS:
-            total_score += params[param]
-
-        return total_score

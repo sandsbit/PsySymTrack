@@ -20,6 +20,7 @@ import tempfile
 import unittest
 from datetime import datetime
 from pathlib import Path
+from typing import ClassVar
 from unittest.mock import patch
 
 from analysis.stats import (
@@ -60,14 +61,14 @@ class TestStatistics(unittest.TestCase):
             assert history is None
             return (params["test_id1"] + params["test_id2"]) * 2
 
-    TEST_ID1_VALUES = [  # noqa: RUF012
+    TEST_ID1_VALUES: ClassVar = [
         (datetime(2026, 6, 15, 0, 0), 1),
         (datetime(2026, 8, 3, 0, 0), 2),
         (datetime(2026, 8, 10, 0, 0), 3),
         (datetime(2026, 8, 17, 0, 0), 4),
         (datetime(2026, 8, 24, 0, 0), 2)
     ]
-    TEST_ID2_VALUES = [  # noqa: RUF012
+    TEST_ID2_VALUES: ClassVar = [
         (datetime(2026, 6, 15, 0, 0), 2),
         (datetime(2026, 8, 3, 0, 0), 4),
         (datetime(2026, 8, 10, 0, 0), 6),
@@ -179,35 +180,35 @@ class TestWarnings(unittest.TestCase):
             assert history is None
             return params["test_id4"]
 
-    TEST_ID1_VALUES = [  # noqa: RUF012
+    TEST_ID1_VALUES: ClassVar = [
         (datetime(2026, 7, 20, 0, 0), 3),
         (datetime(2026, 8, 3, 0, 0), 3),
         (datetime(2026, 8, 10, 0, 0), 3),
         (datetime(2026, 8, 17, 0, 0), 3),
         (datetime(2026, 8, 24, 0, 0), 3)
     ]
-    TEST_ID2_VALUES = [  # noqa: RUF012
+    TEST_ID2_VALUES: ClassVar = [
         (datetime(2026, 6, 15, 0, 0), 3),
         (datetime(2026, 8, 3, 0, 0), 3),
         (datetime(2026, 8, 10, 0, 0), 3),
         (datetime(2026, 8, 17, 0, 0), 3),
         (datetime(2026, 8, 24, 0, 0), 4)
     ]
-    TEST_ID3_VALUES = [  # noqa: RUF012
+    TEST_ID3_VALUES: ClassVar = [
         (datetime(2026, 6, 15, 0, 0), 4),
         (datetime(2026, 8, 3, 0, 0), 5),
         (datetime(2026, 8, 10, 0, 0), 4),
         (datetime(2026, 8, 17, 0, 0), 3),
         (datetime(2026, 8, 24, 0, 0), 3)
     ]
-    TEST_ID4_VALUES = [  # noqa: RUF012
+    TEST_ID4_VALUES: ClassVar = [
         (datetime(2026, 6, 15, 0, 0), 4),
         (datetime(2026, 8, 3, 0, 0), 5),
         (datetime(2026, 8, 10, 0, 0), 4),
         (datetime(2026, 8, 17, 0, 0), 3),
         (datetime(2026, 8, 24, 0, 0), 4)
     ]
-    TEST_ID5_VALUES = [  # noqa: RUF012
+    TEST_ID5_VALUES: ClassVar = [
         (datetime(2026, 6, 15, 0, 0), 4),
         (datetime(2026, 8, 3, 0, 0), 4),
         (datetime(2026, 8, 10, 0, 0), 5),

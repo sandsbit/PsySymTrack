@@ -1,3 +1,4 @@
+# noqa: N999
 # PsySymTrack
 # Psychiatric symptom tracker with basic analysis
 # Copyright (C) 2026 Nikita Serba. All rights reserved
@@ -15,10 +16,14 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
+
 from datetime import datetime
+from typing import ClassVar
 
 from tracking.metrics import Metric
 
+
+# noinspection pep8-naming
 class ReQoL_10(Metric):
     """
     Mental health quality of life.
@@ -26,10 +31,10 @@ class ReQoL_10(Metric):
     0...40
     """
 
-    NAME = "ReQoL-10"
-    DESCRIPTION = "Mental health quality of life"
+    NAME: ClassVar = "ReQoL-10"
+    DESCRIPTION: ClassVar = "Mental health quality of life"
 
-    USED_PARAMS_IDS = [
+    USED_PARAMS_IDS: ClassVar = [
         "qol_tasks",
         "qol_trust",
         "qol_coping",
@@ -41,8 +46,8 @@ class ReQoL_10(Metric):
         "qol_lonely",
         "qol_confident"
     ]
-    NEEDS_HISTORY = False
-    NEEDS_HISTORY_FOR = None
+    NEEDS_HISTORY: ClassVar = False
+    NEEDS_HISTORY_FOR: ClassVar = None
 
     min_value = 0
     max_value = 40
@@ -50,7 +55,7 @@ class ReQoL_10(Metric):
     normal_max = 40
     not_severely_abnormal_min = 0
     not_severely_abnormal_max = 40
-    INTERP = None
+    INTERP: ClassVar = None
 
     def calculate(self, params: dict[str, int | float],
                   history: dict[str, list[tuple[datetime, int]]] | None = None) -> float | None:

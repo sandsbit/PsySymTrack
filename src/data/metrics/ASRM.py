@@ -1,3 +1,4 @@
+# noqa: N999
 # PsySymTrack
 # Psychiatric symptom tracker with basic analysis
 # Copyright (C) 2026 Nikita Serba. All rights reserved
@@ -15,29 +16,32 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
-from datetime import datetime
 
+from typing import ClassVar, override
+
+from data.metrics.templates import SimpleSummator
 from tracking.metrics import Metric
 
-class ASRM(Metric):
+
+class ASRM(SimpleSummator, Metric):
     """
     The Altman Self-Rating Mania Scale (ASRM) is a diagnostic tool designed to assess the presence and severity of manic symptoms in individuals.
 
     Cutoff 6.
     """
 
-    NAME = "ASRM (simplified and adapted)"
-    DESCRIPTION = "Diagnostic tool designed to assess the presence and severity of manic symptoms in individuals."
+    NAME: ClassVar = "ASRM (simplified and adapted)"
+    DESCRIPTION: ClassVar = "Diagnostic tool designed to assess the presence and severity of manic symptoms in individuals."
 
-    USED_PARAMS_IDS = [
+    USED_PARAMS_IDS: ClassVar = [
         "mood",
         "self_image",
         "sleep_duration",
         "energy",
         "agitation"
     ]
-    NEEDS_HISTORY = False
-    NEEDS_HISTORY_FOR = None
+    NEEDS_HISTORY: ClassVar = False
+    NEEDS_HISTORY_FOR: ClassVar = None
 
     min_value = 0
     max_value = 20
@@ -45,29 +49,17 @@ class ASRM(Metric):
     normal_max = 5
     not_severely_abnormal_min = 0
     not_severely_abnormal_max = 9
-    INTERP = [
-        (0, 5, "Normal / No MMania"),
+    INTERP: ClassVar = [
+        (0, 5, "Normal / No Mania"),
         (6, 9, "Possible Hypomania"),
         (10, 14, "Possible Mania"),
         (15, 20, "Possible Severe Mania")
     ]
 
-    @staticmethod
-    def _transform_negative(value: int) -> int:
+    @override
+    def processor(self, value: float) -> float:
         if value > 0:
             return 0
         if value == -3:
             return 4
         return -value
-
-    def calculate(self, params: dict[str, int | float],
-                  history: dict[str, list[tuple[datetime, int]]] | None = None) -> float | None:
-        total_score = 0
-
-        total_score += self._transform_negative(params["mood"])
-        total_score += self._transform_negative(params["self_image"])
-        total_score += self._transform_negative(params["sleep_duration"])
-        total_score += self._transform_negative(params["energy"])
-        total_score += self._transform_negative(params["agitation"])
-
-        return total_score
