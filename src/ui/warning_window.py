@@ -19,7 +19,7 @@
 import tkinter as tk
 from tkinter import ttk
 
-from analysis.stats import get_warnings, WarningsResult
+from analysis.stats import WarningsResult, get_warnings
 from tracking.metrics import Metric
 from tracking.values import Value
 from ui.misc.scrollable_frame import ScrollableFrame
@@ -97,19 +97,6 @@ class WarningsWindow(tk.Toplevel):
 
     def reload(self) -> None:
         self.blocks_frame.clear()
-
-        # TODO:
-        # Load blocks depending on:
-        # self.category.get() -> "Values" or "Metrics"
-        # self.period.get() -> "Acute" or "Old"
-        #
-        # For every warning:
-        # self.add_block(
-        #     danger=True/False,
-        #     title="...",
-        #     description="..."
-        # )
-
         warnings = get_warnings()
         if self.category.get() == "Values":
             if self.period.get() == "Acute":
@@ -122,6 +109,7 @@ class WarningsWindow(tk.Toplevel):
             else:
                 self._add_warnings_metrics(warnings.metrics_old)
 
+    # noinspection string-conversion-without-dunder-method
     def _add_warnings_values(self, warns: list[tuple[Value, WarningsResult.WarningDescription]]):
         for value, description in warns:
             danger = description.severely_abnormal_weeks is not None
@@ -135,6 +123,7 @@ class WarningsWindow(tk.Toplevel):
                 description=descr
             )
 
+    # noinspection string-conversion-without-dunder-method
     def _add_warnings_metrics(self, warns: list[tuple[type[Metric], WarningsResult.WarningDescription]]):
         for metric, description in warns:
             danger = description.severely_abnormal_weeks is not None

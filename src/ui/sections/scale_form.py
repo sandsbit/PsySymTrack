@@ -18,25 +18,29 @@
 
 import tkinter as tk
 from tkinter import ttk
+from tkinter.ttk import Combobox
 
+from app_info import get_working_dir_path
+from tracking.values import ScaleValue, ValuesManager
 from ui.misc.placeholder_entry import PlaceholderEntry
 from ui.misc.scrollable_frame import ScrollableFrame
-
-from tracking.values import ScaleValue
 
 
 class ScaleForm(ttk.Frame):
 
-    CATEGORY_OPTIONS = [
-        "Mental",
-        "Somatic",
-        "Side-effects"
-    ]
+    category_options: list[str]
 
     def __init__(self, parent):
         super().__init__(parent)
 
-        self.entries: dict[str, PlaceholderEntry] = {}
+        scale_values_dir = get_working_dir_path() / "values" / "scales"
+        self.category_options = []
+        if scale_values_dir.exists():
+            categories_files = scale_values_dir.glob("*.json")
+            for category_file in categories_files:
+                self.category_options.append(category_file.stem)
+
+        self.entries: dict[str, PlaceholderEntry | Combobox] = {}
 
         self.description_entries: list[tk.StringVar] = []
         self.active_entries: list[tk.BooleanVar] = []
@@ -162,7 +166,7 @@ class ScaleForm(ttk.Frame):
         if name == "category":
             entry = ttk.Combobox(
                 self,
-                values=self.CATEGORY_OPTIONS,
+                values=self.category_options,
                 state="readonly"
             )
 
@@ -316,17 +320,15 @@ class ScaleForm(ttk.Frame):
                     f"{name} must be an integer"
                 )
 
-        if "min_value" in values and "max_value" in values:
-            if values["max_value"] < values["min_value"]:
-                errors.append(
-                    "max_value must be greater than min_value"
-                )
+        if ("min_value" in values and "max_value" in values) and values["max_value"] < values["min_value"]:
+            errors.append(
+                "max_value must be greater than min_value"
+            )
 
-        if "normal_min" in values and "normal_max" in values:
-            if values["normal_max"] < values["normal_min"]:
-                errors.append(
-                    "normal_max must be greater than normal_min"
-                )
+        if ("normal_min" in values and "normal_max" in values) and values["normal_max"] < values["normal_min"]:
+            errors.append(
+                "normal_max must be greater than normal_min"
+            )
 
         # Optional abnormal ranges
         abnormal_min = self._optional_int(
@@ -346,19 +348,25 @@ class ScaleForm(ttk.Frame):
                 "not_severly_abormal_max must be an integer"
             )
 
-        if abnormal_min is not None and "normal_min" in values:
-            if abnormal_min > values["normal_min"]:
-                errors.append(
-                    "not_severly_abormal_min must be smaller than normal_min"
-                )
+        if (abnormal_min is not None and "normal_min" in values) and abnormal_min > values["normal_min"]:
+            errors.append(
+                "not_severly_abormal_min must be smaller than normal_min"
+            )
 
-        if abnormal_max is not None and "normal_max" in values:
-            if abnormal_max < values["normal_max"]:
-                errors.append(
-                    "not_severly_abormal_max must be greater than normal_max"
-                )
+        if (abnormal_max is not None and "normal_max" in values) and abnormal_max < values["normal_max"]:
+            errors.append(
+                "not_severly_abormal_max must be greater than normal_max"
+            )
 
-        # TODO: Check whether id is unique.
+        new_id = self.entries["id"].get().strip()
+        manager = ValuesManager()
+        all_values = [value for values in manager.scale_values().values() for value in values]
+        all_values += manager.physical_values()
+        for value in all_values:
+            if value.id == new_id:
+                errors.append(
+                    "ID is not unique, chose another one"
+                )
 
         expected_count = None
         if "min_value" in values and "max_value" in values:
@@ -374,11 +382,10 @@ class ScaleForm(ttk.Frame):
                     "Incorrect number of value descriptions"
                 )
 
-            if self.has_inactive_var.get():
-                if len(self.active_entries) != expected_count:
-                    errors.append(
-                        "Incorrect number of active values"
-                    )
+            if self.has_inactive_var.get() and len(self.active_entries) != expected_count:
+                errors.append(
+                    "Incorrect number of active values"
+                )
 
         return errors
 
@@ -393,6 +400,7 @@ class ScaleForm(ttk.Frame):
         except ValueError:
             return None
 
+    # noinspection bad-argument-type
     def build(self) -> ScaleValue:
         return ScaleValue(
             id=self.entries["id"].get(),

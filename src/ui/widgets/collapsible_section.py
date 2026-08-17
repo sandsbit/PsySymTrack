@@ -16,12 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
 
+from collections.abc import Callable
 from tkinter import ttk
-from typing import Callable
 
 from tracking.metrics import Metric
 from tracking.values import Value
-from .object_entry import ObjectEntry
+from ui.widgets.object_entry import ObjectEntry
 
 
 class CollapsibleSection(ttk.Frame):
@@ -33,7 +33,7 @@ class CollapsibleSection(ttk.Frame):
         self,
         parent,
         title: str,
-        on_selected: Callable[[Value], None],
+        on_selected: Callable[[Value | type[Metric]], None],
         expanded: bool = True,
         *args,
         **kwargs
@@ -94,7 +94,7 @@ class CollapsibleSection(ttk.Frame):
 
     def add_entry(
         self,
-        obj: Value | Metric
+        obj: Value | type[Metric]
     ):
         if isinstance(obj, Value):
             entry = ObjectEntry(

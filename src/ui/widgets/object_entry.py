@@ -17,8 +17,8 @@
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
 
 import tkinter as tk
+from collections.abc import Callable
 from tkinter import ttk
-from typing import Callable
 
 from tracking.metrics import Metric
 from tracking.values import Value
@@ -48,10 +48,10 @@ class ObjectEntry(ttk.Frame):
         self.obj = obj
         self.on_selected = on_selected
 
-        self.icon = icon
-
         # Keep reference to image.
         # Otherwise Tkinter may garbage collect it.
+        self.icon = icon
+
         self._icon_label = None
 
         if icon is not None:

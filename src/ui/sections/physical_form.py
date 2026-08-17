@@ -16,20 +16,20 @@
 # You should have received a copy of the GNU General Public License
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
 
-import tkinter as tk
 from tkinter import ttk
 
+from tracking.values import PhysicalValue, ValuesManager
 from ui.misc.placeholder_entry import PlaceholderEntry
-
-from tracking.values import PhysicalValue
 
 
 class PhysicalForm(ttk.Frame):
 
-    entries: dict[str, PlaceholderEntry] = {}
+    entries: dict[str, PlaceholderEntry]
 
     def __init__(self, parent):
         super().__init__(parent)
+
+        self.entries = {}
 
         self._create_widgets()
 
@@ -174,10 +174,20 @@ class PhysicalForm(ttk.Frame):
                 "not_severly_abormal_max must be greater than normal_max"
             )
 
-        # TODO: Check whether id is unique.
+        new_id = self.entries["id"].get().strip()
+        manager = ValuesManager()
+        values = [value for values in manager.scale_values().values() for value in values]
+        values += manager.physical_values()
+        for value in values:
+            if value.id == new_id:
+                errors.append(
+                    "ID is not unique, chose another one"
+                )
+
 
         return errors
 
+    # noinspection bad-argument-type
     def build(self) -> PhysicalValue:
         return PhysicalValue(
             id=self.entries["id"].get(),

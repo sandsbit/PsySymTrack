@@ -19,9 +19,9 @@
 import tkinter as tk
 from tkinter import ttk
 
-from analysis.alerts import generate_alerts, Alert
+from analysis.alerts import Alert, generate_alerts
 from general.userdata import load_user_data
-from tracking.valuestorsage import ValuesStorage
+from tracking.valuestorsage import open_storage
 from ui.misc.scrollable_frame import ScrollableFrame
 
 
@@ -47,8 +47,8 @@ class AlertsWindow(tk.Toplevel):
     def reload(self) -> None:
         self.blocks_frame.clear()
 
-        storage = ValuesStorage()
-        try:
+        with open_storage() as storage:
+            # noinspection bad-argument-type
             warnings = generate_alerts(load_user_data(), storage)
             for warning in warnings:
                 self.add_block(
@@ -56,8 +56,6 @@ class AlertsWindow(tk.Toplevel):
                     title=warning.name,
                     description=warning.description
                 )
-        finally:
-            storage.close()
 
     def add_block(
         self,

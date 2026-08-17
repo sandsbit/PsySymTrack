@@ -15,16 +15,18 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
+
 import tkinter as tk
 
 from PIL import Image, ImageTk
 
-from utils.osutil import get_working_dir_path
-from .registration_view import RegistrationView
-from .main_view import MainView
-
-from general.userdata import load_user_data
 from app_info import APP_NAME
+from general.userdata import load_user_data
+from utils.osutil import get_working_dir_path
+
+from .main_view import MainView
+from .registration_view import RegistrationView
+
 
 class Application(tk.Tk):
     def __init__(self):
@@ -35,6 +37,7 @@ class Application(tk.Tk):
         height = 800
 
         icon_path = get_working_dir_path() / "icons" / "icon.png"
+        # noinspection bad-argument-type
         self.wm_iconphoto(False, ImageTk.PhotoImage(Image.open(icon_path)))
 
         self.geometry(

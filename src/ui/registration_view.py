@@ -17,9 +17,9 @@
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
 
 import tkinter as tk
-from tkinter import ttk, messagebox
+from collections.abc import Callable
 from datetime import datetime
-from typing import Callable
+from tkinter import messagebox, ttk
 
 from general.userdata import BasicUserData, Sex, save_user_data
 

@@ -18,9 +18,9 @@
 
 from tkinter import ttk
 
-from .sections.left_panel import LeftPanel
-from .sections.data_view import DataView
-from .sections.editor_view import EditorView
+from ui.sections.data_view import DataView
+from ui.sections.editor_view import EditorView
+from ui.sections.left_panel import LeftPanel
 
 
 class MainView(ttk.Frame):

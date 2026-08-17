@@ -17,13 +17,12 @@
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
 
 import tkinter as tk
-from tkinter import ttk, messagebox
-from typing import Callable
+from collections.abc import Callable
+from tkinter import messagebox, ttk
 
-from ui.sections.scale_form import ScaleForm
+from tracking.values import PhysicalValue, ScaleValue, ValuesManager
 from ui.sections.physical_form import PhysicalForm
-
-from tracking.values import ValuesManager, ScaleValue, PhysicalValue
+from ui.sections.scale_form import ScaleForm
 
 
 class AddValueWindow(tk.Toplevel):
