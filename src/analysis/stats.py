@@ -144,74 +144,23 @@ class WarningsResult:
     metrics_new: list[tuple[type[Metric], WarningDescription]]
     metrics_old: list[tuple[type[Metric], WarningDescription]]
 
-def _get_warning_for_value(value: Value) -> WarningsResult.WarningDescription | None:
-    """Generate warning (if needed) for a given value."""
-    values = []
-    with open_storage() as storage:
-        values = storage.get_range(
-            value.id,
-            datetime(1970, 1, 1, 0, 0, 0, 0),
-            datetime.now()
-        )
-
-    if len(values) == 0:
-        return None
-
-    values = values[::-1]
-    severely_abnormal_streak = value.is_severely_abnormal(values[0][1])
-    abnormal_streak = value.is_abnormal(values[0][1])
-    abnormal_streak_since: datetime | None = None
-    abnormal_streak_length = 0
-    severely_abnormal_streak_length = 0
-    severely_abnormal_streak_since: datetime | None = None
-    for i in range(1, len(values)):
-        val = values[i][1]
-        if (not abnormal_streak) and (not severely_abnormal_streak):
-            break
-
-        if severely_abnormal_streak:
-            severely_abnormal_streak_length += 1
-            severely_abnormal_streak_since = values[i-1][0]
-            severely_abnormal_streak = value.is_severely_abnormal(val)
-
-        if abnormal_streak:
-            abnormal_streak_length += 1
-            abnormal_streak_since = values[i-1][0]
-            abnormal_streak = value.is_abnormal(val)
-
-            if not abnormal_streak:
-                next_abnormal = (i + 1 < len(values)) and value.is_abnormal(values[i + 1][1])
-                next_next_abnormal = (i + 2 < len(values)) and value.is_abnormal(values[i + 2][1])
-                if next_abnormal and next_next_abnormal:
-                    abnormal_streak = True
-
-    if abnormal_streak_since is None:
-        assert(abnormal_streak_length == 0)
-        return None
-
-    assert(abnormal_streak_length != 0)
-
-    # noinspection bad-argument-type
-    return WarningsResult.WarningDescription(
-        abnormal_weeks=round((datetime.now() - abnormal_streak_since).days / 7.0),
-        mean_episode_value=np.mean(list(zip(*values))[1][:abnormal_streak_length]),
-        severely_abnormal_weeks= None if severely_abnormal_streak_since is None
-        else round((datetime.now() - severely_abnormal_streak_since).days / 7.0),
-        mean_severe_episode_value= None if severely_abnormal_streak_since is None
-        else np.mean(list(zip(*values))[1][:severely_abnormal_streak_length])
+def _get_warning(val_metric: Value | type[Metric]) -> WarningsResult.WarningDescription | None:
+    metric_values = get_points(
+        val_metric.id if isinstance(val_metric, Value) else val_metric,
+        DateRange.YEARS_5
     )
-
-
-def _get_warning_for_metric(metric: type[Metric]) -> WarningsResult.WarningDescription | None:
-    metric_values = get_points(metric, DateRange.YEARS_5)
 
     if len(metric_values[0]) == 0:
         return None
 
-    metric_inst = metric(None)
+    if isinstance(val_metric, Value):
+        compar = val_metric
+    else:
+        compar = val_metric(None)
+
     metric_values = (metric_values[0][::-1], metric_values[1][::-1])
-    severely_abnormal_streak = metric_inst.is_severely_abnormal(metric_values[1][0])
-    abnormal_streak = metric_inst.is_abnormal(metric_values[1][0])
+    severely_abnormal_streak = compar.is_severely_abnormal(metric_values[1][0])
+    abnormal_streak = compar.is_abnormal(metric_values[1][0])
     abnormal_streak_since: datetime | None = None
     abnormal_streak_length = 0
     severely_abnormal_streak_length = 0
@@ -224,16 +173,16 @@ def _get_warning_for_metric(metric: type[Metric]) -> WarningsResult.WarningDescr
         if severely_abnormal_streak:
             severely_abnormal_streak_length += 1
             severely_abnormal_streak_since = metric_values[0][i-1]
-            severely_abnormal_streak = metric_inst.is_severely_abnormal(val)
+            severely_abnormal_streak = compar.is_severely_abnormal(val)
 
         if abnormal_streak:
             abnormal_streak_length += 1
             abnormal_streak_since = metric_values[0][i-1]
-            abnormal_streak = metric_inst.is_abnormal(val)
+            abnormal_streak = compar.is_abnormal(val)
 
             if not abnormal_streak:
-                next_abnormal = (i + 1 < len(metric_values)) and metric_inst.is_abnormal(metric_values[1][i + 1])
-                next_next_abnormal = (i + 2 < len(metric_values)) and metric_inst.is_abnormal(metric_values[1][i + 2])
+                next_abnormal = (i + 1 < len(metric_values)) and compar.is_abnormal(metric_values[1][i + 1])
+                next_next_abnormal = (i + 2 < len(metric_values)) and compar.is_abnormal(metric_values[1][i + 2])
                 if next_abnormal and next_next_abnormal:
                     abnormal_streak = True
 
@@ -260,7 +209,7 @@ def get_warnings() -> WarningsResult:
     values = [value for category in manager.scale_values().values() for value in category]
     values += manager.physical_values()
     for value in values:
-        warning = _get_warning_for_value(value)
+        warning = _get_warning(value)
         if warning is not None:
             if warning.abnormal_weeks > STATS_WARN_WEEKS_CUTOFF:
                 results.values_old.append((value, warning))
@@ -268,7 +217,7 @@ def get_warnings() -> WarningsResult:
                 results.values_new.append((value, warning))
 
     for metric in get_all_metrics():
-        warning = _get_warning_for_metric(metric)
+        warning = _get_warning(metric)
         if warning is not None:
             if warning.abnormal_weeks > STATS_WARN_WEEKS_CUTOFF:
                 results.metrics_old.append((metric, warning))
