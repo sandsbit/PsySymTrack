@@ -16,8 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
 
+from datetime import datetime, timedelta
+from typing import ClassVar
+
 import numpy as np
-from datetime import timedelta, datetime
 
 from analysis.alerts import Alert, AlertGen
 from data.metrics.GAD import GAD_7
@@ -26,9 +28,9 @@ from utils import dateutil
 
 
 class AnxietyAlerts(AlertGen):
-    USED_PARAMS_IDS = []
-    USED_METRICS = [GAD_7]
-    GIVE_HISTORY_FOR = timedelta(days=31)
+    USED_PARAMS_IDS: ClassVar = []
+    USED_METRICS: ClassVar = [GAD_7]
+    GIVE_HISTORY_FOR: ClassVar = timedelta(days=31)
 
     def generate_alert(
             self,
@@ -43,7 +45,7 @@ class AnxietyAlerts(AlertGen):
         if anxiety_score[-1][0] < dateutil.n_weeks_before(datetime.now(), 1):
             return None
 
-        severity_score = np.mean(list(zip(*anxiety_score))[1])
+        severity_score = float(np.mean(list(zip(*anxiety_score))[1]))
         if 4.5 <= severity_score <= 9.5:
             return Alert(
                 name="Mild Anxiety Alert",

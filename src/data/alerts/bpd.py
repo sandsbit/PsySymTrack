@@ -16,42 +16,30 @@
 # You should have received a copy of the GNU General Public License
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
 
-from scipy.stats import wilcoxon
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
+from typing import ClassVar
 
 from analysis.alerts import Alert, AlertGen
+from data.alerts.methods import significant_change_last_month
 from data.metrics.BEST import BEST
 from tracking.metrics import Metric
 
 
 class BPDAlert(AlertGen):
-    USED_PARAMS_IDS = []
-    USED_METRICS = [BEST]
-    GIVE_HISTORY_FOR = timedelta(days=31*3)
+    USED_PARAMS_IDS: ClassVar = []
+    USED_METRICS: ClassVar = [BEST]
+    GIVE_HISTORY_FOR: ClassVar = timedelta(days=31*3)
 
     def generate_alert(
             self,
             values: dict[str, list[tuple[datetime, float]]],
             metrics: dict[type[Metric], list[tuple[datetime, float]]]
     ) -> Alert | None:
-        month_before = datetime.now() - timedelta(days=31)
-        values_old, values_new = [], []
-
-        for date, value in metrics[BEST]:
-            if date < month_before:
-                values_old.append(value)
-            else:
-                values_new.append(value)
-
-        if len(values_old) < 2 or len(values_new) < 2:
-            return None
-
-        _, p = wilcoxon(values_new, values_old, alternative="greater")
-        if p <= 0.05:
+        result = significant_change_last_month(metrics[BEST])
+        if result is not None:
             return Alert(
                 name="BPD Severity has risen",
-                description=f"For the last month BPD symptoms are significantly severe (p = {p})",
+                description=f"For the last month BPD symptoms are significantly severe (p = {result})",
                 severity=Alert.AlertSeverity.IMPORTANT
             )
-
         return None

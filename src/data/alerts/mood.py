@@ -16,8 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
 
+from datetime import datetime, timedelta
+from typing import ClassVar
+
 import numpy as np
-from datetime import timedelta, datetime
 
 from analysis.alerts import Alert, AlertGen
 from data.metrics.ASRM import ASRM
@@ -27,9 +29,9 @@ from utils import dateutil
 
 
 class MoodEpisodeAlerts(AlertGen):
-    USED_PARAMS_IDS = []
-    USED_METRICS = [QIDS_SR_16, ASRM]
-    GIVE_HISTORY_FOR = timedelta(days=31)
+    USED_PARAMS_IDS: ClassVar = []
+    USED_METRICS: ClassVar = [QIDS_SR_16, ASRM]
+    GIVE_HISTORY_FOR: ClassVar = timedelta(days=31)
 
     @staticmethod
     def _depression_alert(depression_score: list[tuple[datetime, float]]) -> Alert | None:
@@ -39,7 +41,7 @@ class MoodEpisodeAlerts(AlertGen):
         if depression_score[-1][0] < dateutil.n_weeks_before(datetime.now(), 1):
             return None
 
-        severity_score = np.mean(list(zip(*depression_score))[1])
+        severity_score = float(np.mean(list(zip(*depression_score))[1]))
         if 6 <= severity_score <= 10.5:
             return Alert(
                 name="Mild Depression Alert",
@@ -69,7 +71,7 @@ class MoodEpisodeAlerts(AlertGen):
         if mania_score[-1][0] < dateutil.n_weeks_before(datetime.now(), 1):
             return None
 
-        severity_score = max(np.mean(list(zip(*mania_score))[1]), mania_score[-1][1])
+        severity_score = max(float(np.mean(list(zip(*mania_score))[1])), mania_score[-1][1])
         if 6 <= severity_score <= 9.5:
             return Alert(
                 name="Hypomania Alert",
@@ -99,7 +101,7 @@ class MoodEpisodeAlerts(AlertGen):
         depression_alert = self._depression_alert(metrics[QIDS_SR_16])
         mania_alert = self._mania_alert(metrics[ASRM])
 
-        if (depression_alert is not None and depression_alert.AlertSeverity != Alert.AlertSeverity.WARNING) and mania_alert is not None:
+        if (depression_alert is not None and depression_alert.severity != Alert.AlertSeverity.WARNING) and mania_alert is not None:
             return Alert(
                 name="Mixed Episode Alert",
                 description="Possible depression/(hypo)mania with mixed features!",

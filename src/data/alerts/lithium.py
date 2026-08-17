@@ -16,8 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
 
-import numpy as np
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
+from typing import ClassVar
 
 from analysis.alerts import Alert, AlertGen
 from data.metrics.ASRM import ASRM
@@ -25,9 +25,9 @@ from tracking.metrics import Metric
 
 
 class LithiumAlerts(AlertGen):
-    USED_PARAMS_IDS = ["lithium"]
-    USED_METRICS = [ASRM]
-    GIVE_HISTORY_FOR = timedelta(days=31*3)
+    USED_PARAMS_IDS: ClassVar = ["lithium"]
+    USED_METRICS: ClassVar = [ASRM]
+    GIVE_HISTORY_FOR: ClassVar = timedelta(days=31*3)
 
     def generate_alert(
             self,
