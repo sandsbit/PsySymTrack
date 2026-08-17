@@ -88,7 +88,7 @@ def _points_for_metric(metric: type[Metric], date_range: DateRange)\
                 values.append(result)
 
             date -= timedelta(days=7)
-        return np.array(dates), np.array(values)
+        return np.array(dates[::-1]), np.array(values[::-1])
 
 
 # noinspection PyTypeChecker,type-hints
@@ -181,10 +181,18 @@ def _get_warning(val_metric: Value | type[Metric]) -> WarningsResult.WarningDesc
             abnormal_streak = compar.is_abnormal(val)
 
             if not abnormal_streak:
-                next_abnormal = (i + 1 < len(metric_values)) and compar.is_abnormal(metric_values[1][i + 1])
-                next_next_abnormal = (i + 2 < len(metric_values)) and compar.is_abnormal(metric_values[1][i + 2])
+                next_abnormal = (i + 1 < len(metric_values[0])) and compar.is_abnormal(metric_values[1][i + 1])
+                next_next_abnormal = (i + 2 < len(metric_values[0])) and compar.is_abnormal(metric_values[1][i + 2])
                 if next_abnormal and next_next_abnormal:
                     abnormal_streak = True
+
+    if severely_abnormal_streak:
+        severely_abnormal_streak_length += 1
+        severely_abnormal_streak_since = metric_values[0][-1]
+
+    if abnormal_streak:
+        abnormal_streak_length += 1
+        abnormal_streak_since = metric_values[0][-1]
 
     if abnormal_streak_since is None or abnormal_streak_length == 1:
         return None
@@ -192,10 +200,10 @@ def _get_warning(val_metric: Value | type[Metric]) -> WarningsResult.WarningDesc
     assert(abnormal_streak_length != 0)
 
     return WarningsResult.WarningDescription(
-        abnormal_weeks=round((datetime.now() - abnormal_streak_since).days / 7.0),
+        abnormal_weeks=abnormal_streak_length,
         mean_episode_value=np.mean(metric_values[1][:abnormal_streak_length]),
         severely_abnormal_weeks= None if severely_abnormal_streak_since is None
-        else round((datetime.now() - severely_abnormal_streak_since).days / 7.0),
+        else severely_abnormal_streak_length,
         mean_severe_episode_value= None if severely_abnormal_streak_since is None
         else np.mean(metric_values[1][:severely_abnormal_streak_length])
     )
