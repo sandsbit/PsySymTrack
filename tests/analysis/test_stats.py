@@ -31,7 +31,7 @@ from analysis.stats import (
     get_warnings,
 )
 from tracking.metrics import Metric
-from tracking.values import ValuesManager, ScaleValue
+from tracking.values import ScaleValue, ValuesManager
 from tracking.valuestorsage import ValuesStorage, open_storage
 
 
