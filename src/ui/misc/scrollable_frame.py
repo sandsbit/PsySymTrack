@@ -19,7 +19,10 @@
 import tkinter as tk
 from tkinter import ttk
 
+from typing_extensions import deprecated
 
+
+@deprecated
 class ScrollableFrame(ttk.Frame):
     """
     A vertically scrollable frame.
@@ -30,11 +33,17 @@ class ScrollableFrame(ttk.Frame):
     def __init__(self, parent, height: int | None = None, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
 
-        self.canvas = tk.Canvas(
-            self,
-            highlightthickness=0,
-            height=height
-        )
+        if height is not None:
+            self.canvas = tk.Canvas(
+                self,
+                highlightthickness=0,
+                height=height
+            )
+        else:
+            self.canvas = tk.Canvas(
+                self,
+                highlightthickness=0
+            )
 
         self.scrollbar = ttk.Scrollbar(
             self,

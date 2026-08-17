@@ -19,8 +19,16 @@
 import tkinter as tk
 from tkinter import ttk
 
+from typing_extensions import deprecated
 
+
+@deprecated
 class PlaceholderEntry(ttk.Entry):
+    """Tkinter's entry with placeholder text"""
+
+    _has_placeholder: bool
+    placeholder: str
+    var: tk.StringVar
 
     def __init__(
         self,
