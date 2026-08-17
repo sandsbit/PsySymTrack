@@ -22,7 +22,6 @@ from tkinter import ttk
 from typing_extensions import deprecated
 
 
-@deprecated
 class PlaceholderEntry(ttk.Entry):
     """Tkinter's entry with placeholder text"""
 

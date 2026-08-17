@@ -22,7 +22,6 @@ from tkinter import ttk
 from typing_extensions import deprecated
 
 
-@deprecated
 class ScrollableFrame(ttk.Frame):
     """
     A vertically scrollable frame.
