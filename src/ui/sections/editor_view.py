@@ -252,6 +252,22 @@ class EditorView(ttk.Frame):
     def _build_scale_editor(self):
         assert isinstance(self.value, ScaleValue)
 
+        ttk.Label(
+            self.editor_frame,
+            text=self.value.name,
+            font="Helvetica 22 bold"
+        ).pack(
+                anchor="w"
+        )
+
+        ttk.Label(
+            self.editor_frame,
+            text=self.value.description,
+            font="Helvetica 16"
+        ).pack(
+                anchor="w"
+        )
+
         self.scale_selection = tk.StringVar(value="")
 
         for value, description in (
@@ -282,6 +298,22 @@ class EditorView(ttk.Frame):
 
     def _build_physical_editor(self):
         assert isinstance(self.value, PhysicalValue)
+
+        ttk.Label(
+            self.editor_frame,
+            text=self.value.name,
+            font="Helvetica 22 bold"
+        ).pack(
+                anchor="w"
+        )
+
+        ttk.Label(
+            self.editor_frame,
+            text=self.value.description,
+            font="Helvetica 16"
+        ).pack(
+                anchor="w"
+        )
 
         label = (
             f"{self.value.name} "
@@ -348,6 +380,22 @@ class EditorView(ttk.Frame):
     def _build_metric_editor(self):
         # noinspection bad-argument-type
         assert issubclass(self.value, Metric)
+
+        ttk.Label(
+            self.editor_frame,
+            text=self.value.NAME,
+            font="Helvetica 22 bold"
+        ).pack(
+                anchor="w"
+        )
+
+        ttk.Label(
+            self.editor_frame,
+            text=self.value.DESCRIPTION,
+            font="Helvetica 16"
+        ).pack(
+                anchor="w"
+        )
 
         #
         # Current value
