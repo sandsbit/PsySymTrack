@@ -31,6 +31,7 @@ from analysis.stats import (
     get_stats,
     get_warnings,
 )
+from general.userdata import BasicUserData, Sex, load_user_data
 from tracking.metrics import Metric
 from tracking.values import ScaleValue, ValuesManager
 from tracking.valuestorsage import ValuesStorage, open_storage
@@ -84,6 +85,13 @@ class TestStatistics(unittest.TestCase):
             Path(self.temp_dir.name) / "test.sqlite",
         )
         self.db_patch.start()
+        test_userdata = BasicUserData(
+                datetime(2004, 8, 28, 0, 0),
+                Sex.MALE,
+                178
+            )
+        self.user_data_patch = patch("analysis.stats.load_user_data", return_value=test_userdata)
+        self.user_data_patch.start()
         self.now_patch = patch("analysis.stats.datetime")
         dt_mock = self.now_patch.start()
         dt_mock.now.return_value=datetime(2026, 8, 31, 0, 0)
@@ -96,6 +104,7 @@ class TestStatistics(unittest.TestCase):
     def tearDown(self) -> None:
         self.db_patch.stop()
         self.now_patch.stop()
+        self.user_data_patch.stop()
         self.temp_dir.cleanup()
 
     def test_get_values_series(self):
@@ -225,6 +234,14 @@ class TestWarnings(unittest.TestCase):
         )
         self.db_patch.start()
 
+        test_userdata = BasicUserData(
+                datetime(2004, 8, 28, 0, 0),
+                Sex.MALE,
+                178
+            )
+        self.user_data_patch = patch("analysis.stats.load_user_data", return_value=test_userdata)
+        self.user_data_patch.start()
+
         self.now_patch = patch("analysis.stats.datetime")
         dt_mock = self.now_patch.start()
         dt_mock.now.return_value=datetime(2026, 8, 31, 0, 0)
@@ -267,6 +284,7 @@ class TestWarnings(unittest.TestCase):
         self.db_patch.stop()
         self.now_patch.stop()
         self.manager_patch.stop()
+        self.user_data_patch.stop()
         self.temp_dir.cleanup()
 
     def test_no_warning_on_normal(self):
