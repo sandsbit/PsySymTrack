@@ -17,14 +17,15 @@
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
 
 import tkinter as tk
-from tkinter import ttk, messagebox
 from datetime import datetime, timedelta
+from tkinter import messagebox, ttk
 
 from general.userdata import load_user_data
-from tracking.values import Value, ScaleValue, PhysicalValue
-from tracking.valuestorsage import ValuesStorage
 from tracking.metrics import Metric, evaluate_metric
+from tracking.values import PhysicalValue, ScaleValue, Value
+from tracking.valuestorsage import ValuesStorage, open_storage
 from utils import dateutil
+
 
 class EditorView(ttk.Frame):
     """
@@ -136,7 +137,7 @@ class EditorView(ttk.Frame):
         except ValueError:
             return
 
-        self.current_week = self.dateutil.monday_before(
+        self.current_week = dateutil.monday_before(
             date
         )
 
@@ -162,6 +163,7 @@ class EditorView(ttk.Frame):
         for widget in self.editor_frame.winfo_children():
             widget.destroy()
 
+        # noinspection bad-argument-type
         if isinstance(self.value, ScaleValue):
             self._build_scale_editor()
 
@@ -170,6 +172,58 @@ class EditorView(ttk.Frame):
 
         elif issubclass(self.value, Metric):
             self._build_metric_editor()
+
+    # noinspection unresolved-references
+    def _refresh_current_value_scale(self, storage: ValuesStorage):
+        current_value = storage.get_value(self.value.id, self.current_week)
+        if current_value is None:
+            self.scale_selection.set("")
+        else:
+            self.scale_selection.set(
+                str(int(current_value))
+            )
+
+    # noinspection unresolved-references
+    def _refresh_current_value_physical(self, storage: ValuesStorage):
+        # Clear previous value first
+        self.physical_entry.delete(0, tk.END)
+
+        current_value = storage.get_value(self.value.id, self.current_week)
+        if current_value is not None:
+            self.physical_entry.delete(0, tk.END)
+            self.physical_entry.insert(0, str(current_value))
+
+    # noinspection bad-argument-type,unresolved-references
+    def _refresh_current_value_metric(self, storage: ValuesStorage):
+        user_data = load_user_data()
+        assert user_data is not None
+        metric_value = evaluate_metric(
+            self.value, user_data, storage, self.current_week
+        )
+        if metric_value is None:
+            self.metric_value_label.configure(text="—")
+
+            self.metric_progress["value"] = 0
+
+            self.metric_interp_label.configure(text="<UNK>")
+            self.metric_interpretation_label.configure(text="Interpretation: N/A")
+        else:
+            self.metric_value_label.configure(text=str(metric_value))
+            progress = (metric_value - self.value.RESULT_MIN) / (
+                self.value.RESULT_MAX - self.value.RESULT_MIN
+            )
+            self.metric_progress["value"] = progress * 100
+
+            self.metric_interpretation_label.configure(text="Interpretation: N/A")
+            int_text = ""
+            if self.value.INTERP is not None:
+                for minv, maxv, desc in self.value.INTERP:
+                    int_text += f"{minv}-{maxv}: {desc}\n"
+                    if minv <= metric_value <= maxv:
+                        self.metric_interpretation_label.configure(
+                            text="Interpretation: " + desc
+                        )
+            self.metric_interp_label.configure(text=int_text)
 
     def _refresh_current_value(self):
         """
@@ -180,63 +234,14 @@ class EditorView(ttk.Frame):
         if self.value is None:
             return
 
-        storage = ValuesStorage()
-        try:
+        with open_storage() as storage:
+            # noinspection bad-argument-type
             if isinstance(self.value, ScaleValue):
-                current_value = storage.get_value(self.value.id, self.current_week)
-                if current_value is None:
-                    self.scale_selection.set("")
-                else:
-                    self.scale_selection.set(
-                        str(current_value)
-                    )
+                self._refresh_current_value_scale(storage)
             elif isinstance(self.value, PhysicalValue):
-                # Clear previous value first
-                self.physical_entry.delete(
-                    0,
-                    tk.END
-                )
-
-                current_value = storage.get_value(self.value.id, self.current_week)
-                if current_value is not None:
-                    self.physical_entry.delete(0, tk.END)
-                    self.physical_entry.insert(0, str(current_value))
+                self._refresh_current_value_physical(storage)
             elif issubclass(self.value, Metric):
-                metric_value = evaluate_metric(self.value, load_user_data(), storage, self.current_week)
-                if metric_value is None:
-                    self.metric_value_label.configure(
-                        text="—"
-                    )
-
-                    self.metric_progress["value"] = 0
-
-                    self.metric_interp_label.configure(text="<UNK>")
-                    self.metric_interpretation_label.configure(
-                        text="Interpretation: N/A"
-                    )
-                else:
-                    self.metric_value_label.configure(text=str(metric_value))
-                    progress = (
-                        metric_value - self.value.RESULT_MIN
-                    ) / (
-                        self.value.RESULT_MAX - self.value.RESULT_MIN
-                    )
-                    self.metric_progress["value"] = progress * 100
-
-                    self.metric_interpretation_label.configure(
-                        text="Interpretation: N/A"
-                    )
-                    int_text = ''
-                    if self.value.INTERP is not None:
-                        for minv, maxv, desc in self.value.INTERP:
-                            int_text += f"{minv}-{maxv}: {desc}\n"
-                            if minv <= metric_value <= maxv:
-                                self.metric_interpretation_label.configure(
-                                    text="Interpretation: " + desc
-                                )
-                    self.metric_interp_label.configure(text=int_text)
-        finally:
-            storage.close()
+                self._refresh_current_value_metric(storage)
 
     # ------------------------------------------------------------------
     # ScaleValue editor
@@ -260,6 +265,7 @@ class EditorView(ttk.Frame):
                 anchor="w"
             )
 
+    # noinspection unresolved-references
     def _save_scale_value(self):
         date = self.current_week
         selected_value = self.scale_selection.get()
@@ -342,6 +348,7 @@ class EditorView(ttk.Frame):
     # ========= Metrics ========
 
     def _build_metric_editor(self):
+        # noinspection bad-argument-type
         assert issubclass(self.value, Metric)
 
         #

@@ -15,19 +15,19 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
-
+import math
 import tkinter as tk
+from datetime import datetime
+from tkinter import ttk
 
 import numpy as np
-
-from datetime import datetime, timedelta
-from tkinter import ttk
-from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
 
-from analysis.stats import DateRange, TrackingStatistics, get_stats, get_points
+from analysis.stats import DateRange, TrackingStatistics, get_points, get_stats
+from tracking.basics import RangedEntity
 from tracking.metrics import Metric
-from tracking.values import Value, ScaleValue, PhysicalValue
+from tracking.values import Value
 from utils import dateutil
 
 
@@ -159,76 +159,44 @@ class DataView(ttk.Frame):
         if isinstance(self.current_object, Value):
             dates, values = get_points(self.current_object.id, selected_range)
         else:
+            # noinspection bad-argument-type
             dates, values = get_points(self.current_object, selected_range)
         self.ax.plot(dates, values)
 
-        # TODO: migrate to +inf and -inf
         now = datetime.now()
+        # noinspection bad-argument-type
         self.ax.set_xlim(dateutil.monday_before(now - selected_range.get_timedelta()), now)
-        if isinstance(self.current_object, Value) and self.current_object.min_value is not None and self.current_object.max_value is not None:
-            self.ax.set_ylim(self.current_object.min_value, self.current_object.max_value)
-        elif isinstance(self.current_object, type) and (self.current_object.RESULT_MIN is not None and self.current_object.RESULT_MAX is not None):
-            self.ax.set_ylim(self.current_object.RESULT_MIN, self.current_object.RESULT_MAX)
-        elif isinstance(self.current_object, PhysicalValue) and len(values) > 0:
-            self.ax.set_ylim(min(np.min(values), 0), np.max(values) * 1.2)
 
-
-        if isinstance(self.current_object, ScaleValue):
-            self.ax.axhspan(self.current_object.normal_min, self.current_object.normal_max, color="green", alpha=0.2)
-            if self.current_object.not_severely_abnormal_min is not None:
-                self.ax.axhspan(self.current_object.not_severely_abnormal_min, self.current_object.normal_min, color="yellow", alpha=0.2)
-                self.ax.axhspan(self.current_object.min_value, self.current_object.not_severely_abnormal_min, color="red", alpha=0.2)
-            else:
-                self.ax.axhspan(self.current_object.min_value, self.current_object.normal_min, color="yellow", alpha=0.2)
-            if self.current_object.not_severely_abnormal_max is not None:
-                self.ax.axhspan(self.current_object.normal_max, self.current_object.not_severely_abnormal_max, color="yellow", alpha=0.2)
-                self.ax.axhspan(self.current_object.not_severely_abnormal_max, self.current_object.max_value, color="red", alpha=0.2)
-            else:
-                self.ax.axhspan(self.current_object.normal_max, self.current_object.max_value, color="yellow", alpha=0.2)
-        elif isinstance(self.current_object, PhysicalValue):
+        abs_min = self.current_object.min_value
+        if math.isinf(abs_min):
             if len(values) > 0:
                 abs_min = min(np.min(values), 0)
-                abs_max = np.max(values)
             else:
                 abs_min = 0
+        abs_max = self.current_object.max_value
+        if math.isinf(abs_max):
+            if len(values) > 0:
+                abs_max = np.max(values) * 1.2
+            else:
                 abs_max = 100
-            if self.current_object.normal_min is not None:
-                normal_max = self.current_object.normal_max if self.current_object.normal_max is not None else abs_max
-                self.ax.axhspan(self.current_object.normal_min, normal_max, color="green", alpha=0.2)
-                min_value = self.current_object.min_value if self.current_object.min_value is not None else abs_min
-                if self.current_object.not_severely_abnormal_min is not None:
-                    self.ax.axhspan(self.current_object.not_severely_abnormal_min, self.current_object.normal_min, color="yellow", alpha=0.2)
-                    self.ax.axhspan(min_value, self.current_object.not_severely_abnormal_min, color="red", alpha=0.2)
-                else:
-                    self.ax.axhspan(min_value, self.current_object.normal_min, color="yellow", alpha=0.2)
-            if self.current_object.normal_max is not None:
-                if self.current_object.normal_min is None:
-                    self.ax.axhspan(abs_min, self.current_object.normal_max, color="green", alpha=0.2)
-                max_value = self.current_object.max_value if self.current_object.max_value is not None else abs_max
-                if self.current_object.not_severely_abnormal_max is not None:
-                    self.ax.axhspan(self.current_object.normal_max, self.current_object.not_severely_abnormal_max, color="yellow", alpha=0.2)
-                    self.ax.axhspan(self.current_object.not_severely_abnormal_max, max_value, color="red", alpha=0.2)
-                else:
-                    self.ax.axhspan(self.current_object.normal_max, max_value, color="red", alpha=0.2)
-        else:
-            if self.current_object.RESULT_NORMAL_MIN is not None:
-                normal_max = self.current_object.RESULT_NORMAL_MAX if self.current_object.RESULT_NORMAL_MAX is not None else self.current_object.RESULT_MAX
-                self.ax.axhspan(self.current_object.RESULT_NORMAL_MIN, normal_max, color="green", alpha=0.2)
-                min_value = self.current_object.RESULT_MIN if self.current_object.RESULT_MIN is not None else self.current_object.RESULT_MIN
-                if self.current_object.RESULT_NOT_SEVERELY_ABNORMAL_MIN is not None:
-                    self.ax.axhspan(self.current_object.RESULT_NOT_SEVERELY_ABNORMAL_MIN, self.current_object.RESULT_NORMAL_MIN, color="yellow", alpha=0.2)
-                    self.ax.axhspan(min_value, self.current_object.RESULT_NOT_SEVERELY_ABNORMAL_MIN, color="red", alpha=0.2)
-                else:
-                    self.ax.axhspan(min_value, self.current_object.RESULT_NORMAL_MIN, color="yellow", alpha=0.2)
-            if self.current_object.RESULT_NORMAL_MAX is not None:
-                if self.current_object.RESULT_NORMAL_MIN is None:
-                    self.ax.axhspan(self.current_object.RESULT_MIN, self.current_object.RESULT_NORMAL_MAX, color="green", alpha=0.2)
-                max_value = self.current_object.RESULT_MAX if self.current_object.RESULT_MAX is not None else self.current_object.RESULT_MAX
-                if self.current_object.RESULT_NOT_SEVERELY_ABNORMAL_MAX is not None:
-                    self.ax.axhspan(self.current_object.RESULT_NORMAL_MAX, self.current_object.RESULT_NOT_SEVERELY_ABNORMAL_MAX, color="yellow", alpha=0.2)
-                    self.ax.axhspan(self.current_object.RESULT_NOT_SEVERELY_ABNORMAL_MAX, max_value, color="red", alpha=0.2)
-                else:
-                    self.ax.axhspan(self.current_object.RESULT_NORMAL_MAX, max_value, color="red", alpha=0.2)
+        ranges = self.current_object.get_ranges(abs_min, abs_max)
+
+        to_process = [
+            RangedEntity.RangeType.NORMAL,
+            RangedEntity.RangeType.MILDLY_ABNORMAL,
+            RangedEntity.RangeType.SEVERELY_ABNORMAL
+        ]
+        colors = [
+            "green",
+            "yellow",
+            "red"
+        ]
+
+        self.ax.set_ylim(*ranges[RangedEntity.RangeType.TOTAL_ALLOWED])
+
+        for range_type, color in zip(to_process, colors):
+            for start, end in ranges[range_type]:
+                self.ax.axhspan(start, end, color=color, alpha=0.2)
 
         if isinstance(self.current_object, Value):
             self.ax.set_title(self.current_object.name)

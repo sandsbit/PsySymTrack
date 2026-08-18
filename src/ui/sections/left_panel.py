@@ -16,17 +16,16 @@
 # You should have received a copy of the GNU General Public License
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
 
+from collections.abc import Callable
 from tkinter import ttk
-from typing import Callable
 
-from tracking.metrics import get_all_metrics, Metric
+from tracking.metrics import Metric, get_all_metrics
+from tracking.values import Value, ValuesManager
+from ui.add_value_window import AddValueWindow
 from ui.alerts_window import AlertsWindow
 from ui.misc.scrollable_frame import ScrollableFrame
 from ui.warning_window import WarningsWindow
 from ui.widgets.collapsible_section import CollapsibleSection
-from ui.add_value_window import AddValueWindow
-
-from tracking.values import ValuesManager, Value
 
 
 class LeftPanel(ttk.Frame):
@@ -41,7 +40,7 @@ class LeftPanel(ttk.Frame):
     def __init__(
         self,
         parent,
-        on_selected: Callable[[Value], None],
+        on_selected: Callable[[Value | type[Metric]], None],
         *args,
         **kwargs
     ):
