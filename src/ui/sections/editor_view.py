@@ -283,6 +283,14 @@ class EditorView(ttk.Frame):
                 anchor="w"
             )
 
+        ttk.Button(
+            self.editor_frame,
+            text="Clear",
+            command=self._delete_scale_value
+        ).pack(
+            anchor="w"
+        )
+
     # noinspection unresolved-references
     def _save_scale_value(self):
         date = self.current_week
@@ -290,6 +298,15 @@ class EditorView(ttk.Frame):
 
         with open_storage() as storage:
             storage.edit_value(self.value.id, date, int(selected_value))
+            self.main_view.data_view.refresh()
+
+    # noinspection unresolved-references
+    def _delete_scale_value(self):
+        date = self.current_week
+
+        with open_storage() as storage:
+            storage.delete_value(self.value.id, date)
+            self.scale_selection.set("")
             self.main_view.data_view.refresh()
 
     # ------------------------------------------------------------------
@@ -344,9 +361,18 @@ class EditorView(ttk.Frame):
         )
 
     def _save_physical_value(self):
+        date = self.current_week
+        value_raw = self.physical_entry.get()
+
+        if value_raw.strip() == "":
+            with open_storage() as storage:
+                storage.delete_value(self.value.id, date)
+                self.main_view.data_view.refresh()
+                return
+
         try:
             value = float(
-                self.physical_entry.get()
+                value_raw
             )
 
         except ValueError:
@@ -368,8 +394,6 @@ class EditorView(ttk.Frame):
                 "Value is outside allowed range."
             )
             return
-
-        date = self.current_week
 
         with open_storage() as storage:
             storage.edit_value(self.value.id, date, value)

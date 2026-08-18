@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - View of the value now updates right after a change
 - Name and description of the value/metric is now duplicated in the editing panel
+- One can now delete saved values
 
 ### Fixed
 
