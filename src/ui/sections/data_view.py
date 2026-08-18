@@ -135,12 +135,12 @@ class DataView(ttk.Frame):
         if len(DateRange) > 0:
             self.date_range_combo.current(0)
 
-        self._refresh()
+        self.refresh()
 
     def _date_range_changed(self, _event: tk.Event) -> None:
-        self._refresh()
+        self.refresh()
 
-    def _refresh(self) -> None:
+    def refresh(self) -> None:
         if self.current_object is None:
             return
 

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- View of the value now updates right after a change
+
 ### Fixed
 
 - Problems with loading physical values

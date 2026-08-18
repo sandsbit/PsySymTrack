@@ -36,8 +36,10 @@ class EditorView(ttk.Frame):
     - editing the value for that week
     """
 
-    def __init__(self, parent, *args, **kwargs):
+    def __init__(self, parent, main_view, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
+
+        self.main_view = main_view
 
         self.value: Value | type[Metric] | None = None
 
@@ -270,11 +272,9 @@ class EditorView(ttk.Frame):
         date = self.current_week
         selected_value = self.scale_selection.get()
 
-        storage = ValuesStorage()
-        try:
+        with open_storage() as storage:
             storage.edit_value(self.value.id, date, int(selected_value))
-        finally:
-            storage.close()
+            self.main_view.data_view.refresh()
 
     # ------------------------------------------------------------------
     # PhysicalValue editor
@@ -339,11 +339,9 @@ class EditorView(ttk.Frame):
 
         date = self.current_week
 
-        storage = ValuesStorage()
-        try:
+        with open_storage() as storage:
             storage.edit_value(self.value.id, date, value)
-        finally:
-            storage.close()
+            self.main_view.data_view.refresh()
 
     # ========= Metrics ========
 

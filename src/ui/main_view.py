@@ -96,7 +96,8 @@ class MainView(ttk.Frame):
         )
 
         self.editor_view = EditorView(
-            self.right_panel
+            self.right_panel,
+            self
         )
 
         self.editor_view.grid(
