@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Incorrect mood episode detection
 - Old list of scale value categories
 - Error while entering current week
+- Borderline values weren't visible on plots
 - Cleaned up code and tests
 
 ## [1.0.0-beta.1] - 2026-08-15

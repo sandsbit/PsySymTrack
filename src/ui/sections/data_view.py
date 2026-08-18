@@ -176,10 +176,16 @@ class DataView(ttk.Frame):
         abs_max = self.current_object.max_value
         if math.isinf(abs_max):
             if len(values) > 0:
-                abs_max = np.max(values) * 1.2
+                abs_max = np.max(values)
             else:
                 abs_max = 100
         ranges = self.current_object.get_ranges(abs_min, abs_max)
+
+        min_y, max_y = ranges[RangedEntity.RangeType.TOTAL_ALLOWED]
+        self.ax.set_ylim(
+            min_y - 0.05 * (max_y - min_y),
+            max_y + 0.05 * (max_y - min_y)
+        )
 
         to_process = [
             RangedEntity.RangeType.NORMAL,
@@ -191,8 +197,6 @@ class DataView(ttk.Frame):
             "yellow",
             "red"
         ]
-
-        self.ax.set_ylim(*ranges[RangedEntity.RangeType.TOTAL_ALLOWED])
 
         for range_type, color in zip(to_process, colors):
             for start, end in ranges[range_type]:
