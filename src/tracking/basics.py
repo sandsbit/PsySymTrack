@@ -17,8 +17,11 @@
 # along with PsySymTrack. If not, see <https://www.gnu.org/licenses/>.
 
 from abc import ABC
+from collections.abc import Callable
 from dataclasses import dataclass
 from enum import Enum
+
+import math
 
 
 @dataclass
@@ -78,3 +81,41 @@ class RangedEntity(ABC):
 
     def is_abnormal(self, value: float) -> bool:
         return self.check_range_for_value(value) in [RangedEntity.RangeValue.MILDLY_ABNORMAL, RangedEntity.RangeValue.SEVERELY_ABNORMAL]
+
+    class RangeType(Enum):
+        TOTAL_ALLOWED = 0
+        NORMAL = 1
+        MILDLY_ABNORMAL = 2
+        SEVERELY_ABNORMAL = 3
+
+    type ListOfPoints = list[tuple[float, float]]
+
+    def get_ranges(
+            self,
+            abs_min: float = -math.inf,
+            abs_max: float = math.inf
+    ) -> dict[RangeType, ListOfPoints | tuple[float, float]]:
+        """
+        Get mathematical ranges for different ranges of the instance.
+
+        :param abs_min: value to use instead of -oo
+        :param abs_max: value to use instead of +oo
+        :return: dict where for RangeType.TOTAL_ALLOWED the allowed range is given and for the rest of values
+                 list of such ranges that combine to the total range of that type.
+        """
+        remove_inf: Callable[[float], float] = \
+            lambda x: x if not math.isinf(x) else (abs_max if x > 0 else abs_min)
+        remove_empty: Callable[[RangedEntity.ListOfPoints], RangedEntity.ListOfPoints] = \
+            lambda x: [y for y in x if y[0] != y[1]]
+
+        result = {RangedEntity.RangeType.TOTAL_ALLOWED: (remove_inf(self.min_value), remove_inf(self.max_value)),
+                  RangedEntity.RangeType.NORMAL: [(remove_inf(self.normal_min), remove_inf(self.normal_max))],
+                  RangedEntity.RangeType.MILDLY_ABNORMAL: remove_empty([
+                      (remove_inf(self.not_severely_abnormal_min), remove_inf(self.normal_min)),
+                      (remove_inf(self.normal_max), remove_inf(self.not_severely_abnormal_max))
+                  ]), RangedEntity.RangeType.SEVERELY_ABNORMAL: remove_empty([
+                (remove_inf(self.min_value), remove_inf(self.not_severely_abnormal_min)),
+                (remove_inf(self.not_severely_abnormal_max), remove_inf(self.max_value))
+            ])}
+        return result
+
