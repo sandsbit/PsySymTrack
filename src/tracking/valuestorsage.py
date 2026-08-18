@@ -122,7 +122,7 @@ class ValuesStorage:
         )
 
         return [
-            (datetime.fromisoformat(timestamp), int(value))
+            (datetime.fromisoformat(timestamp), value)
             for timestamp, value in cursor.fetchall()
         ]
 
