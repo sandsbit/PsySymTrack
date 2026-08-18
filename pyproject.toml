@@ -9,6 +9,7 @@ dependencies = [
   "numpy>=2.0.0",
   "scipy>=1.17.0",
   "matplotlib>=3.11.0",
+  "requests",
   "pillow"
 ]
 requires-python = ">=3.12"
@@ -75,5 +76,6 @@ packages = [
   "src/general",
   "src/tracking",
   "src/ui",
-  "src/utils"
+  "src/utils",
+  "src/updating"
 ]
