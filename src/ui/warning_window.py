@@ -115,7 +115,7 @@ class WarningsWindow(tk.Toplevel):
             danger = description.severely_abnormal_weeks is not None
             descr = ""
             if danger:
-                descr += f"Severely abnormal for {description.severely_abnormal_weeks} weeks"
+                descr += f"Severely abnormal for {description.severely_abnormal_weeks} weeks\n"
             descr += f"Mean value for period: {description.mean_episode_value} (RANGE {value.normal_min}-{value.normal_max})"
             self.add_block(
                 danger=danger,
