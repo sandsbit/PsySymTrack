@@ -42,8 +42,31 @@ install: build
 	fi
 
 deb:
+    mkdir -p dist/$(APPNAME)_$(APPVERSION)/opt/$(APPNAME)
+    cp dist/$(APPNAME)/* dist/$(APPNAME)_$(APPVERSION)/opt/$(APPNAME)/*
+    mkdir -p dist/$(APPNAME)_$(APPVERSION)/usr/share/applications
+    touch dist/$(APPNAME)_$(APPVERSION)/usr/share/applications/$(APPNAME).desktop
+    echo "[Desktop Entry]\n" >> dist/$(APPNAME)_$(APPVERSION)/usr/share/applications/$(APPNAME).desktop
+    echo "Type=Application\n" >> dist/$(APPNAME)_$(APPVERSION)/usr/share/applications/$(APPNAME).desktop
+    echo "Version=$(VERS)\n" >> dist/$(APPNAME)_$(APPVERSION)/usr/share/applications/$(APPNAME).desktop
+    echo "Name=$(APPNAME)\n" >> dist/$(APPNAME)_$(APPVERSION)/usr/share/applications/$(APPNAME).desktop
+    echo "Path=/opt/$(APPNAME)\n" >> dist/$(APPNAME)_$(APPVERSION)/usr/share/applications/$(APPNAME).desktop
+    echo "Exec=$(APPNAME)\n" >> dist/$(APPNAME)_$(APPVERSION)/usr/share/applications/$(APPNAME).desktop
+    echo "Icon=$/opt/(APPNAME)/icons/icon.png\n" >> dist/$(APPNAME)_$(APPVERSION)/usr/share/applications/$(APPNAME).desktop
+    mkdir -p dist/$(APPNAME)_$(APPVERSION)/DEBIAN
+    touch dist/$(APPNAME)_$(APPVERSION)/DEBIAN/control
+    echo "Package: $(APPNAME)" >> dist/$(APPNAME)_$(APPVERSION)/DEBIAN/control
+    echo "Version: $(VER)" >> dist/$(APPNAME)_$(APPVERSION)/DEBIAN/control
+    echo "Section: base" >> dist/$(APPNAME)_$(APPVERSION)/DEBIAN/control
+    echo "Priority: optional" >> dist/$(APPNAME)_$(APPVERSION)/DEBIAN/control
+    echo "Architecture: amd64" >> dist/$(APPNAME)_$(APPVERSION)/DEBIAN/control
+    echo "Depends: " >> dist/$(APPNAME)_$(APPVERSION)/DEBIAN/control
+    echo "Maintainer: Nikita Serba <nikitaserba@icloud.com>" >> dist/$(APPNAME)_$(APPVERSION)/DEBIAN/control
+    dpkg-deb --build dist/$(APPNAME)_$(APPVERSION)/
+    # TODO: rename
 
-rpm:
+rpm: deb
+    fakeroot talien --to-rpm out/$(FILE_PREFIX)-linux_amd64.deb
 
 clean:
     rm -rf ./build/
