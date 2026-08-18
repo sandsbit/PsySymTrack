@@ -64,3 +64,16 @@ addopts = "-ra"
 
 [tool.ruff.lint]
 ignore = ["DTZ001", "DTZ005", "DTZ007"]
+
+[tool.hatch.build]
+sources = ["src"]
+
+[tool.hatch.build.targets.wheel]
+packages = [
+  "src/analysis",
+  "src/data",
+  "src/general",
+  "src/tracking",
+  "src/ui",
+  "src/utils"
+]
