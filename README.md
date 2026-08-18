@@ -1,8 +1,8 @@
 # PsySymTrack
 Psychiatric symptom tracker with basic analysis (intended for personal use) [UNDER DEVELOPMENT]
 
-You can check out first beta in "Releases" section, but the full documentation
-will be only avaliable for first release version, which is coming out soon.
+You can check out first beta in "Releases" section, but the full documentation will be only avaliable
+for first release version, which is coming out soon.
 # License
 ![GNU GPL v3 logo](https://www.gnu.org.cach3.com/graphics/gplv3-with-text-136x68.png)
 
