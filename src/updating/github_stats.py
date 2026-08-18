@@ -33,9 +33,6 @@ def get_latest_version() -> str | None:
         warnings.warn("Could not get latest version from GitHub. Response code: " + str(response.status_code), RuntimeWarning)
         return None
 
-    print(response.json()[0]["tag_name"])
-    print(response.json()[1]["tag_name"])
-
     versions = response.json()
     for version in versions:
         number = version["tag_name"][1:]
