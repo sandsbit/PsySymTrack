@@ -179,7 +179,13 @@ class DataView(ttk.Frame):
                 abs_max = np.max(values)
             else:
                 abs_max = 100
-        ranges = self.current_object.get_ranges(abs_min, abs_max)
+
+        if isinstance(self.current_object, Value):
+            ranges = self.current_object.get_ranges(abs_min, abs_max)
+        else:
+            # noinspection calling-non-callable
+            inst = self.current_object(None)
+            ranges = inst.get_ranges(abs_min, abs_max)
 
         min_y, max_y = ranges[RangedEntity.RangeType.TOTAL_ALLOWED]
         self.ax.set_ylim(
