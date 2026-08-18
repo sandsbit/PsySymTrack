@@ -18,9 +18,13 @@
 
 from tkinter import ttk
 
+from app_info import APP_VERSION
+from ui.misc.messages import showinfo_with_link
 from ui.sections.data_view import DataView
 from ui.sections.editor_view import EditorView
 from ui.sections.left_panel import LeftPanel
+from updating.github_stats import get_latest_version
+from utils.versions import process_release_version
 
 
 class MainView(ttk.Frame):
@@ -106,6 +110,19 @@ class MainView(ttk.Frame):
             sticky="nsew"
         )
 
+        self._check_for_updates()
+
     def _on_object_selected(self, obj):
         self.data_view.show(obj)
         self.editor_view.show(obj)
+
+    def _check_for_updates(self):
+        latest_version = get_latest_version()
+        if (latest_version is not None) and (process_release_version(latest_version) > process_release_version(APP_VERSION)):
+            showinfo_with_link(
+                self,
+                "New update",
+                f"New version {latest_version} is available on out GitHub. Please, update soon.",
+                "Download here",
+                "https://github.com/sandsbit/PsySymTrack/releases"
+            )
