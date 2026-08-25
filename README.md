@@ -95,7 +95,12 @@ consisting of a portable archive and .app application on macOS.
 ## Privacy 
 All collected data is stored locally on your computer unencrypted and never leaves your computer. Support for encryption 
 is planned.
-## License
+## Legal
+PsySymTrack is a symptom tracking and analysis tool, not a medical device or substitute for professional medical advice,
+diagnosis, or treatment. Its scores, analyses, episode detections, and warnings are for informational purposes only and
+may be inaccurate. Do not use PsySymTrack to make medication or treatment decisions. Always consult a qualified healthcare
+professional regarding your health.
+
 ![GNU GPL v3 logo](https://www.gnu.org.cach3.com/graphics/gplv3-with-text-136x68.png)
 
 PsySymTrack is free software: you can redistribute it and/or modify
