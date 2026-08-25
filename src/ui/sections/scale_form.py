@@ -20,10 +20,10 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter.ttk import Combobox
 
-from app_info import get_working_dir_path
 from tracking.values import ScaleValue, ValuesManager
 from ui.misc.placeholder_entry import PlaceholderEntry
 from ui.misc.scrollable_frame import ScrollableFrame
+from utils.osutil import get_working_dir_path
 
 
 class ScaleForm(ttk.Frame):

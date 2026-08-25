@@ -105,15 +105,11 @@ class EditorView(ttk.Frame):
 
         self._update_week_display()
 
-    def show(self, value: Value):
+    def show(self, value: Value | type[Metric]):
         """
         Display editor for a selected Value object.
         """
         self.value = value
-
-        self.current_week = dateutil.monday_before(
-            datetime.now()
-        )
 
         self._update_week_display()
         self._build_editor()

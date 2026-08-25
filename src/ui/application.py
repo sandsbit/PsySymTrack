@@ -22,10 +22,10 @@ from PIL import Image, ImageTk
 
 from app_info import APP_NAME
 from general.userdata import load_user_data
+from ui.legal_window import LegalView
+from ui.main_view import MainView
+from ui.registration_view import RegistrationView
 from utils.osutil import get_working_dir_path
-
-from .main_view import MainView
-from .registration_view import RegistrationView
 
 
 class Application(tk.Tk):
@@ -66,13 +66,19 @@ class Application(tk.Tk):
         user_data = load_user_data()
 
         if user_data is None:
-            self.show_user_data_view()
+            self.show_legal()
         else:
             self.show_main_view()
 
     def clear_view(self):
         for widget in self.winfo_children():
             widget.destroy()
+
+    def show_legal(self):
+        self.clear_view()
+
+        view = LegalView(self, on_agree=self.show_user_data_view)
+        view.pack(fill="both", expand=True)
 
     def show_user_data_view(self):
         self.clear_view()
