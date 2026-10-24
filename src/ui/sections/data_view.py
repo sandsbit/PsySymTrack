@@ -132,7 +132,7 @@ class DataView(ttk.Frame):
     def show(self, obj: Value | type[Metric]) -> None:
         self.current_object = obj
 
-        if len(DateRange) > 0:
+        if self.date_range_var.get() == '':
             self.date_range_combo.current(0)
 
         self.refresh()
