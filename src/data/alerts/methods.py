@@ -49,6 +49,18 @@ def significant_change_last_month(
     if len(values_old) < 2 or len(values_new) < 2:
         return None
 
+    if  len(values_old) > len(values_new):
+        values_old = values_old[-len(values_new):]
+    elif len(values_new) > len(values_old):
+        size = int((len(values_new) + len(values_old)) / 2)
+        values_old += values_new[:(size - len(values_old))]
+        values_new = values_new[(size - len(values_old)):]
+        if (len(values_old) + 1) == len(values_new):
+            values_old = values_old[1:]
+            values_old.append(values_new[0])
+            values_new = values_new[1:]
+    assert len(values_old) == len(values_new)
+
     _, p = wilcoxon(values_new, values_old, alternative=alternative)
     if p <= 0.05:
         return p
